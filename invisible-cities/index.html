@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>看不见的城市 · Invisible Cities</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet" />
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <style>
+    :root {
+      --bg-deep: #0f0f1a;
+      --bg-mid: #1a1a2e;
+      --panel-bg: rgba(20, 20, 35, 0.96);
+      --text-primary: #f2f2f5;
+      --text-secondary: #a0a0b8;
+      --accent-glow: rgba(255, 255, 255, 0.08);
+      --memory: #e8b86d;
+      --desires: #e74c3c;
+      --signs: #9b59b6;
+      --thin: #ecf0f1;
+      --trading: #f39c12;
+      --eyes: #3498db;
+      --dead: #7f8c8d;
+      --sky: #1abc9c;
+      --continuous: #2ecc71;
+      --hidden: #5d7a96;
+      --names: #e67e22;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: radial-gradient(ellipse at center, var(--bg-mid) 0%, var(--bg-deep) 100%);
+      color: var(--text-primary);
+    }
+
+    #starfield {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    #viz {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      cursor: grab;
+    }
+
+    #viz:active {
+      cursor: grabbing;
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 10;
+      padding: 18px 24px 12px;
+      background: linear-gradient(to bottom, rgba(15, 15, 26, 0.85), rgba(15, 15, 26, 0));
+      pointer-events: none;
+    }
+
+    header h1 {
+      margin: 0 0 6px;
+      font-family: "Noto Serif SC", "Songti SC", serif;
+      font-size: 26px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      pointer-events: auto;
+    }
+
+    header p {
+      margin: 0;
+      font-size: 13px;
+      color: var(--text-secondary);
+      pointer-events: auto;
+    }
+
+    #controls {
+      position: fixed;
+      top: 84px;
+      left: 24px;
+      right: 120px;
+      z-index: 10;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      pointer-events: none;
+    }
+
+    .chip {
+      pointer-events: auto;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text-secondary);
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      backdrop-filter: blur(4px);
+      user-select: none;
+    }
+
+    .chip:hover {
+      background: rgba(255, 255, 255, 0.12);
+      color: var(--text-primary);
+    }
+
+    .chip.active {
+      background: rgba(255, 255, 255, 0.18);
+      color: var(--text-primary);
+      border-color: currentColor;
+      box-shadow: 0 0 10px currentColor;
+    }
+
+    #reset-view {
+      position: fixed;
+      top: 24px;
+      right: 24px;
+      z-index: 10;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text-secondary);
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 12px;
+      cursor: pointer;
+      backdrop-filter: blur(4px);
+      transition: all 0.2s ease;
+    }
+
+    #reset-view:hover {
+      background: rgba(255, 255, 255, 0.14);
+      color: var(--text-primary);
+    }
+
+    #tooltip {
+      position: fixed;
+      z-index: 20;
+      max-width: 280px;
+      padding: 12px 14px;
+      border-radius: 8px;
+      background: var(--panel-bg);
+      border-left: 3px solid var(--accent-glow);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(8px);
+      pointer-events: none;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.18s ease, transform 0.18s ease;
+    }
+
+    #tooltip.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    #tooltip h4 {
+      margin: 0 0 6px;
+      font-family: "Noto Serif SC", serif;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    #tooltip .meta {
+      font-size: 11px;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    #tooltip p {
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.55;
+      color: #d0d0e0;
+    }
+
+    #overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 15;
+      background: rgba(0, 0, 0, 0.35);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+
+    #overlay.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    #detail {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 420px;
+      max-width: 100%;
+      height: 100%;
+      z-index: 16;
+      background: var(--panel-bg);
+      box-shadow: -10px 0 40px rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(12px);
+      transform: translateX(100%);
+      transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+      display: flex;
+      flex-direction: column;
+    }
+
+    #detail.visible {
+      transform: translateX(0);
+    }
+
+    #detail .close {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text-secondary);
+      font-size: 18px;
+      line-height: 1;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      transition: all 0.2s ease;
+    }
+
+    #detail .close:hover {
+      background: rgba(255, 255, 255, 0.14);
+      color: var(--text-primary);
+    }
+
+    #detail .content {
+      padding: 48px 32px 40px;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    #detail .category-badge {
+      display: inline-block;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid currentColor;
+      color: var(--text-secondary);
+      margin-bottom: 14px;
+    }
+
+    #detail h2 {
+      margin: 0 0 18px;
+      font-family: "Noto Serif SC", serif;
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      line-height: 1.2;
+    }
+
+    #detail .excerpt {
+      font-size: 15px;
+      line-height: 1.85;
+      color: #d8d8e8;
+      white-space: pre-line;
+    }
+
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 20px;
+      }
+
+      #controls {
+        top: 78px;
+        left: 16px;
+        right: 16px;
+      }
+
+      .chip {
+        font-size: 11px;
+        padding: 4px 10px;
+      }
+
+      #reset-view {
+        top: auto;
+        bottom: 18px;
+        right: 16px;
+      }
+
+      #detail {
+        top: auto;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 62vh;
+        transform: translateY(100%);
+        border-radius: 18px 18px 0 0;
+      }
+
+      #detail.visible {
+        transform: translateY(0);
+      }
+
+      #detail h2 {
+        font-size: 26px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="starfield"></canvas>
+  <svg id="viz"></svg>
+
+  <header>
+    <h1>看不见的城市</h1>
+    <p>卡尔维诺 · 55 座城市的诗意星座</p>
+  </header>
+
+  <div id="controls">
+    <button class="chip active" data-category="all">全部</button>
+  </div>
+
+  <button id="reset-view">重置视角</button>
+
+  <div id="tooltip">
+    <h4></h4>
+    <div class="meta"></div>
+    <p></p>
+  </div>
+
+  <div id="overlay"></div>
+
+  <aside id="detail">
+    <button class="close" aria-label="关闭">×</button>
+    <div class="content">
+      <div class="category-badge"></div>
+      <h2></h2>
+      <div class="excerpt"></div>
+    </div>
+  </aside>
+
+  <script>
+    const categories = {
+      memory: { label: "记忆之城", color: "#e8b86d" },
+      desires: { label: "欲望之城", color: "#e74c3c" },
+      signs: { label: "符号之城", color: "#9b59b6" },
+      thin: { label: "轻盈之城", color: "#ecf0f1" },
+      trading: { label: "贸易之城", color: "#f39c12" },
+      eyes: { label: "眼睛之城", color: "#3498db" },
+      dead: { label: "死亡之城", color: "#7f8c8d" },
+      sky: { label: "天空之城", color: "#1abc9c" },
+      continuous: { label: "连绵之城", color: "#2ecc71" },
+      hidden: { label: "隐蔽之城", color: "#5d7a96" },
+      names: { label: "名字之城", color: "#e67e22" },
+    };
+
+    const cities = [
+      // 记忆之城
+      { id: "zora", name: "佐拉", category: "memory", excerpt: "佐拉是一座隐秘之城，关于它的一切记忆都逐渐失落，除了那些像手纹一样印在城市里的欲望。", full: "佐拉是一座隐秘之城，关于它的一切记忆都逐渐失落，除了那些像手纹一样印在城市里的欲望。\n对每一个到那里去的人，它都会以某种方式唤起一段相似的往事：一座桥、一座宫殿、一扇窗。" },
+      { id: "maurilia", name: "莫里亚", category: "memory", excerpt: "莫里亚的旧城已经消失，只留下几张明信片，而人们宁愿相信明信片上的色彩才是真实的。", full: "莫里亚的旧城已经消失，只留下几张明信片，而人们宁愿相信明信片上的色彩才是真实的。\n旅游者怀着遗憾打量那些老照片，而本地居民已经学会了在玻璃幕墙的反光里寻找往昔。" },
+      { id: "despina_memory", name: "德斯庇娜", category: "memory", excerpt: "德斯庇娜有两种面貌：对于骑骆驼的人来说，它是一座装载着船只的城市；对于海员来说，它是一座骆驼之城。", full: "德斯庇娜有两种面貌：对于骑骆驼的人来说，它是一座装载着船只的城市；对于海员来说，它是一座骆驼之城。\n每个人在城市里寻找的，不过是自己在旅途尽头渴望看见的东西。" },
+      { id: "anastasia", name: "安娜斯塔西亚", category: "memory", excerpt: "在安娜斯塔西亚，你的欲望永远不会得到满足，你会在追逐欲望的过程中忘记自己最初想要什么。", full: "在安娜斯塔西亚，你的欲望永远不会得到满足，你会在追逐欲望的过程中忘记自己最初想要什么。\n城市用无数个岔路口迷惑你，让你在每一个选择之后都相信自己曾经错过更好的命运。" },
+      { id: "olivia", name: "奥莉维亚", category: "memory", excerpt: "关于奥莉维亚，人们讲述着繁荣与幸福的传说，却从不愿提及那被城墙遮蔽的阴影。", full: "关于奥莉维亚，人们讲述着繁荣与幸福的传说，却从不愿提及那被城墙遮蔽的阴影。\n记忆在这里是一种筛选：只留下光辉，把黑暗推给另一座城市的传说。" },
+
+      // 欲望之城
+      { id: "despina_desire", name: "德斯庇娜", category: "desires", excerpt: "德斯庇娜的城门同时向沙漠与海洋敞开，每位旅人都把最强烈的渴望投射到它的塔楼之上。", full: "德斯庇娜的城门同时向沙漠与海洋敞开，每位旅人都把最强烈的渴望投射到它的塔楼之上。\n它从不回答你的欲望，只是把它们映照得更清晰。" },
+      { id: "dorothea", name: "多罗泰亚", category: "desires", excerpt: "人们来到多罗泰亚，是因为听说这里有一条黄金铺就的街道；他们留下，是因为找到了另一条。", full: "人们来到多罗泰亚，是因为听说这里有一条黄金铺就的街道；他们留下，是因为找到了另一条。\n城市真正的财富，不在于它许诺什么，而在于它让你在追逐中重新认识自己的匮乏。" },
+      { id: "zirma", name: "齐尔玛", category: "desires", excerpt: "齐尔玛是一座由重复构成的城市：同样的街角、同样的面孔、同样的黄昏，每一次经过都像是第一次。", full: "齐尔玛是一座由重复构成的城市：同样的街角、同样的面孔、同样的黄昏，每一次经过都像是第一次。\n旅人在那里学会了，欲望的乐趣不在于抵达，而在于不断重新发现熟悉的陌生。" },
+      { id: "euphemia", name: "欧菲米亚", category: "desires", excerpt: "每年月圆之夜，商人们聚集在欧菲米亚交换的不只是货物，还有各自城市的故事与梦境。", full: "每年月圆之夜，商人们聚集在欧菲米亚交换的不只是货物，还有各自城市的故事与梦境。\n当市场散去，留在地上的不是金币，而是无数被讲述又遗忘的城市的残影。" },
+      { id: "hypatia", name: "希帕蒂娅", category: "desires", excerpt: "希帕蒂娅的街道像河床一样宽阔，流淌着人们对于理性与秩序的隐秘渴望。", full: "希帕蒂娅的街道像河床一样宽阔，流淌着人们对于理性与秩序的隐秘渴望。\n然而在每个十字路口，沉默的喷泉都在提醒：水越是清澈，越照得见人心的浑浊。" },
+
+      // 符号之城
+      { id: "tamara", name: "塔玛拉", category: "signs", excerpt: "塔玛拉的一切都在指向别处：招牌、门环、雕塑，没有一样东西是为了它自己而存在。", full: "塔玛拉的一切都在指向别处：招牌、门环、雕塑，没有一样东西是为了它自己而存在。\n走进这座城市，你会开始怀疑自己也是某个更大符号系统中一个无法破译的记号。" },
+      { id: "zoe", name: "佐伊", category: "signs", excerpt: "佐伊没有任何可辨认的面孔，因为它的建筑、街道和居民都在不断模仿彼此。", full: "佐伊没有任何可辨认的面孔，因为它的建筑、街道和居民都在不断模仿彼此。\n在佐伊，分辨真伪不是智慧，而是一种奢侈的徒劳。" },
+      { id: "aglaia", name: "阿格劳拉", category: "signs", excerpt: "阿格劳拉的故事比它的石头还多，每一面墙都被传说覆盖，几乎看不见墙本身。", full: "阿格劳拉的故事比它的石头还多，每一面墙都被传说覆盖，几乎看不见墙本身。\n城市由此获得了一种透明的重量：你越了解它，越难触及它真实的样子。" },
+      { id: "octavia", name: "奥克塔维亚", category: "signs", excerpt: "奥克塔维亚悬挂在深渊之上，绳索、吊桥和网构成了它的街道，危险是它唯一的真实。", full: "奥克塔维亚悬挂在深渊之上，绳索、吊桥和网构成了它的街道，危险是它唯一的真实。\n居民们早已习惯把生命托付给细线，仿佛这样活着才配得上天空。" },
+      { id: "ersilia", name: "埃乌萨皮娅", category: "signs", excerpt: "埃乌萨皮娅的居民用彩色的线把房屋彼此连接，以表示关系、交易和仇恨。", full: "埃乌萨皮娅的居民用彩色的线把房屋彼此连接，以表示关系、交易和仇恨。\n当线条太多太乱，他们便整城迁徙，只留下一座由无用之线编织的迷宫。" },
+
+      // 轻盈之城
+      { id: "isaura", name: "伊莎乌拉", category: "thin", excerpt: "伊莎乌拉建在一百七十二座深井之上，城市越轻盈，地下的黑暗就越深。", full: "伊莎乌拉建在一百七十二座深井之上，城市越轻盈，地下的黑暗就越深。\n湖水从井底涌出，映照出亭台楼阁，仿佛整座城市都依赖一片倒影才得以存在。" },
+      { id: "zenobia", name: "则诺比亚", category: "thin", excerpt: "则诺比亚是悬在木桩上的城市，梯子、天桥和平台是它唯一的陆地。", full: "则诺比亚是悬在木桩上的城市，梯子、天桥和平台是它唯一的陆地。\n居民们走在半空，对脚下的虚空习以为常，仿佛轻盈才是城市的本来面目。" },
+      { id: "armilla", name: "阿尔米拉", category: "thin", excerpt: "阿尔米拉只有管道、水龙头和浴池，没有墙壁，也没有屋顶。", full: "阿尔米拉只有管道、水龙头和浴池，没有墙壁，也没有屋顶。\n水在阳光明媚中流淌，城市像一首没有歌词的歌，纯粹而空旷。" },
+      { id: "sophronia", name: "索夫罗尼亚", category: "thin", excerpt: "索夫罗尼亚的一半是固定的，另一半则是每年进城的游乐场，二者轮流扮演真实与虚幻。", full: "索夫罗尼亚的一半是固定的，另一半则是每年进城的游乐场，二者轮流扮演真实与虚幻。\n当木马和旋转台拆走，留下的广场显得格外沉重；而当它们归来，石头又仿佛只是临时布景。" },
+      { id: "olinda", name: "奥林达", category: "thin", excerpt: "奥林达从不扩张，只是在同样的街道里生出更小的街道，像贝壳上的纹路一样自我重复。", full: "奥林达从不扩张，只是在同样的街道里生出更小的街道，像贝壳上的纹路一样自我重复。\n你以为自己在远行，其实不过是在城市的褶皱里进进出出。" },
+
+      // 贸易之城
+      { id: "euphemia_trade", name: "欧菲米亚", category: "trading", excerpt: "商人们在欧菲米亚交换语言，他们把各自的方言卖给对方，买回一种临时的共同语。", full: "商人们在欧菲米亚交换语言，他们把各自的方言卖给对方，买回一种临时的共同语。\n等到集市散去，每个人都发现自己既失去故乡，又尚未到达任何地方。" },
+      { id: "chloe", name: "克萝伊", category: "trading", excerpt: "克萝伊是一座没有城墙的城市，人们相遇、交易、离散，却从未真正属于它。", full: "克萝伊是一座没有城墙的城市，人们相遇、交易、离散，却从未真正属于它。\n在这里，商品流动得比感情更快，每个人都在别人的目光里短暂停留。" },
+      { id: "phyllis", name: "菲丽丝", category: "trading", excerpt: "菲丽丝的市场里，每一件商品都携带着它前世城市的记忆，买方买回的其实是别人的过去。", full: "菲丽丝的市场里，每一件商品都携带着它前世城市的记忆，买方买回的其实是别人的过去。\n因此，在这座城市里致富的人，往往也是背负最多陌生记忆的人。" },
+      { id: "trude", name: "特鲁德", category: "trading", excerpt: "特鲁德无处不在：每一座机场、加油站和连锁酒店都是它的分身。", full: "特鲁德无处不在：每一座机场、加油站和连锁酒店都是它的分身。\n旅人们讨厌它，却又在每个疲惫的深夜投奔它，因为它承诺了唯一熟悉的事物。" },
+      { id: "procopia", name: "普罗科皮亚", category: "trading", excerpt: "普罗科皮亚的人口随集市季节膨胀又收缩，城市的大小由商品的潮汐决定。", full: "普罗科皮亚的人口随集市季节膨胀又收缩，城市的大小由商品的潮汐决定。\n当最后一个摊位撤走，街道像退潮后的沙滩一样留下陌生的空旷。" },
+
+      // 眼睛之城
+      { id: "valdrada", name: "瓦尔德拉达", category: "eyes", excerpt: "瓦尔德拉达建在湖边，它的每一座建筑都在水中拥有倒影，真实与镜像彼此注视。", full: "瓦尔德拉达建在湖边，它的每一座建筑都在水中拥有倒影，真实与镜像彼此注视。\n居民们学会了一举一动都要配得上倒影中的自己，城市因此活得格外审慎。" },
+      { id: "baucis", name: "包西斯", category: "eyes", excerpt: "包西斯悬挂在高跷之上，没有街道，只有纵横交错的楼梯和天桥，视线永远高于云端。", full: "包西斯悬挂在高跷之上，没有街道，只有纵横交错的楼梯和天桥，视线永远高于云端。\n居民们低头只能看见雾气，于是渐渐相信城市之外别无世界。" },
+      { id: "phyllis_eyes", name: "菲丽丝", category: "eyes", excerpt: "在菲丽丝，观看本身成为一种建筑：窗户、阳台和拱门都为了让人彼此看见而设计。", full: "在菲丽丝，观看本身成为一种建筑：窗户、阳台和拱门都为了让人彼此看见而设计。\n人们在这座城市里变得透明，却也因此无法确定谁才是被观看的主角。" },
+      { id: "moriana", name: "莫里亚娜", category: "eyes", excerpt: "莫里亚娜的正面是白色大理石与明亮窗户，背面却是阴暗的后墙和铁窗，城市有两副面孔。", full: "莫里亚娜的正面是白色大理石与明亮窗户，背面却是阴暗的后墙和铁窗，城市有两副面孔。\n没有人知道哪一面才是真实的，因为没有人能同时绕到城市的两侧。" },
+      { id: "clarice", name: "克拉莉切", category: "eyes", excerpt: "克拉莉切不断用新材料覆盖旧城区，每一层都试图让城市看起来更年轻，却也越来越看不清本来面目。", full: "克拉莉切不断用新材料覆盖旧城区，每一层都试图让城市看起来更年轻，却也越来越看不清本来面目。\n居民们透过层层历史的缝隙张望，终于明白眼睛也会被自己的城市欺骗。" },
+
+      // 死亡之城
+      { id: "melania", name: "梅拉尼亚", category: "dead", excerpt: "梅拉尼亚的死者与活人混居，死者的房间被生者继承，直到后者也变成沉默的房客。", full: "梅拉尼亚的死者与活人混居，死者的房间被生者继承，直到后者也变成沉默的房客。\n城市因此拥有层层叠叠的住客历史，每一面墙都是一本未合上的家谱。" },
+      { id: "adelma", name: "阿德尔玛", category: "dead", excerpt: "在阿德尔玛，每一个转角都会遇见已经去世的人，城市是生者误闯的死者集市。", full: "在阿德尔玛，每一个转角都会遇见已经去世的人，城市是生者误闯的死者集市。\n当你开始在这里认出熟悉的面孔，你就知道自己也正在变成其中一个影子。" },
+      { id: "argia", name: "阿尔吉雅", category: "dead", excerpt: "阿尔吉雅被埋在地下，街道是隧道，窗户通向岩石，居民们早已忘记天空的样子。", full: "阿尔吉雅被埋在地下，街道是隧道，窗户通向岩石，居民们早已忘记天空的样子。\n他们说，黑暗并不是死亡的同义词，而是一种更古老、更安静的生活方式。" },
+      { id: "laura", name: "劳拉", category: "dead", excerpt: "劳拉有无数座坟墓，却没有一座属于真正死去的人；它们只是城市对死亡的一种练习。", full: "劳拉有无数座坟墓，却没有一座属于真正死去的人；它们只是城市对死亡的一种练习。\n在这里，死亡被提前排练，以至于当它真正到来时，反而显得不够庄重。" },
+      { id: "otavia", name: "奥塔维亚", category: "dead", excerpt: "奥塔维亚的居民生活在悬崖上的网中，死亡不是坠落，而是网终于无法承受重量。", full: "奥塔维亚的居民生活在悬崖上的网中，死亡不是坠落，而是网终于无法承受重量。\n他们称这张网为城市，而网的每一根绳都由无数代人的信任编织而成。" },
+
+      // 天空之城
+      { id: "beersheba", name: "贝尔萨贝", category: "sky", excerpt: "贝尔萨贝有两座城市：一座在地上，用泥土和垃圾建造；一座在天上，只存在于居民的祈祷中。", full: "贝尔萨贝有两座城市：一座在地上，用泥土和垃圾建造；一座在天上，只存在于居民的祈祷中。\n他们相信天上的那座城市才是完美的，却不知道它正在吸收地上那座城市所有的失望。" },
+      { id: "theodora", name: "泰奥朵拉", category: "sky", excerpt: "泰奥朵拉是一座消灭了一切害虫与敌人的城市，最终却也因为消灭了差异而陷入沉睡。", full: "泰奥朵拉是一座消灭了一切害虫与敌人的城市，最终却也因为消灭了差异而陷入沉睡。\n天空之下，纯净的街道空无一人，因为生活本身已经无法在那里找到容身之处。" },
+      { id: "perinthia", name: "培林西亚", category: "sky", excerpt: "培林西亚完全按照星象建造，街道对应星座，宫殿对应行星，然而住在里面的人却一个个畸形。", full: "培林西亚完全按照星象建造，街道对应星座，宫殿对应行星，然而住在里面的人却一个个畸形。\n天文学家们仰望天空寻找原因，却不敢承认最完美的图纸也可能养育最扭曲的生命。" },
+      { id: "andria", name: "安德里亚", category: "sky", excerpt: "安德里亚的每一座建筑都对应天空中的一颗星，城市随星象的变化而改变自己的形状。", full: "安德里亚的每一座建筑都对应天空中的一颗星，城市随星象的变化而改变自己的形状。\n居民们并不觉得被动，相反，他们骄傲地认为自己是宇宙齿轮上最精致的一颗齿。" },
+      { id: "celestia", name: "塞莱斯蒂亚", category: "sky", excerpt: "塞莱斯蒂亚是一座通往天空的阶梯城市，越是高处，空气越稀薄，信仰越纯粹。", full: "塞莱斯蒂亚是一座通往天空的阶梯城市，越是高处，空气越稀薄，信仰越纯粹。\n climbing 的人很少回头，因为回头意味着承认天空也许只是另一片更远的地面。" },
+
+      // 连绵之城
+      { id: "leonia", name: "莱奥尼亚", category: "continuous", excerpt: "莱奥尼亚每天丢弃昨天的自己，垃圾山环绕着城市，越堆越高，几乎要把它淹没。", full: "莱奥尼亚每天丢弃昨天的自己，垃圾山环绕着城市，越堆越高，几乎要把它淹没。\n居民们沉迷于新鲜事物，却看不见自己制造的历史正在从四面八方合拢。" },
+      { id: "penthesilea", name: "彭忒西勒亚", category: "continuous", excerpt: "彭忒西勒亚没有边界，它向所有方向蔓延，直到旅行者再也说不清自己是在城内还是城外。", full: "彭忒西勒亚没有边界，它向所有方向蔓延，直到旅行者再也说不清自己是在城内还是城外。\n在这座城市里，最远的郊区与最近的中心没有区别，连绵本身就是它的身份。" },
+      { id: "tecla", name: "泰克拉", category: "continuous", excerpt: "泰克拉永远处于建造之中，脚手架是它真正的街道，完工即意味着被遗忘。", full: "泰克拉永远处于建造之中，脚手架是它真正的街道，完工即意味着被遗忘。\n居民们崇拜的不是建筑本身，而是建筑所许诺的那个永远不会到来的完成。" },
+      { id: "trude_cont", name: "特鲁德", category: "continuous", excerpt: "特鲁德的街道一条接一条重复着自己，旅人无论走多远，都会发现自己从未离开。", full: "特鲁德的街道一条接一条重复着自己，旅人无论走多远，都会发现自己从未离开。\n连绵不是丰富，而是同一座城市的无限回声，直到你忘记出发时的名字。" },
+      { id: "prok", name: "普罗科皮亚", category: "continuous", excerpt: "普罗科皮亚的城市与乡村连成一体，农田、工厂和住宅彼此渗透，没有明确的开始与结束。", full: "普罗科皮亚的城市与乡村连成一体，农田、工厂和住宅彼此渗透，没有明确的开始与结束。\n在这里，连绵是一种生活方式，也是一种让人无法逃离的温柔陷阱。" },
+
+      // 隐蔽之城
+      { id: "raissa", name: "拉伊莎", category: "hidden", excerpt: "拉伊莎隐藏着自己的真实：城里最好的东西都被藏在最不起眼的门后。", full: "拉伊莎隐藏着自己的真实：城里最好的东西都被藏在最不起眼的门后。\n那些匆匆而过的旅人只看见平庸的街道，却永远错过了城市真正的心跳。" },
+      { id: "marozia", name: "马罗齐亚", category: "hidden", excerpt: "马罗齐亚每隔一段时间就会蜕去旧壳，新的城市从旧的废墟中长出，而居民却浑然不觉。", full: "马罗齐亚每隔一段时间就会蜕去旧壳，新的城市从旧的废墟中长出，而居民却浑然不觉。\n他们以为自己在老去，其实只是城市一次次借用了他们的身体更换新装。" },
+      { id: "iridia", name: "伊里迪亚", category: "hidden", excerpt: "伊里迪亚的秘密写在无数本公共账簿上，但没有人能读完它们，因此秘密反而被公开所保护。", full: "伊里迪亚的秘密写在无数本公共账簿上，但没有人能读完它们，因此秘密反而被公开所保护。\n城市把真相分散在可见之处，让寻找者淹没在过量的信息里。" },
+      { id: "olinda_hidden", name: "奥林达", category: "hidden", excerpt: "奥林达的深处藏着更小的奥林达，像套娃一样，城市在你最不经意的地方打开另一扇门。", full: "奥林达的深处藏着更小的奥林达，像套娃一样，城市在你最不经意的地方打开另一扇门。\n你以为已经熟悉它，直到某天推开一扇普通的门，发现里面是另一座完整的城市。" },
+      { id: "laudomia", name: "劳多米亚", category: "hidden", excerpt: "劳多米亚有地上、地下和水中三座城，只有最后一座才能被真正看见。", full: "劳多米亚有地上、地下和水中三座城，只有最后一座才能被真正看见。\n水面如镜，把真实与倒影对调，居民们早已习惯用倒置的眼光看待自己的生活。" },
+
+      // 名字之城
+      { id: "aglaura", name: "阿格劳拉", category: "names", excerpt: "阿格劳拉的名字比它的城墙更古老，人们为了名字争吵，却对城市本身视而不见。", full: "阿格劳拉的名字比它的城墙更古老，人们为了名字争吵，却对城市本身视而不见。\n一个名字可以召唤一座城市，也可以把同一座城市分裂成无数个互不承认的碎片。" },
+      { id: "euphemia_names", name: "欧菲米亚", category: "names", excerpt: "欧菲米亚在每种语言里都有不同的名字，每个名字都改变了它的形状和性格。", full: "欧菲米亚在每种语言里都有不同的名字，每个名字都改变了它的形状和性格。\n说不同语言的人谈论的是同一座城市，却永远不知道彼此描述的其实是不同的梦境。" },
+      { id: "zoe_names", name: "佐伊", category: "names", excerpt: "佐伊的名字意味着生命，而城市本身却像一枚被遗忘在口袋里的硬币，沉默而光滑。", full: "佐伊的名字意味着生命，而城市本身却像一枚被遗忘在口袋里的硬币，沉默而光滑。\n名字在这里是一种负担，因为它必须不断证明自己配得上那个响亮的称呼。" },
+      { id: "zenobia_names", name: "则诺比亚", category: "names", excerpt: "则诺比亚的名字属于一位女王，而城市里住着的却是对女王一无所知的后代。", full: "则诺比亚的名字属于一位女王，而城市里住着的却是对女王一无所知的后代。\n名字把一段历史强加给现在，直到居民们误以为光荣的遗产就是他们自己的生活。" },
+      { id: "irene", name: "伊雷妮", category: "names", excerpt: "伊雷妮的名字在地图上尚未标出，因为它只存在于那些还没有到达那里的人的口中。", full: "伊雷妮的名字在地图上尚未标出，因为它只存在于那些还没有到达那里的人的口中。\n它是一座关于未来的城市：只有当你放弃寻找，它才会以另一个名字出现。" },
+    ];
+
+    // Canvas starfield
+    const starCanvas = document.getElementById("starfield");
+    const starCtx = starCanvas.getContext("2d");
+
+    function resizeStarfield() {
+      starCanvas.width = window.innerWidth;
+      starCanvas.height = window.innerHeight;
+      drawStars();
+    }
+
+    function drawStars() {
+      starCtx.clearRect(0, 0, starCanvas.width, starCanvas.height);
+      const count = Math.floor((starCanvas.width * starCanvas.height) / 4000);
+      for (let i = 0; i < count; i++) {
+        const x = Math.random() * starCanvas.width;
+        const y = Math.random() * starCanvas.height;
+        const r = Math.random() * 1.2 + 0.3;
+        const a = Math.random() * 0.6 + 0.2;
+        starCtx.beginPath();
+        starCtx.arc(x, y, r, 0, Math.PI * 2);
+        starCtx.fillStyle = `rgba(255, 255, 255, ${a})`;
+        starCtx.fill();
+      }
+    }
+
+    resizeStarfield();
+    window.addEventListener("resize", resizeStarfield);
+
+    // Controls
+    const controls = document.getElementById("controls");
+    Object.entries(categories).forEach(([key, info]) => {
+      const btn = document.createElement("button");
+      btn.className = "chip";
+      btn.dataset.category = key;
+      btn.textContent = info.label;
+      btn.style.setProperty("--cat-color", info.color);
+      controls.appendChild(btn);
+    });
+
+    let activeCategory = "all";
+    const chips = document.querySelectorAll(".chip");
+    chips.forEach(chip => {
+      chip.addEventListener("click", () => {
+        activeCategory = chip.dataset.category;
+        chips.forEach(c => c.classList.remove("active"));
+        chip.classList.add("active");
+        updateVisibility();
+      });
+    });
+
+    // D3 setup
+    const svg = d3.select("#viz");
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    svg.attr("width", width).attr("height", height);
+
+    const g = svg.append("g");
+
+    const zoom = d3.zoom()
+      .scaleExtent([0.3, 4])
+      .on("zoom", (event) => g.attr("transform", event.transform));
+
+    svg.call(zoom);
+
+    // Build links: connect cities within same category (cluster), plus a few cross-category echoes
+    const links = [];
+    const categoryGroups = {};
+    cities.forEach(c => {
+      if (!categoryGroups[c.category]) categoryGroups[c.category] = [];
+      categoryGroups[c.category].push(c.id);
+    });
+    Object.values(categoryGroups).forEach(group => {
+      for (let i = 0; i < group.length - 1; i++) {
+        links.push({ source: group[i], target: group[i + 1], type: "intra" });
+      }
+      if (group.length > 2) {
+        links.push({ source: group[0], target: group[group.length - 1], type: "intra" });
+      }
+    });
+
+    // Echo links: connect first city of each category to a thematic neighbor
+    const echoLinks = [
+      ["zora", "despina_desire"],
+      ["tamara", "isaura"],
+      ["valdrada", "beersheba"],
+      ["melania", "adelma"],
+      ["leonia", "penthesilea"],
+      ["raissa", "aglaura"],
+    ];
+    echoLinks.forEach(([a, b]) => {
+      links.push({ source: a, target: b, type: "echo" });
+    });
+
+    const simulation = d3.forceSimulation(cities)
+      .force("link", d3.forceLink(links).id(d => d.id).distance(d => d.type === "echo" ? 180 : 70))
+      .force("charge", d3.forceManyBody().strength(-180))
+      .force("center", d3.forceCenter(width / 2, height / 2))
+      .force("collide", d3.forceCollide().radius(18));
+
+    const link = g.append("g")
+      .attr("class", "links")
+      .selectAll("line")
+      .data(links)
+      .join("line")
+      .attr("stroke", d => d.type === "echo" ? "rgba(255,255,255,0.12)" : categories[cities.find(c => c.id === d.source.id || c.id === d.source)?.category]?.color || "#888")
+      .attr("stroke-opacity", d => d.type === "echo" ? 0.25 : 0.35)
+      .attr("stroke-width", d => d.type === "echo" ? 1 : 1.2)
+      .attr("stroke-dasharray", d => d.type === "echo" ? "4,4" : "0");
+
+    const nodeGroup = g.append("g")
+      .attr("class", "nodes")
+      .selectAll("g")
+      .data(cities)
+      .join("g")
+      .attr("class", "city-node")
+      .attr("cursor", "pointer")
+      .call(d3.drag()
+        .on("start", dragstarted)
+        .on("drag", dragged)
+        .on("end", dragended));
+
+    const defs = svg.append("defs");
+    Object.entries(categories).forEach(([key, info]) => {
+      const filter = defs.append("filter")
+        .attr("id", `glow-${key}`)
+        .attr("x", "-50%")
+        .attr("y", "-50%")
+        .attr("width", "200%")
+        .attr("height", "200%");
+      filter.append("feGaussianBlur")
+        .attr("stdDeviation", "2.5")
+        .attr("result", "coloredBlur");
+      filter.append("feMerge")
+        .call(merge => {
+          merge.append("feMergeNode").attr("in", "coloredBlur");
+          merge.append("feMergeNode").attr("in", "SourceGraphic");
+        });
+    });
+
+    nodeGroup.append("circle")
+      .attr("r", d => d.category === "hidden" ? 10 : 8)
+      .attr("fill", d => categories[d.category].color)
+      .attr("stroke", d => d.category === "thin" || d.category === "hidden" ? "rgba(255,255,255,0.8)" : "rgba(255,255,255,0.35)")
+      .attr("stroke-width", 1.5)
+      .style("filter", d => `url(#glow-${d.category})`)
+      .style("transition", "all 0.2s ease");
+
+    nodeGroup.append("text")
+      .text(d => d.name)
+      .attr("dy", 22)
+      .attr("text-anchor", "middle")
+      .attr("fill", "rgba(255,255,255,0.85)")
+      .attr("font-size", "11px")
+      .attr("font-weight", "400")
+      .attr("pointer-events", "none")
+      .style("text-shadow", "0 1px 4px rgba(0,0,0,0.8)");
+
+    // Tooltip
+    const tooltip = document.getElementById("tooltip");
+    let tooltipTimeout;
+
+    function showTooltip(event, d) {
+      clearTimeout(tooltipTimeout);
+      const cat = categories[d.category];
+      tooltip.querySelector("h4").textContent = d.name;
+      tooltip.querySelector(".meta").textContent = cat.label;
+      tooltip.querySelector("p").textContent = d.excerpt;
+      tooltip.style.borderLeftColor = cat.color;
+
+      const rect = tooltip.getBoundingClientRect();
+      let left = event.clientX + 16;
+      let top = event.clientY + 16;
+      if (left + rect.width > window.innerWidth) left = event.clientX - rect.width - 12;
+      if (top + rect.height > window.innerHeight) top = event.clientY - rect.height - 12;
+      tooltip.style.left = `${left}px`;
+      tooltip.style.top = `${top}px`;
+      tooltip.classList.add("visible");
+    }
+
+    function hideTooltip() {
+      tooltipTimeout = setTimeout(() => tooltip.classList.remove("visible"), 120);
+    }
+
+    nodeGroup
+      .on("mouseenter", (event, d) => showTooltip(event, d))
+      .on("mousemove", (event, d) => showTooltip(event, d))
+      .on("mouseleave", hideTooltip);
+
+    // Detail panel
+    const detail = document.getElementById("detail");
+    const overlay = document.getElementById("overlay");
+
+    function openDetail(d) {
+      const cat = categories[d.category];
+      detail.querySelector(".category-badge").textContent = cat.label;
+      detail.querySelector(".category-badge").style.color = cat.color;
+      detail.querySelector(".category-badge").style.borderColor = cat.color;
+      detail.querySelector("h2").textContent = d.name;
+      detail.querySelector(".excerpt").textContent = d.full;
+      detail.classList.add("visible");
+      overlay.classList.add("visible");
+    }
+
+    function closeDetail() {
+      detail.classList.remove("visible");
+      overlay.classList.remove("visible");
+    }
+
+    nodeGroup.on("click", (event, d) => {
+      event.stopPropagation();
+      openDetail(d);
+    });
+
+    overlay.addEventListener("click", closeDetail);
+    detail.querySelector(".close").addEventListener("click", closeDetail);
+    document.addEventListener("keydown", e => {
+      if (e.key === "Escape") closeDetail();
+    });
+
+    // Visibility update for filtering
+    function updateVisibility() {
+      nodeGroup.transition().duration(300)
+        .style("opacity", d => activeCategory === "all" || d.category === activeCategory ? 1 : 0.12);
+      link.transition().duration(300)
+        .style("opacity", d => {
+          const sCat = d.source.category;
+          const tCat = d.target.category;
+          if (activeCategory === "all") return 1;
+          return (sCat === activeCategory && tCat === activeCategory) ? 1 : 0.06;
+        });
+    }
+
+    // Simulation tick
+    simulation.on("tick", () => {
+      link
+        .attr("x1", d => d.source.x)
+        .attr("y1", d => d.source.y)
+        .attr("x2", d => d.target.x)
+        .attr("y2", d => d.target.y);
+
+      nodeGroup.attr("transform", d => `translate(${d.x},${d.y})`);
+    });
+
+    // Drag functions
+    function dragstarted(event, d) {
+      if (!event.active) simulation.alphaTarget(0.3).restart();
+      d.fx = d.x;
+      d.fy = d.y;
+    }
+
+    function dragged(event, d) {
+      d.fx = event.x;
+      d.fy = event.y;
+    }
+
+    function dragended(event, d) {
+      if (!event.active) simulation.alphaTarget(0);
+      d.fx = null;
+      d.fy = null;
+    }
+
+    // Resize
+    window.addEventListener("resize", () => {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      svg.attr("width", w).attr("height", h);
+      simulation.force("center", d3.forceCenter(w / 2, h / 2));
+      simulation.alpha(0.3).restart();
+    });
+
+    // Reset view
+    document.getElementById("reset-view").addEventListener("click", () => {
+      svg.transition().duration(750).call(zoom.transform, d3.zoomIdentity);
+    });
+  </script>
+</body>
+</html>
