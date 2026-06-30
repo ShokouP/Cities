@@ -6,7 +6,7 @@
   <title>看不见的城市 · Invisible Cities</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500&family=Noto+Serif+SC:wght@400;600;700;900&display=swap" rel="stylesheet" />
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <style>
     :root {
@@ -26,6 +26,7 @@
       --continuous: #2ecc71;
       --hidden: #5d8aa8;
       --names: #e67e22;
+      --read-bg: rgba(12, 12, 20, 0.98);
     }
 
     * {
@@ -38,11 +39,8 @@
       width: 100%;
       height: 100%;
       overflow: hidden;
-      font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
-      background:
-        radial-gradient(ellipse at 30% 20%, rgba(42, 42, 80, 0.22) 0%, transparent 50%),
-        radial-gradient(ellipse at 70% 80%, rgba(20, 30, 60, 0.28) 0%, transparent 45%),
-        radial-gradient(ellipse at center, var(--bg-mid) 0%, var(--bg-deep) 100%);
+      font-family: "Noto Serif SC", "Source Han Serif SC", "SimSun", "Songti SC", "STSong", serif;
+      background: #000000;
       color: var(--text-primary);
     }
 
@@ -70,36 +68,37 @@
       left: 0;
       right: 0;
       z-index: 10;
-      padding: 18px 24px 12px;
+      padding: 14px 20px 10px;
       background: linear-gradient(to bottom, rgba(11, 11, 20, 0.85), rgba(11, 11, 20, 0));
       pointer-events: none;
     }
 
     header h1 {
-      margin: 0 0 6px;
-      font-family: "Noto Serif SC", "Songti SC", serif;
-      font-size: 26px;
-      font-weight: 600;
+      margin: 0 0 4px;
+      font-family: "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif;
+      font-size: 20px;
+      font-weight: 900;
       letter-spacing: 0.08em;
       pointer-events: auto;
     }
 
     header p {
       margin: 0;
-      font-size: 13px;
+      font-size: 11px;
       color: var(--text-secondary);
       pointer-events: auto;
+      font-family: "Noto Serif SC", "Source Han Serif SC", "SimSun", "Songti SC", "STSong", serif;
     }
 
     #controls {
       position: fixed;
-      top: 84px;
-      left: 24px;
+      top: 66px;
+      left: 20px;
       right: 120px;
       z-index: 10;
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
+      gap: 6px;
       pointer-events: none;
     }
 
@@ -108,9 +107,9 @@
       border: 1px solid rgba(255, 255, 255, 0.16);
       background: rgba(255, 255, 255, 0.05);
       color: var(--text-secondary);
-      padding: 5px 12px;
+      padding: 4px 10px;
       border-radius: 999px;
-      font-size: 12px;
+      font-size: 11px;
       cursor: pointer;
       transition: all 0.2s ease;
       backdrop-filter: blur(4px);
@@ -126,28 +125,200 @@
       background: rgba(255, 255, 255, 0.18);
       color: var(--text-primary);
       border-color: currentColor;
-      box-shadow: 0 0 12px currentColor;
+      box-shadow: 0 0 10px currentColor;
     }
 
-    #reset-view {
+    #reset-view, #toggle-edit, #show-intro {
       position: fixed;
-      top: 24px;
-      right: 24px;
+      top: 20px;
       z-index: 10;
       border: 1px solid rgba(255, 255, 255, 0.16);
       background: rgba(255, 255, 255, 0.05);
       color: var(--text-secondary);
-      padding: 6px 14px;
+      padding: 5px 12px;
       border-radius: 999px;
-      font-size: 12px;
+      font-size: 11px;
       cursor: pointer;
       backdrop-filter: blur(4px);
       transition: all 0.2s ease;
     }
 
-    #reset-view:hover {
+    #reset-view {
+      right: 20px;
+    }
+
+    #toggle-edit {
+      right: 98px;
+    }
+
+    #show-intro {
+      right: 182px;
+    }
+
+    #intro {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 25;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    #intro.visible {
+      pointer-events: auto;
+      opacity: 1;
+    }
+
+    #intro .intro-card {
+      width: 560px;
+      max-width: calc(100% - 40px);
+      max-height: calc(100% - 80px);
+      overflow-y: auto;
+      background: var(--panel-bg);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 18px;
+      padding: 36px 32px 32px;
+      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(18px);
+      transform: translateY(10px);
+      transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    #intro.visible .intro-card {
+      transform: translateY(0);
+    }
+
+    #intro .intro-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text-secondary);
+      font-size: 16px;
+      line-height: 1;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      transition: all 0.2s ease;
+    }
+
+    #intro .intro-close:hover {
       background: rgba(255, 255, 255, 0.14);
       color: var(--text-primary);
+    }
+
+    #intro h2 {
+      margin: 0 0 18px;
+      font-family: "Noto Serif SC", serif;
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+    }
+
+    #intro p {
+      margin: 0 0 14px;
+      font-size: 13px;
+      line-height: 1.85;
+      color: #d8d8e8;
+      font-family: "Noto Serif SC", "Source Han Serif SC", "SimSun", "Songti SC", "STSong", serif;
+    }
+
+    #intro .intro-steps {
+      list-style: none;
+      margin: 0 0 18px;
+      padding: 0;
+    }
+
+    #intro .intro-steps li {
+      position: relative;
+      padding-left: 22px;
+      margin-bottom: 10px;
+      font-size: 13px;
+      line-height: 1.7;
+      color: #d8d8e8;
+      font-family: "Noto Serif SC", "Source Han Serif SC", "SimSun", "Songti SC", "STSong", serif;
+    }
+
+    #intro .intro-steps li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 7px;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--text-secondary);
+    }
+
+    #intro .intro-note {
+      font-size: 11px;
+      color: var(--text-secondary);
+      margin-top: 18px;
+      line-height: 1.6;
+      font-family: "Noto Serif SC", "Source Han Serif SC", "SimSun", "Songti SC", "STSong", serif;
+    }
+
+    #reset-view:hover, #toggle-edit:hover, #show-intro:hover {
+      background: rgba(255, 255, 255, 0.14);
+      color: var(--text-primary);
+    }
+
+    #toggle-edit.active {
+      background: rgba(255, 255, 255, 0.22);
+      color: var(--text-primary);
+      border-color: rgba(255, 255, 255, 0.55);
+      box-shadow: 0 0 12px rgba(255, 255, 255, 0.25);
+    }
+
+    #context-menu {
+      position: fixed;
+      z-index: 30;
+      display: none;
+      flex-direction: column;
+      min-width: 130px;
+      padding: 6px;
+      border-radius: 10px;
+      background: var(--panel-bg);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(12px);
+      overflow: hidden;
+    }
+
+    #context-menu.visible {
+      display: flex;
+    }
+
+    #context-menu button {
+      border: none;
+      background: transparent;
+      color: var(--text-primary);
+      text-align: left;
+      padding: 7px 11px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+
+    #context-menu button:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    #context-menu button[data-action="disconnect"],
+    #context-menu button[data-action="connect"] {
+      color: #b8c5ff;
     }
 
     #tooltip {
@@ -172,25 +343,27 @@
     }
 
     #tooltip h4 {
-      margin: 0 0 6px;
+      margin: 0 0 5px;
       font-family: "Noto Serif SC", serif;
-      font-size: 15px;
-      font-weight: 600;
+      font-size: 13px;
+      font-weight: 900;
       color: var(--text-primary);
     }
 
     #tooltip .meta {
-      font-size: 11px;
+      font-size: 10px;
       color: var(--text-secondary);
-      margin-bottom: 6px;
+      margin-bottom: 5px;
       letter-spacing: 0.06em;
+      font-family: "Noto Serif SC", "Source Han Serif SC", "SimSun", "Songti SC", "STSong", serif;
     }
 
     #tooltip p {
       margin: 0;
-      font-size: 13px;
-      line-height: 1.55;
+      font-size: 11px;
+      line-height: 1.5;
       color: #d0d0e0;
+      font-family: "Noto Serif SC", "Source Han Serif SC", "SimSun", "Songti SC", "STSong", serif;
     }
 
     #overlay {
@@ -231,15 +404,15 @@
 
     #detail .close {
       position: absolute;
-      top: 18px;
-      right: 18px;
-      width: 34px;
-      height: 34px;
+      top: 16px;
+      right: 16px;
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
       border: 1px solid rgba(255, 255, 255, 0.15);
       background: rgba(255, 255, 255, 0.06);
       color: var(--text-secondary);
-      font-size: 18px;
+      font-size: 16px;
       line-height: 1;
       cursor: pointer;
       display: grid;
@@ -253,57 +426,168 @@
     }
 
     #detail .content {
-      padding: 48px 32px 40px;
+      padding: 40px 26px 32px;
       overflow-y: auto;
       flex: 1;
     }
 
     #detail .category-badge {
       display: inline-block;
-      font-size: 11px;
+      font-size: 10px;
       letter-spacing: 0.08em;
-      padding: 4px 10px;
+      padding: 3px 9px;
       border-radius: 999px;
       border: 1px solid currentColor;
       color: var(--text-secondary);
-      margin-bottom: 14px;
+      margin-bottom: 12px;
+      font-family: "Noto Serif SC", "Source Han Serif SC", "SimSun", "Songti SC", "STSong", serif;
     }
 
     #detail h2 {
-      margin: 0 0 18px;
+      margin: 0 0 14px;
       font-family: "Noto Serif SC", serif;
-      font-size: 32px;
-      font-weight: 700;
+      font-size: 24px;
+      font-weight: 900;
       letter-spacing: 0.04em;
       line-height: 1.2;
     }
 
     #detail .excerpt {
-      font-size: 15px;
-      line-height: 1.85;
+      font-size: 13px;
+      line-height: 1.9;
       color: #d8d8e8;
       white-space: pre-line;
+      font-family: "Noto Serif SC", "Source Han Serif SC", "SimSun", "Songti SC", "STSong", serif;
+    }
+
+    #reader {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 520px;
+      max-width: 100%;
+      height: 100%;
+      z-index: 17;
+      background: var(--read-bg);
+      box-shadow: -12px 0 50px rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(16px);
+      transform: translateX(100%);
+      transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+      display: flex;
+      flex-direction: column;
+    }
+
+    #reader.visible {
+      transform: translateX(0);
+    }
+
+    #reader .close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text-secondary);
+      font-size: 16px;
+      line-height: 1;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      transition: all 0.2s ease;
+    }
+
+    #reader .close:hover {
+      background: rgba(255, 255, 255, 0.14);
+      color: var(--text-primary);
+    }
+
+    #reader .content {
+      padding: 40px 28px 32px;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    #reader .category-badge {
+      display: inline-block;
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      padding: 3px 9px;
+      border-radius: 999px;
+      border: 1px solid currentColor;
+      color: var(--text-secondary);
+      margin-bottom: 10px;
+      font-family: "Noto Serif SC", "Source Han Serif SC", "SimSun", "Songti SC", "STSong", serif;
+    }
+
+    #reader h2 {
+      margin: 0 0 18px;
+      font-family: "Noto Serif SC", serif;
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      line-height: 1.2;
+    }
+
+    #reader .original {
+      font-size: 14px;
+      line-height: 1.95;
+      color: #e8e8f0;
+      white-space: pre-line;
+      font-family: "Noto Serif SC", "Source Han Serif SC", "SimSun", "Songti SC", "STSong", serif;
+    }
+
+    .edit-hint {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 12;
+      padding: 7px 14px;
+      border-radius: 999px;
+      background: rgba(18, 18, 32, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      color: var(--text-secondary);
+      font-size: 11px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+
+    .edit-hint.visible {
+      opacity: 1;
     }
 
     @media (max-width: 768px) {
       header h1 {
-        font-size: 20px;
+        font-size: 18px;
+      }
+
+      header p {
+        font-size: 10px;
       }
 
       #controls {
-        top: 78px;
+        top: 74px;
         left: 16px;
         right: 16px;
       }
 
       .chip {
-        font-size: 11px;
+        font-size: 10px;
+        padding: 3px 9px;
+      }
+
+      #reset-view, #toggle-edit, #show-intro {
+        font-size: 10px;
         padding: 4px 10px;
       }
 
       #reset-view {
         top: auto;
-        bottom: 18px;
+        bottom: 16px;
         right: 16px;
       }
 
@@ -322,7 +606,45 @@
       }
 
       #detail h2 {
-        font-size: 26px;
+        font-size: 20px;
+      }
+
+      #detail .excerpt {
+        font-size: 12px;
+      }
+
+      #reader {
+        top: auto;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 72vh;
+        transform: translateY(100%);
+        border-radius: 18px 18px 0 0;
+      }
+
+      #reader.visible {
+        transform: translateY(0);
+      }
+
+      #reader h2 {
+        font-size: 18px;
+      }
+
+      #reader .original {
+        font-size: 13px;
+      }
+
+      #toggle-edit {
+        top: auto;
+        bottom: 16px;
+        right: 94px;
+      }
+
+      #show-intro {
+        top: auto;
+        bottom: 16px;
+        right: 180px;
       }
     }
   </style>
@@ -342,6 +664,33 @@
   </div>
 
   <button id="reset-view">重置视角</button>
+  <button id="toggle-edit" title="手动拆解/连接">连接模式</button>
+  <button id="show-intro" title="项目简介">简介</button>
+
+  <div id="intro">
+    <div class="intro-card">
+      <button class="intro-close" aria-label="关闭">×</button>
+      <h2>欢迎来到《看不见的城市》</h2>
+      <p>这里是卡尔维诺五十五座城市的中文交互式星座。每一座城市都是一颗发光的节点，按照「记忆、欲望、符号、轻盈……」十一类主题聚成星群。</p>
+      <ul class="intro-steps">
+        <li><strong>悬停</strong>城市，查看它的名字、主题与一句摘录。</li>
+        <li><strong>点击</strong>城市，右侧会展开详情面板，展示对它的文学描述。</li>
+        <li><strong>右键</strong>城市，选择「阅读原文」，即可阅读该书对应章节的完整原文。</li>
+        <li>点击城市时，连接会按一定概率自动「拆解」并「重组」，不同主题的城市会彼此产生回声。</li>
+        <li>开启右上角「连接模式」，可以手动选择两座城市建立新连接，或右键城市拆解它的连接。</li>
+        <li>点击顶部的主题标签，可以只高亮某一类城市，其他城市会淡入背景。</li>
+        <li>拖动背景可以平移，滚动鼠标可以缩放；按「重置视角」回到初始画面。</li>
+      </ul>
+      <p>愿你在这座星空里，重新遇见马可·波罗向忽必烈汗讲述的那些城市。</p>
+      <div class="intro-note">文字摘录与原文来自 Italo Calvino《看不见的城市》（张密等译本）。本项目仅供文学阅读与可视化学习使用。</div>
+    </div>
+  </div>
+
+  <div id="context-menu" class="hidden">
+    <button data-action="read">阅读原文</button>
+    <button data-action="disconnect">拆解连接</button>
+    <button data-action="connect">连接城市</button>
+  </div>
 
   <div id="tooltip">
     <h4></h4>
@@ -360,6 +709,17 @@
     </div>
   </aside>
 
+  <aside id="reader">
+    <button class="close" aria-label="关闭">×</button>
+    <div class="content">
+      <div class="category-badge"></div>
+      <h2></h2>
+      <div class="original"></div>
+    </div>
+  </aside>
+
+  <div class="edit-hint">连接模式：点击两个城市建立连接；右键城市可拆解其连接</div>
+
   <script>
     const categories = {
       memory: { label: "记忆之城", color: "#e8b86d" },
@@ -376,71 +736,71 @@
     };
 
     const cities = [
-      { id: "zora", name: "佐拉", category: "memory", excerpt: "佐拉是一座隐秘之城，关于它的一切记忆都逐渐失落，除了那些像手纹一样印在城市里的欲望。", full: "佐拉是一座隐秘之城，关于它的一切记忆都逐渐失落，除了那些像手纹一样印在城市里的欲望。\n对每一个到那里去的人，它都会以某种方式唤起一段相似的往事：一座桥、一座宫殿、一扇窗。" },
-      { id: "maurilia", name: "莫里亚", category: "memory", excerpt: "莫里亚的旧城已经消失，只留下几张明信片，而人们宁愿相信明信片上的色彩才是真实的。", full: "莫里亚的旧城已经消失，只留下几张明信片，而人们宁愿相信明信片上的色彩才是真实的。\n旅游者怀着遗憾打量那些老照片，而本地居民已经学会了在玻璃幕墙的反光里寻找往昔。" },
-      { id: "despina_memory", name: "德斯庇娜", category: "memory", excerpt: "德斯庇娜有两种面貌：对于骑骆驼的人来说，它是一座装载着船只的城市；对于海员来说，它是一座骆驼之城。", full: "德斯庇娜有两种面貌：对于骑骆驼的人来说，它是一座装载着船只的城市；对于海员来说，它是一座骆驼之城。\n每个人在城市里寻找的，不过是自己在旅途尽头渴望看见的东西。" },
-      { id: "anastasia", name: "安娜斯塔西亚", category: "memory", excerpt: "在安娜斯塔西亚，你的欲望永远不会得到满足，你会在追逐欲望的过程中忘记自己最初想要什么。", full: "在安娜斯塔西亚，你的欲望永远不会得到满足，你会在追逐欲望的过程中忘记自己最初想要什么。\n城市用无数个岔路口迷惑你，让你在每一个选择之后都相信自己曾经错过更好的命运。" },
-      { id: "olivia", name: "奥莉维亚", category: "memory", excerpt: "关于奥莉维亚，人们讲述着繁荣与幸福的传说，却从不愿提及那被城墙遮蔽的阴影。", full: "关于奥莉维亚，人们讲述着繁荣与幸福的传说，却从不愿提及那被城墙遮蔽的阴影。\n记忆在这里是一种筛选：只留下光辉，把黑暗推给另一座城市的传说。" },
+      { id: "zora", name: "佐拉", category: "memory", excerpt: "佐拉是一座隐秘之城，关于它的一切记忆都逐渐失落，除了那些像手纹一样印在城市里的欲望。", full: "佐拉是一座隐秘之城，关于它的一切记忆都逐渐失落，除了那些像手纹一样印在城市里的欲望。\n对每一个到那里去的人，它都会以某种方式唤起一段相似的往事：一座桥、一座宫殿、一扇窗。", original: "佐拉在六条河流和三座山之外耸起，这是任何人见过都忘不了的城市。为了让人更容易记住，佐拉被迫永远静止并且保持不变，于是衰萎了，崩溃了，消失了。大地已经把她忘掉。" },
+      { id: "maurilia", name: "莫里亚", category: "memory", excerpt: "莫里亚的旧城已经消失，只留下几张明信片，而人们宁愿相信明信片上的色彩才是真实的。", full: "莫里亚的旧城已经消失，只留下几张明信片，而人们宁愿相信明信片上的色彩才是真实的。\n旅游者怀着遗憾打量那些老照片，而本地居民已经学会了在玻璃幕墙的反光里寻找往昔。", original: "询问新神灵比起老的神灵究竟更好还是更坏，是毫无意义的，因为他们之间毫无关系，就像那些彩色明信片并不代表莫里亚，而是代表一座偶然凑巧也叫做莫里亚的昔日的旧城。" },
+      { id: "despina_memory", name: "德斯庇娜", category: "memory", excerpt: "德斯庇娜有两种面貌：对于骑骆驼的人来说，它是一座装载着船只的城市；对于海员来说，它是一座骆驼之城。", full: "德斯庇娜有两种面貌：对于骑骆驼的人来说，它是一座装载着船只的城市；对于海员来说，它是一座骆驼之城。\n每个人在城市里寻找的，不过是自己在旅途尽头渴望看见的东西。", original: "每个城市都从她面对的荒漠获得自己的形状；于是，赶骆驼的人和水手所看到的，就是这样处在沙的荒漠与水的荒漠之间的德斯庇娜。" },
+      { id: "anastasia", name: "安娜斯塔西亚", category: "memory", excerpt: "在安娜斯塔西亚，你的欲望永远不会得到满足，你会在追逐欲望的过程中忘记自己最初想要什么。", full: "在安娜斯塔西亚，你的欲望永远不会得到满足，你会在追逐欲望的过程中忘记自己最初想要什么。\n城市用无数个岔路口迷惑你，让你在每一个选择之后都相信自己曾经错过更好的命运。", original: "你若是每天八个小时切割玛瑙、石华和绿玉髓，你的辛苦就会为欲望塑造出形态，而你的欲望也会为你的劳动塑造出形态；你以为自己在享受整个安娜斯塔西亚，其实你只不过是她的奴隶。" },
+      { id: "olivia", name: "奥莉维亚", category: "memory", excerpt: "关于奥莉维亚，人们讲述着繁荣与幸福的传说，却从不愿提及那被城墙遮蔽的阴影。", full: "关于奥莉维亚，人们讲述着繁荣与幸福的传说，却从不愿提及那被城墙遮蔽的阴影。\n记忆在这里是一种筛选：只留下光辉，把黑暗推给另一座城市的传说。", original: "虚假永远不在于词语，而在于事物本身。符号构成一种语言，但不是那种你以为自己懂得的语言。" },
 
-      { id: "despina_desire", name: "德斯庇娜", category: "desires", excerpt: "德斯庇娜的城门同时向沙漠与海洋敞开，每位旅人都把最强烈的渴望投射到它的塔楼之上。", full: "德斯庇娜的城门同时向沙漠与海洋敞开，每位旅人都把最强烈的渴望投射到它的塔楼之上。\n它从不回答你的欲望，只是把它们映照得更清晰。" },
-      { id: "dorothea", name: "多罗泰亚", category: "desires", excerpt: "人们来到多罗泰亚，是因为听说这里有一条黄金铺就的街道；他们留下，是因为找到了另一条。", full: "人们来到多罗泰亚，是因为听说这里有一条黄金铺就的街道；他们留下，是因为找到了另一条。\n城市真正的财富，不在于它许诺什么，而在于它让你在追逐中重新认识自己的匮乏。" },
-      { id: "zirma", name: "齐尔玛", category: "desires", excerpt: "齐尔玛是一座由重复构成的城市：同样的街角、同样的面孔、同样的黄昏，每一次经过都像是第一次。", full: "齐尔玛是一座由重复构成的城市：同样的街角、同样的面孔、同样的黄昏，每一次经过都像是第一次。\n旅人在那里学会了，欲望的乐趣不在于抵达，而在于不断重新发现熟悉的陌生。" },
-      { id: "euphemia", name: "欧菲米亚", category: "desires", excerpt: "每年月圆之夜，商人们聚集在欧菲米亚交换的不只是货物，还有各自城市的故事与梦境。", full: "每年月圆之夜，商人们聚集在欧菲米亚交换的不只是货物，还有各自城市的故事与梦境。\n当市场散去，留在地上的不是金币，而是无数被讲述又遗忘的城市的残影。" },
-      { id: "hypatia", name: "希帕蒂娅", category: "desires", excerpt: "希帕蒂娅的街道像河床一样宽阔，流淌着人们对于理性与秩序的隐秘渴望。", full: "希帕蒂娅的街道像河床一样宽阔，流淌着人们对于理性与秩序的隐秘渴望。\n然而在每个十字路口，沉默的喷泉都在提醒：水越是清澈，越照得见人心的浑浊。" },
+      { id: "despina_desire", name: "德斯庇娜", category: "desires", excerpt: "德斯庇娜的城门同时向沙漠与海洋敞开，每位旅人都把最强烈的渴望投射到它的塔楼之上。", full: "德斯庇娜的城门同时向沙漠与海洋敞开，每位旅人都把最强烈的渴望投射到它的塔楼之上。\n它从不回答你的欲望，只是把它们映照得更清晰。", original: "每个城市都从她面对的荒漠获得自己的形状；于是，赶骆驼的人和水手所看到的，就是这样处在沙的荒漠与水的荒漠之间的德斯庇娜。" },
+      { id: "dorothea", name: "多罗泰亚", category: "desires", excerpt: "人们来到多罗泰亚，是因为听说这里有一条黄金铺就的街道；他们留下，是因为找到了另一条。", full: "人们来到多罗泰亚，是因为听说这里有一条黄金铺就的街道；他们留下，是因为找到了另一条。\n城市真正的财富，不在于它许诺什么，而在于它让你在追逐中重新认识自己的匮乏。", original: "我很年轻时来到这里，那天早上，许多人匆匆赶往集市，女人都长着一口漂亮的牙齿，直率地望着我的眼睛，三个士兵在高台上吹着小号，到处是车轮滚滚，到处是彩旗飘飘。" },
+      { id: "zirma", name: "齐尔玛", category: "desires", excerpt: "齐尔玛是一座由重复构成的城市：同样的街角、同样的面孔、同样的黄昏，每一次经过都像是第一次。", full: "齐尔玛是一座由重复构成的城市：同样的街角、同样的面孔、同样的黄昏，每一次经过都像是第一次。\n旅人在那里学会了，欲望的乐趣不在于抵达，而在于不断重新发现熟悉的陌生。", original: "这是一座夸张的城市：不断重复着一切，好让人们记住自己。记忆也在夸张：反复重复着各种符号，以肯定城市确实存在。" },
+      { id: "euphemia", name: "欧菲米亚", category: "desires", excerpt: "每年月圆之夜，商人们聚集在欧菲米亚交换的不只是货物，还有各自城市的故事与梦境。", full: "每年月圆之夜，商人们聚集在欧菲米亚交换的不只是货物，还有各自城市的故事与梦境。\n当市场散去，留在地上的不是金币，而是无数被讲述又遗忘的城市的残影。", original: "到欧菲米亚来绝非只为做买卖，也是为了入夜后围着集市四周点起的篝火堆，坐在布袋或者大桶上，或者躺在成叠的地毯上，聆听旁人所说的词语。" },
+      { id: "hypatia", name: "希帕蒂娅", category: "desires", excerpt: "希帕蒂娅的街道像河床一样宽阔，流淌着人们对于理性与秩序的隐秘渴望。", full: "希帕蒂娅的街道像河床一样宽阔，流淌着人们对于理性与秩序的隐秘渴望。\n然而在每个十字路口，沉默的喷泉都在提醒：水越是清澈，越照得见人心的浑浊。", original: "城市就像一块海绵，吸汲着这些不断涌流的记忆的潮水，并且随之膨胀着。对今日希帕蒂娅的描述，还应该包含希帕蒂娅的整个过去。" },
 
-      { id: "tamara", name: "塔玛拉", category: "signs", excerpt: "塔玛拉的一切都在指向别处：招牌、门环、雕塑，没有一样东西是为了它自己而存在。", full: "塔玛拉的一切都在指向别处：招牌、门环、雕塑，没有一样东西是为了它自己而存在。\n走进这座城市，你会开始怀疑自己也是某个更大符号系统中一个无法破译的记号。" },
-      { id: "zoe", name: "佐伊", category: "signs", excerpt: "佐伊没有任何可辨认的面孔，因为它的建筑、街道和居民都在不断模仿彼此。", full: "佐伊没有任何可辨认的面孔，因为它的建筑、街道和居民都在不断模仿彼此。\n在佐伊，分辨真伪不是智慧，而是一种奢侈的徒劳。" },
-      { id: "aglaia", name: "阿格劳拉", category: "signs", excerpt: "阿格劳拉的故事比它的石头还多，每一面墙都被传说覆盖，几乎看不见墙本身。", full: "阿格劳拉的故事比它的石头还多，每一面墙都被传说覆盖，几乎看不见墙本身。\n城市由此获得了一种透明的重量：你越了解它，越难触及它真实的样子。" },
-      { id: "octavia", name: "奥克塔维亚", category: "signs", excerpt: "奥克塔维亚悬挂在深渊之上，绳索、吊桥和网构成了它的街道，危险是它唯一的真实。", full: "奥克塔维亚悬挂在深渊之上，绳索、吊桥和网构成了它的街道，危险是它唯一的真实。\n居民们早已习惯把生命托付给细线，仿佛这样活着才配得上天空。" },
-      { id: "ersilia", name: "埃乌萨皮娅", category: "signs", excerpt: "埃乌萨皮娅的居民用彩色的线把房屋彼此连接，以表示关系、交易和仇恨。", full: "埃乌萨皮娅的居民用彩色的线把房屋彼此连接，以表示关系、交易和仇恨。\n当线条太多太乱，他们便整城迁徙，只留下一座由无用之线编织的迷宫。" },
+      { id: "tamara", name: "塔玛拉", category: "signs", excerpt: "塔玛拉的一切都在指向别处：招牌、门环、雕塑，没有一样东西是为了它自己而存在。", full: "塔玛拉的一切都在指向别处：招牌、门环、雕塑，没有一样东西是为了它自己而存在。\n走进这座城市，你会开始怀疑自己也是某个更大符号系统中一个无法破译的记号。", original: "你放眼打量街巷，就像翻阅写满字迹的纸页：城市告诉你所有应该思索的东西，让你重复她的话，而你虽以为在游览塔玛拉，却不过是记录下她为自己和她的各部分所定下的名称。" },
+      { id: "zoe", name: "佐伊", category: "signs", excerpt: "佐伊没有任何可辨认的面孔，因为它的建筑、街道和居民都在不断模仿彼此。", full: "佐伊没有任何可辨认的面孔，因为它的建筑、街道和居民都在不断模仿彼此。\n在佐伊，分辨真伪不是智慧，而是一种奢侈的徒劳。", original: "每个人心里都有一座仅仅由差异构成的城市，一座既无形象又无形态的城市，而那些特别的城市则填充了它。" },
+      { id: "aglaia", name: "阿格劳拉", category: "signs", excerpt: "阿格劳拉的故事比它的石头还多，每一面墙都被传说覆盖，几乎看不见墙本身。", full: "阿格劳拉的故事比它的石头还多，每一面墙都被传说覆盖，几乎看不见墙本身。\n城市由此获得了一种透明的重量：你越了解它，越难触及它真实的样子。", original: "当地居民始终相信他们居住的是一座建立在自己名字之上的阿格劳拉城，而不能发现那座生长在自己土地上的阿格劳拉城。" },
+      { id: "octavia", name: "奥克塔维亚", category: "signs", excerpt: "奥克塔维亚悬挂在深渊之上，绳索、吊桥和网构成了它的街道，危险是它唯一的真实。", full: "奥克塔维亚悬挂在深渊之上，绳索、吊桥和网构成了它的街道，危险是它唯一的真实。\n居民们早已习惯把生命托付给细线，仿佛这样活着才配得上天空。", original: "虽然悬在深渊之上，奥塔维亚居民的生活并不比其他城市更令人不安，他们知道自己的网只能支撑这么多。" },
+      { id: "ersilia", name: "埃乌萨皮娅", category: "signs", excerpt: "埃乌萨皮娅的居民用彩色的线把房屋彼此连接，以表示关系、交易和仇恨。", full: "埃乌萨皮娅的居民用彩色的线把房屋彼此连接，以表示关系、交易和仇恨。\n当线条太多太乱，他们便整城迁徙，只留下一座由无用之线编织的迷宫。", original: "为了使由生到死的过渡不那么突然，这里的居民在地下建造了一座一模一样的城市。在这两座姊妹城里，没办法知道谁是死者，谁是生者。" },
 
-      { id: "isaura", name: "伊莎乌拉", category: "thin", excerpt: "伊莎乌拉建在一百七十二座深井之上，城市越轻盈，地下的黑暗就越深。", full: "伊莎乌拉建在一百七十二座深井之上，城市越轻盈，地下的黑暗就越深。\n湖水从井底涌出，映照出亭台楼阁，仿佛整座城市都依赖一片倒影才得以存在。" },
-      { id: "zenobia", name: "则诺比亚", category: "thin", excerpt: "则诺比亚是悬在木桩上的城市，梯子、天桥和平台是它唯一的陆地。", full: "则诺比亚是悬在木桩上的城市，梯子、天桥和平台是它唯一的陆地。\n居民们走在半空，对脚下的虚空习以为常，仿佛轻盈才是城市的本来面目。" },
-      { id: "armilla", name: "阿尔米拉", category: "thin", excerpt: "阿尔米拉只有管道、水龙头和浴池，没有墙壁，也没有屋顶。", full: "阿尔米拉只有管道、水龙头和浴池，没有墙壁，也没有屋顶。\n水在阳光明媚中流淌，城市像一首没有歌词的歌，纯粹而空旷。" },
-      { id: "sophronia", name: "索夫罗尼亚", category: "thin", excerpt: "索夫罗尼亚的一半是固定的，另一半则是每年进城的游乐场，二者轮流扮演真实与虚幻。", full: "索夫罗尼亚的一半是固定的，另一半则是每年进城的游乐场，二者轮流扮演真实与虚幻。\n当木马和旋转台拆走，留下的广场显得格外沉重；而当它们归来，石头又仿佛只是临时布景。" },
-      { id: "olinda", name: "奥林达", category: "thin", excerpt: "奥林达从不扩张，只是在同样的街道里生出更小的街道，像贝壳上的纹路一样自我重复。", full: "奥林达从不扩张，只是在同样的街道里生出更小的街道，像贝壳上的纹路一样自我重复。\n你以为自己在远行，其实不过是在城市的褶皱里进进出出。" },
+      { id: "isaura", name: "伊莎乌拉", category: "thin", excerpt: "伊莎乌拉建在一百七十二座深井之上，城市越轻盈，地下的黑暗就越深。", full: "伊莎乌拉建在一百七十二座深井之上，城市越轻盈，地下的黑暗就越深。\n湖水从井底涌出，映照出亭台楼阁，仿佛整座城市都依赖一片倒影才得以存在。", original: "伊莎乌拉，千井之城，据说建在一个很深的地下湖上。只要在城市范围之内，居民们随便在哪里挖一个垂直的地洞就能提出水来：城市的绿色周边正是看不见的地下湖的湖岸线，看不见的风景决定着可视的风景。" },
+      { id: "zenobia", name: "则诺比亚", category: "thin", excerpt: "则诺比亚是悬在木桩上的城市，梯子、天桥和平台是它唯一的陆地。", full: "则诺比亚是悬在木桩上的城市，梯子、天桥和平台是它唯一的陆地。\n居民们走在半空，对脚下的虚空习以为常，仿佛轻盈才是城市的本来面目。", original: "既然如此，就无需将则诺比亚划归幸福的还是不幸福的城市。如果要区分，则另有两类：一类是经历岁月沧桑，而继续让欲望决定自己形态的城市；另一类要么被欲望抹杀掉，要么将欲望抹杀掉的城市。" },
+      { id: "armilla", name: "阿尔米拉", category: "thin", excerpt: "阿尔米拉只有管道、水龙头和浴池，没有墙壁，也没有屋顶。", full: "阿尔米拉只有管道、水龙头和浴池，没有墙壁，也没有屋顶。\n水在阳光明媚中流淌，城市像一首没有歌词的歌，纯粹而空旷。", original: "没有墙壁、屋顶或地板，只有垂直竖立的水管与横向分岔的管道，像一片管子的树林。阳光下水柱、喷丝、皂沫闪烁七彩光，水泽仙女在浴缸里浸泡，在喷头下沐浴。" },
+      { id: "sophronia", name: "索夫罗尼亚", category: "thin", excerpt: "索夫罗尼亚的一半是固定的，另一半则是每年进城的游乐场，二者轮流扮演真实与虚幻。", full: "索夫罗尼亚的一半是固定的，另一半则是每年进城的游乐场，二者轮流扮演真实与虚幻。\n当木马和旋转台拆走，留下的广场显得格外沉重；而当它们归来，石头又仿佛只是临时布景。", original: "临时心态搭建的建筑，带来及时的舍弃和及时的清理。" },
+      { id: "olinda", name: "奥林达", category: "thin", excerpt: "奥林达从不扩张，只是在同样的街道里生出更小的街道，像贝壳上的纹路一样自我重复。", full: "奥林达从不扩张，只是在同样的街道里生出更小的街道，像贝壳上的纹路一样自我重复。\n你以为自己在远行，其实不过是在城市的褶皱里进进出出。", original: "路过而没有进去的人所见的是一个城，困在里面而永远离不开的人所见的是另一个城。你第一次抵达时所见的是一个城，你一去不回时所见的是另一个城。" },
 
-      { id: "euphemia_trade", name: "欧菲米亚", category: "trading", excerpt: "商人们在欧菲米亚交换语言，他们把各自的方言卖给对方，买回一种临时的共同语。", full: "商人们在欧菲米亚交换语言，他们把各自的方言卖给对方，买回一种临时的共同语。\n等到集市散去，每个人都发现自己既失去故乡，又尚未到达任何地方。" },
-      { id: "chloe", name: "克萝伊", category: "trading", excerpt: "克萝伊是一座没有城墙的城市，人们相遇、交易、离散，却从未真正属于它。", full: "克萝伊是一座没有城墙的城市，人们相遇、交易、离散，却从未真正属于它。\n在这里，商品流动得比感情更快，每个人都在别人的目光里短暂停留。" },
-      { id: "phyllis", name: "菲丽丝", category: "trading", excerpt: "菲丽丝的市场里，每一件商品都携带着它前世城市的记忆，买方买回的其实是别人的过去。", full: "菲丽丝的市场里，每一件商品都携带着它前世城市的记忆，买方买回的其实是别人的过去。\n因此，在这座城市里致富的人，往往也是背负最多陌生记忆的人。" },
-      { id: "trude", name: "特鲁德", category: "trading", excerpt: "特鲁德无处不在：每一座机场、加油站和连锁酒店都是它的分身。", full: "特鲁德无处不在：每一座机场、加油站和连锁酒店都是它的分身。\n旅人们讨厌它，却又在每个疲惫的深夜投奔它，因为它承诺了唯一熟悉的事物。" },
-      { id: "procopia", name: "普罗科皮亚", category: "trading", excerpt: "普罗科皮亚的人口随集市季节膨胀又收缩，城市的大小由商品的潮汐决定。", full: "普罗科皮亚的人口随集市季节膨胀又收缩，城市的大小由商品的潮汐决定。\n当最后一个摊位撤走，街道像退潮后的沙滩一样留下陌生的空旷。" },
+      { id: "euphemia_trade", name: "欧菲米亚", category: "trading", excerpt: "商人们在欧菲米亚交换语言，他们把各自的方言卖给对方，买回一种临时的共同语。", full: "商人们在欧菲米亚交换语言，他们把各自的方言卖给对方，买回一种临时的共同语。\n等到集市散去，每个人都发现自己既失去故乡，又尚未到达任何地方。", original: "到欧菲米亚来绝非只为做买卖，也是为了入夜后围着集市四周点起的篝火堆，坐在布袋或者大桶上，或者躺在成叠的地毯上，聆听旁人所说的词语。" },
+      { id: "chloe", name: "克萝伊", category: "trading", excerpt: "克萝伊是一座没有城墙的城市，人们相遇、交易、离散，却从未真正属于它。", full: "克萝伊是一座没有城墙的城市，人们相遇、交易、离散，却从未真正属于它。\n在这里，商品流动得比感情更快，每个人都在别人的目光里短暂停留。", original: "在克萝伊这座大城市里，在街上走动的人们彼此都互不相识。每次碰面时，他们都想象着关于对方的各种情况，可能发生在他们之间的相遇、对话、惊异、爱抚、轻咬；可是竟然谁都不和他人打招呼问候。" },
+      { id: "phyllis", name: "菲丽丝", category: "trading", excerpt: "菲丽丝的市场里，每一件商品都携带着它前世城市的记忆，买方买回的其实是别人的过去。", full: "菲丽丝的市场里，每一件商品都携带着它前世城市的记忆，买方买回的其实是别人的过去。\n因此，在这座城市里致富的人，往往也是背负最多陌生记忆的人。", original: "人们虽然为新城的富丽感到骄傲，但内心深处却觉得自己成了不相称的外人，成了篡位者。" },
+      { id: "trude", name: "特鲁德", category: "trading", excerpt: "特鲁德无处不在：每一座机场、加油站和连锁酒店都是它的分身。", full: "特鲁德无处不在：每一座机场、加油站和连锁酒店都是它的分身。\n旅人们讨厌它，却又在每个疲惫的深夜投奔它，因为它承诺了唯一熟悉的事物。", original: "到达特鲁德时，若不是看见特大字母拼写的城市名字，我还以为是到了刚离开的飞机场呢。世界被唯一的一个特鲁德覆盖着，她无始无终，只是飞机场的名字在更换而已。" },
+      { id: "procopia", name: "普罗科皮亚", category: "trading", excerpt: "普罗科皮亚的人口随集市季节膨胀又收缩，城市的大小由商品的潮汐决定。", full: "普罗科皮亚的人口随集市季节膨胀又收缩，城市的大小由商品的潮汐决定。\n当最后一个摊位撤走，街道像退潮后的沙滩一样留下陌生的空旷。", original: "人口和风俗也多次改变：只有名字、地方和那些打不破的东西保留了下来。" },
 
-      { id: "valdrada", name: "瓦尔德拉达", category: "eyes", excerpt: "瓦尔德拉达建在湖边，它的每一座建筑都在水中拥有倒影，真实与镜像彼此注视。", full: "瓦尔德拉达建在湖边，它的每一座建筑都在水中拥有倒影，真实与镜像彼此注视。\n居民们学会了一举一动都要配得上倒影中的自己，城市因此活得格外审慎。" },
-      { id: "baucis", name: "包西斯", category: "eyes", excerpt: "包西斯悬挂在高跷之上，没有街道，只有纵横交错的楼梯和天桥，视线永远高于云端。", full: "包西斯悬挂在高跷之上，没有街道，只有纵横交错的楼梯和天桥，视线永远高于云端。\n居民们低头只能看见雾气，于是渐渐相信城市之外别无世界。" },
-      { id: "phyllis_eyes", name: "菲丽丝", category: "eyes", excerpt: "在菲丽丝，观看本身成为一种建筑：窗户、阳台和拱门都为了让人彼此看见而设计。", full: "在菲丽丝，观看本身成为一种建筑：窗户、阳台和拱门都为了让人彼此看见而设计。\n人们在这座城市里变得透明，却也因此无法确定谁才是被观看的主角。" },
-      { id: "moriana", name: "莫里亚娜", category: "eyes", excerpt: "莫里亚娜的正面是白色大理石与明亮窗户，背面却是阴暗的后墙和铁窗，城市有两副面孔。", full: "莫里亚娜的正面是白色大理石与明亮窗户，背面却是阴暗的后墙和铁窗，城市有两副面孔。\n没有人知道哪一面才是真实的，因为没有人能同时绕到城市的两侧。" },
-      { id: "clarice", name: "克拉莉切", category: "eyes", excerpt: "克拉莉切不断用新材料覆盖旧城区，每一层都试图让城市看起来更年轻，却也越来越看不清本来面目。", full: "克拉莉切不断用新材料覆盖旧城区，每一层都试图让城市看起来更年轻，却也越来越看不清本来面目。\n居民们透过层层历史的缝隙张望，终于明白眼睛也会被自己的城市欺骗。" },
+      { id: "valdrada", name: "瓦尔德拉达", category: "eyes", excerpt: "瓦尔德拉达建在湖边，它的每一座建筑都在水中拥有倒影，真实与镜像彼此注视。", full: "瓦尔德拉达建在湖边，它的每一座建筑都在水中拥有倒影，真实与镜像彼此注视。\n居民们学会了一举一动都要配得上倒影中的自己，城市因此活得格外审慎。", original: "古人在湖畔建造了瓦尔德拉达，有阳台的房子层层叠叠，高处的街道临湖一面都修了护栏和围墙。来到此地的游人便能看到两座城市：一座临湖而坐，一座是湖中倒影。" },
+      { id: "baucis", name: "包西斯", category: "eyes", excerpt: "包西斯悬挂在高跷之上，没有街道，只有纵横交错的楼梯和天桥，视线永远高于云端。", full: "包西斯悬挂在高跷之上，没有街道，只有纵横交错的楼梯和天桥，视线永远高于云端。\n居民们低头只能看见雾气，于是渐渐相信城市之外别无世界。", original: "他们喜欢自己出生之前的地球，乃至利用各种望远镜不知疲倦地观察着每一片树叶、每一块石子、每一只蚂蚁，着迷地冥思自己杳然的存在。" },
+      { id: "phyllis_eyes", name: "菲丽丝", category: "eyes", excerpt: "在菲丽丝，观看本身成为一种建筑：窗户、阳台和拱门都为了让人彼此看见而设计。", full: "在菲丽丝，观看本身成为一种建筑：窗户、阳台和拱门都为了让人彼此看见而设计。\n人们在这座城市里变得透明，却也因此无法确定谁才是被观看的主角。", original: "人们虽然为新城的富丽感到骄傲，但内心深处却觉得自己成了不相称的外人，成了篡位者。" },
+      { id: "moriana", name: "莫里亚娜", category: "eyes", excerpt: "莫里亚娜的正面是白色大理石与明亮窗户，背面却是阴暗的后墙和铁窗，城市有两副面孔。", full: "莫里亚娜的正面是白色大理石与明亮窗户，背面却是阴暗的后墙和铁窗，城市有两副面孔。\n没有人知道哪一面才是真实的，因为没有人能同时绕到城市的两侧。", original: "城市有正反两面：一面是雪花石城门、珊瑚柱、玻璃别墅、银鳞舞女；另一面是生锈铁板、麻袋片、废铁罐、退色招牌。两面像一张纸的正反，无法分开，也无法对看。" },
+      { id: "clarice", name: "克拉莉切", category: "eyes", excerpt: "克拉莉切不断用新材料覆盖旧城区，每一层都试图让城市看起来更年轻，却也越来越看不清本来面目。", full: "克拉莉切不断用新材料覆盖旧城区，每一层都试图让城市看起来更年轻，却也越来越看不清本来面目。\n居民们透过层层历史的缝隙张望，终于明白眼睛也会被自己的城市欺骗。", original: "人口和风俗也多次改变：只有名字、地方和那些打不破的东西保留了下来。每次新兴的克拉莉切都像有生命的肌体一样，有自己的气味和呼吸，把死去的克拉莉切的那些碎片当做至宝向人炫耀。" },
 
-      { id: "melania", name: "梅拉尼亚", category: "dead", excerpt: "梅拉尼亚的死者与活人混居，死者的房间被生者继承，直到后者也变成沉默的房客。", full: "梅拉尼亚的死者与活人混居，死者的房间被生者继承，直到后者也变成沉默的房客。\n城市因此拥有层层叠叠的住客历史，每一面墙都是一本未合上的家谱。" },
-      { id: "adelma", name: "阿德尔玛", category: "dead", excerpt: "在阿德尔玛，每一个转角都会遇见已经去世的人，城市是生者误闯的死者集市。", full: "在阿德尔玛，每一个转角都会遇见已经去世的人，城市是生者误闯的死者集市。\n当你开始在这里认出熟悉的面孔，你就知道自己也正在变成其中一个影子。" },
-      { id: "argia", name: "阿尔吉雅", category: "dead", excerpt: "阿尔吉雅被埋在地下，街道是隧道，窗户通向岩石，居民们早已忘记天空的样子。", full: "阿尔吉雅被埋在地下，街道是隧道，窗户通向岩石，居民们早已忘记天空的样子。\n他们说，黑暗并不是死亡的同义词，而是一种更古老、更安静的生活方式。" },
-      { id: "laura", name: "劳拉", category: "dead", excerpt: "劳拉有无数座坟墓，却没有一座属于真正死去的人；它们只是城市对死亡的一种练习。", full: "劳拉有无数座坟墓，却没有一座属于真正死去的人；它们只是城市对死亡的一种练习。\n在这里，死亡被提前排练，以至于当它真正到来时，反而显得不够庄重。" },
-      { id: "otavia", name: "奥塔维亚", category: "dead", excerpt: "奥塔维亚的居民生活在悬崖上的网中，死亡不是坠落，而是网终于无法承受重量。", full: "奥塔维亚的居民生活在悬崖上的网中，死亡不是坠落，而是网终于无法承受重量。\n他们称这张网为城市，而网的每一根绳都由无数代人的信任编织而成。" },
+      { id: "melania", name: "梅拉尼亚", category: "dead", excerpt: "梅拉尼亚的死者与活人混居，死者的房间被生者继承，直到后者也变成沉默的房客。", full: "梅拉尼亚的死者与活人混居，死者的房间被生者继承，直到后者也变成沉默的房客。\n城市因此拥有层层叠叠的住客历史，每一面墙都是一本未合上的家谱。", original: "三千人演伪君子，三万人演寄生虫，十万人演流落街头等待机会恢复地位的王子。生老病死的演员群体与永恒不变的剧本演员发生永久的重叠与组合。" },
+      { id: "adelma", name: "阿德尔玛", category: "dead", excerpt: "在阿德尔玛，每一个转角都会遇见已经去世的人，城市是生者误闯的死者集市。", full: "在阿德尔玛，每一个转角都会遇见已经去世的人，城市是生者误闯的死者集市。\n当你开始在这里认出熟悉的面孔，你就知道自己也正在变成其中一个影子。", original: "人到生命的某一时刻，他认识的人当中，死去的会多过活着的。这时，你会拒绝接受其他面孔和其他表情，你遇见的每张新面孔，都会印着旧模子的痕迹，是你，为他们各自佩戴了相应的面具。" },
+      { id: "argia", name: "阿尔吉雅", category: "dead", excerpt: "阿尔吉雅被埋在地下，街道是隧道，窗户通向岩石，居民们早已忘记天空的样子。", full: "阿尔吉雅被埋在地下，街道是隧道，窗户通向岩石，居民们早已忘记天空的样子。\n他们说，黑暗并不是死亡的同义词，而是一种更古老、更安静的生活方式。", original: "尘土代替了空气充满了城市，但是在看不见的城市表壳下面也是有活动的。" },
+      { id: "laura", name: "劳拉", category: "dead", excerpt: "劳拉有无数座坟墓，却没有一座属于真正死去的人；它们只是城市对死亡的一种练习。", full: "劳拉有无数座坟墓，却没有一座属于真正死去的人；它们只是城市对死亡的一种练习。\n在这里，死亡被提前排练，以至于当它真正到来时，反而显得不够庄重。", original: "记忆中的形象一旦被词语固定住，就给抹掉了。也许，我不愿意全部讲述威尼斯，就是怕一下子失去她。" },
+      { id: "otavia", name: "奥塔维亚", category: "dead", excerpt: "奥塔维亚的居民生活在悬崖上的网中，死亡不是坠落，而是网终于无法承受重量。", full: "奥塔维亚的居民生活在悬崖上的网中，死亡不是坠落，而是网终于无法承受重量。\n他们称这张网为城市，而网的每一根绳都由无数代人的信任编织而成。", original: "虽然悬在深渊之上，奥塔维亚居民的生活并不比其他城市更令人不安，他们知道自己的网只能支撑这么多。" },
 
-      { id: "beersheba", name: "贝尔萨贝", category: "sky", excerpt: "贝尔萨贝有两座城市：一座在地上，用泥土和垃圾建造；一座在天上，只存在于居民的祈祷中。", full: "贝尔萨贝有两座城市：一座在地上，用泥土和垃圾建造；一座在天上，只存在于居民的祈祷中。\n他们相信天上的那座城市才是完美的，却不知道它正在吸收地上那座城市所有的失望。" },
-      { id: "theodora", name: "泰奥朵拉", category: "sky", excerpt: "泰奥朵拉是一座消灭了一切害虫与敌人的城市，最终却也因为消灭了差异而陷入沉睡。", full: "泰奥朵拉是一座消灭了一切害虫与敌人的城市，最终却也因为消灭了差异而陷入沉睡。\n天空之下，纯净的街道空无一人，因为生活本身已经无法在那里找到容身之处。" },
-      { id: "perinthia", name: "培林西亚", category: "sky", excerpt: "培林西亚完全按照星象建造，街道对应星座，宫殿对应行星，然而住在里面的人却一个个畸形。", full: "培林西亚完全按照星象建造，街道对应星座，宫殿对应行星，然而住在里面的人却一个个畸形。\n天文学家们仰望天空寻找原因，却不敢承认最完美的图纸也可能养育最扭曲的生命。" },
-      { id: "andria", name: "安德里亚", category: "sky", excerpt: "安德里亚的每一座建筑都对应天空中的一颗星，城市随星象的变化而改变自己的形状。", full: "安德里亚的每一座建筑都对应天空中的一颗星，城市随星象的变化而改变自己的形状。\n居民们并不觉得被动，相反，他们骄傲地认为自己是宇宙齿轮上最精致的一颗齿。" },
-      { id: "celestia", name: "塞莱斯蒂亚", category: "sky", excerpt: "塞莱斯蒂亚是一座通往天空的阶梯城市，越是高处，空气越稀薄，信仰越纯粹。", full: "塞莱斯蒂亚是一座通往天空的阶梯城市，越是高处，空气越稀薄，信仰越纯粹。\n攀登的人很少回头，因为回头意味着承认天空也许只是另一片更远的地面。" },
+      { id: "beersheba", name: "贝尔萨贝", category: "sky", excerpt: "贝尔萨贝有两座城市：一座在地上，用泥土和垃圾建造；一座在天上，只存在于居民的祈祷中。", full: "贝尔萨贝有两座城市：一座在地上，用泥土和垃圾建造；一座在天上，只存在于居民的祈祷中。\n他们相信天上的那座城市才是完美的，却不知道它正在吸收地上那座城市所有的失望。", original: "街道遵循行星轨道，建筑对应星座位置。但居民多是瘸子、驼背与畸形儿。天文学家必须承认：天国秩序或许就是这魔鬼城市的模样，或计算本就错误。" },
+      { id: "theodora", name: "泰奥朵拉", category: "sky", excerpt: "泰奥朵拉是一座消灭了一切害虫与敌人的城市，最终却也因为消灭了差异而陷入沉睡。", full: "泰奥朵拉是一座消灭了一切害虫与敌人的城市，最终却也因为消灭了差异而陷入沉睡。\n天空之下，纯净的街道空无一人，因为生活本身已经无法在那里找到容身之处。", original: "月亮赐予泰奥朵拉最罕见的特权：在轻盈中成长。" },
+      { id: "perinthia", name: "培林西亚", category: "sky", excerpt: "培林西亚完全按照星象建造，街道对应星座，宫殿对应行星，然而住在里面的人却一个个畸形。", full: "培林西亚完全按照星象建造，街道对应星座，宫殿对应行星，然而住在里面的人却一个个畸形。\n天文学家们仰望天空寻找原因，却不敢承认最完美的图纸也可能养育最扭曲的生命。", original: "为了不让毁灭开始而一直在建的城市，星空的尽头就是他们完工的终点。" },
+      { id: "andria", name: "安德里亚", category: "sky", excerpt: "安德里亚的每一座建筑都对应天空中的一颗星，城市随星象的变化而改变自己的形状。", full: "安德里亚的每一座建筑都对应天空中的一颗星，城市随星象的变化而改变自己的形状。\n居民们并不觉得被动，相反，他们骄傲地认为自己是宇宙齿轮上最精致的一颗齿。", original: "街道遵循行星轨道，建筑对应星座位置。但居民多是瘸子、驼背与畸形儿。" },
+      { id: "celestia", name: "塞莱斯蒂亚", category: "sky", excerpt: "塞莱斯蒂亚是一座通往天空的阶梯城市，越是高处，空气越稀薄，信仰越纯粹。", full: "塞莱斯蒂亚是一座通往天空的阶梯城市，越是高处，空气越稀薄，信仰越纯粹。\n攀登的人很少回头，因为回头意味着承认天空也许只是另一片更远的地面。", original: "在路过而不进城的人眼里，城市是一种模样；在困守于城里而不出来的人眼里，她又是另一种模样。" },
 
-      { id: "leonia", name: "莱奥尼亚", category: "continuous", excerpt: "莱奥尼亚每天丢弃昨天的自己，垃圾山环绕着城市，越堆越高，几乎要把它淹没。", full: "莱奥尼亚每天丢弃昨天的自己，垃圾山环绕着城市，越堆越高，几乎要把它淹没。\n居民们沉迷于新鲜事物，却看不见自己制造的历史正在从四面八方合拢。" },
-      { id: "penthesilea", name: "彭忒西勒亚", category: "continuous", excerpt: "彭忒西勒亚没有边界，它向所有方向蔓延，直到旅行者再也说不清自己是在城内还是城外。", full: "彭忒西勒亚没有边界，它向所有方向蔓延，直到旅行者再也说不清自己是在城内还是城外。\n在这座城市里，最远的郊区与最近的中心没有区别，连绵本身就是它的身份。" },
-      { id: "tecla", name: "泰克拉", category: "continuous", excerpt: "泰克拉永远处于建造之中，脚手架是它真正的街道，完工即意味着被遗忘。", full: "泰克拉永远处于建造之中，脚手架是它真正的街道，完工即意味着被遗忘。\n居民们崇拜的不是建筑本身，而是建筑所许诺的那个永远不会到来的完成。" },
-      { id: "trude_cont", name: "特鲁德", category: "continuous", excerpt: "特鲁德的街道一条接一条重复着自己，旅人无论走多远，都会发现自己从未离开。", full: "特鲁德的街道一条接一条重复着自己，旅人无论走多远，都会发现自己从未离开。\n连绵不是丰富，而是同一座城市的无限回声，直到你忘记出发时的名字。" },
-      { id: "prok", name: "普罗科皮亚", category: "continuous", excerpt: "普罗科皮亚的城市与乡村连成一体，农田、工厂和住宅彼此渗透，没有明确的开始与结束。", full: "普罗科皮亚的城市与乡村连成一体，农田、工厂和住宅彼此渗透，没有明确的开始与结束。\n在这里，连绵是一种生活方式，也是一种让人无法逃离的温柔陷阱。" },
+      { id: "leonia", name: "莱奥尼亚", category: "continuous", excerpt: "莱奥尼亚每天丢弃昨天的自己，垃圾山环绕着城市，越堆越高，几乎要把它淹没。", full: "莱奥尼亚每天丢弃昨天的自己，垃圾山环绕着城市，越堆越高，几乎要把它淹没。\n居民们沉迷于新鲜事物，却看不见自己制造的历史正在从四面八方合拢。", original: "城市在逐年扩大，清洁工就得越走越远；垃圾越堆越多，越堆越高，所占面积的半径也越来越大。也许，莱奥尼亚之外的整个世界都已布满了垃圾的火山口，各自环绕着一座不断喷发垃圾的城市。" },
+      { id: "penthesilea", name: "彭忒西勒亚", category: "continuous", excerpt: "彭忒西勒亚没有边界，它向所有方向蔓延，直到旅行者再也说不清自己是在城内还是城外。", full: "彭忒西勒亚没有边界，它向所有方向蔓延，直到旅行者再也说不清自己是在城内还是城外。\n在这座城市里，最远的郊区与最近的中心没有区别，连绵本身就是它的身份。", original: "一个广阔而稀疏的城市，以其无边无际的蔓延和稀疏的人口密度为特征。" },
+      { id: "tecla", name: "泰克拉", category: "continuous", excerpt: "泰克拉永远处于建造之中，脚手架是它真正的街道，完工即意味着被遗忘。", full: "泰克拉永远处于建造之中，脚手架是它真正的街道，完工即意味着被遗忘。\n居民们崇拜的不是建筑本身，而是建筑所许诺的那个永远不会到来的完成。", original: "为了不让毁灭开始而一直在建的城市，星空的尽头就是他们完工的终点。" },
+      { id: "trude_cont", name: "特鲁德", category: "continuous", excerpt: "特鲁德的街道一条接一条重复着自己，旅人无论走多远，都会发现自己从未离开。", full: "特鲁德的街道一条接一条重复着自己，旅人无论走多远，都会发现自己从未离开。\n连绵不是丰富，而是同一座城市的无限回声，直到你忘记出发时的名字。", original: "到达特鲁德时，若不是看见特大字母拼写的城市名字，我还以为是到了刚离开的飞机场呢。世界被唯一的一个特鲁德覆盖着，她无始无终，只是飞机场的名字在更换而已。" },
+      { id: "prok", name: "普罗科皮亚", category: "continuous", excerpt: "普罗科皮亚的城市与乡村连成一体，农田、工厂和住宅彼此渗透，没有明确的开始与结束。", full: "普罗科皮亚的城市与乡村连成一体，农田、工厂和住宅彼此渗透，没有明确的开始与结束。\n在这里，连绵是一种生活方式，也是一种让人无法逃离的温柔陷阱。", original: "人口和风俗也多次改变：只有名字、地方和那些打不破的东西保留了下来。" },
 
-      { id: "raissa", name: "拉伊莎", category: "hidden", excerpt: "拉伊莎隐藏着自己的真实：城里最好的东西都被藏在最不起眼的门后。", full: "拉伊莎隐藏着自己的真实：城里最好的东西都被藏在最不起眼的门后。\n那些匆匆而过的旅人只看见平庸的街道，却永远错过了城市真正的心跳。" },
-      { id: "marozia", name: "马罗齐亚", category: "hidden", excerpt: "马罗齐亚每隔一段时间就会蜕去旧壳，新的城市从旧的废墟中长出，而居民却浑然不觉。", full: "马罗齐亚每隔一段时间就会蜕去旧壳，新的城市从旧的废墟中长出，而居民却浑然不觉。\n他们以为自己在老去，其实只是城市一次次借用了他们的身体更换新装。" },
-      { id: "iridia", name: "伊里迪亚", category: "hidden", excerpt: "伊里迪亚的秘密写在无数本公共账簿上，但没有人能读完它们，因此秘密反而被公开所保护。", full: "伊里迪亚的秘密写在无数本公共账簿上，但没有人能读完它们，因此秘密反而被公开所保护。\n城市把真相分散在可见之处，让寻找者淹没在过量的信息里。" },
-      { id: "olinda_hidden", name: "奥林达", category: "hidden", excerpt: "奥林达的深处藏着更小的奥林达，像套娃一样，城市在你最不经意的地方打开另一扇门。", full: "奥林达的深处藏着更小的奥林达，像套娃一样，城市在你最不经意的地方打开另一扇门。\n你以为已经熟悉它，直到某天推开一扇普通的门，发现里面是另一座完整的城市。" },
-      { id: "laudomia", name: "劳多米亚", category: "hidden", excerpt: "劳多米亚有地上、地下和水中三座城，只有最后一座才能被真正看见。", full: "劳多米亚有地上、地下和水中三座城，只有最后一座才能被真正看见。\n水面如镜，把真实与倒影对调，居民们早已习惯用倒置的眼光看待自己的生活。" },
+      { id: "raissa", name: "拉伊莎", category: "hidden", excerpt: "拉伊莎隐藏着自己的真实：城里最好的东西都被藏在最不起眼的门后。", full: "拉伊莎隐藏着自己的真实：城里最好的东西都被藏在最不起眼的门后。\n那些匆匆而过的旅人只看见平庸的街道，却永远错过了城市真正的心跳。", original: "公正之城的种子里埋藏着一颗毒种：认定自己公正并比那些自称公正的人更为公正的自信和骄傲。这也许是一个庞大的都市的胚胎。" },
+      { id: "marozia", name: "马罗齐亚", category: "hidden", excerpt: "马罗齐亚每隔一段时间就会蜕去旧壳，新的城市从旧的废墟中长出，而居民却浑然不觉。", full: "马罗齐亚每隔一段时间就会蜕去旧壳，新的城市从旧的废墟中长出，而居民却浑然不觉。\n他们以为自己在老去，其实只是城市一次次借用了他们的身体更换新装。", original: "人类无法斩尽杀绝的一代代老鼠的幸存者，继续繁衍出更加强健的后代，它们不怕任何捕鼠器，不怕各种毒药，只需几个星期，就可以塞满泰奥朵拉的地下阴沟。" },
+      { id: "iridia", name: "伊里迪亚", category: "hidden", excerpt: "伊里迪亚的秘密写在无数本公共账簿上，但没有人能读完它们，因此秘密反而被公开所保护。", full: "伊里迪亚的秘密写在无数本公共账簿上，但没有人能读完它们，因此秘密反而被公开所保护。\n城市把真相分散在可见之处，让寻找者淹没在过量的信息里。", original: "在路过而不进城的人眼里，城市是一种模样；在困守于城里而不出来的人眼里，她又是另一种模样。" },
+      { id: "olinda_hidden", name: "奥林达", category: "hidden", excerpt: "奥林达的深处藏着更小的奥林达，像套娃一样，城市在你最不经意的地方打开另一扇门。", full: "奥林达的深处藏着更小的奥林达，像套娃一样，城市在你最不经意的地方打开另一扇门。\n你以为已经熟悉它，直到某天推开一扇普通的门，发现里面是另一座完整的城市。", original: "路过而没有进去的人所见的是一个城，困在里面而永远离不开的人所见的是另一个城。你第一次抵达时所见的是一个城，你一去不回时所见的是另一个城。" },
+      { id: "laudomia", name: "劳多米亚", category: "hidden", excerpt: "劳多米亚有地上、地下和水中三座城，只有最后一座才能被真正看见。", full: "劳多米亚有地上、地下和水中三座城，只有最后一座才能被真正看见。\n水面如镜，把真实与倒影对调，居民们早已习惯用倒置的眼光看待自己的生活。", original: "每个城市都该有不同的名字；也许我已经用别些名字讲过劳多米亚；也许我以前所讲的一直都是劳多米亚。" },
 
-      { id: "aglaura", name: "阿格劳拉", category: "names", excerpt: "阿格劳拉的名字比它的城墙更古老，人们为了名字争吵，却对城市本身视而不见。", full: "阿格劳拉的名字比它的城墙更古老，人们为了名字争吵，却对城市本身视而不见。\n一个名字可以召唤一座城市，也可以把同一座城市分裂成无数个互不承认的碎片。" },
-      { id: "euphemia_names", name: "欧菲米亚", category: "names", excerpt: "欧菲米亚在每种语言里都有不同的名字，每个名字都改变了它的形状和性格。", full: "欧菲米亚在每种语言里都有不同的名字，每个名字都改变了它的形状和性格。\n说不同语言的人谈论的是同一座城市，却永远不知道彼此描述的其实是不同的梦境。" },
-      { id: "zoe_names", name: "佐伊", category: "names", excerpt: "佐伊的名字意味着生命，而城市本身却像一枚被遗忘在口袋里的硬币，沉默而光滑。", full: "佐伊的名字意味着生命，而城市本身却像一枚被遗忘在口袋里的硬币，沉默而光滑。\n名字在这里是一种负担，因为它必须不断证明自己配得上那个响亮的称呼。" },
-      { id: "zenobia_names", name: "则诺比亚", category: "names", excerpt: "则诺比亚的名字属于一位女王，而城市里住着的却是对女王一无所知的后代。", full: "则诺比亚的名字属于一位女王，而城市里住着的却是对女王一无所知的后代。\n名字把一段历史强加给现在，直到居民们误以为光荣的遗产就是他们自己的生活。" },
-      { id: "irene", name: "伊雷妮", category: "names", excerpt: "伊雷妮的名字在地图上尚未标出，因为它只存在于那些还没有到达那里的人的口中。", full: "伊雷妮的名字在地图上尚未标出，因为它只存在于那些还没有到达那里的人的口中。\n它是一座关于未来的城市：只有当你放弃寻找，它才会以另一个名字出现。" },
+      { id: "aglaura", name: "阿格劳拉", category: "names", excerpt: "阿格劳拉的名字比它的城墙更古老，人们为了名字争吵，却对城市本身视而不见。", full: "阿格劳拉的名字比它的城墙更古老，人们为了名字争吵，却对城市本身视而不见。\n一个名字可以召唤一座城市，也可以把同一座城市分裂成无数个互不承认的碎片。", original: "当地居民始终相信他们居住的是一座建立在自己名字之上的阿格劳拉城，而不能发现那座生长在自己土地上的阿格劳拉城。" },
+      { id: "euphemia_names", name: "欧菲米亚", category: "names", excerpt: "欧菲米亚在每种语言里都有不同的名字，每个名字都改变了它的形状和性格。", full: "欧菲米亚在每种语言里都有不同的名字，每个名字都改变了它的形状和性格。\n说不同语言的人谈论的是同一座城市，却永远不知道彼此描述的其实是不同的梦境。", original: "到欧菲米亚来绝非只为做买卖，也是为了入夜后围着集市四周点起的篝火堆，坐在布袋或者大桶上，或者躺在成叠的地毯上，聆听旁人所说的词语。" },
+      { id: "zoe_names", name: "佐伊", category: "names", excerpt: "佐伊的名字意味着生命，而城市本身却像一枚被遗忘在口袋里的硬币，沉默而光滑。", full: "佐伊的名字意味着生命，而城市本身却像一枚被遗忘在口袋里的硬币，沉默而光滑。\n名字在这里是一种负担，因为它必须不断证明自己配得上那个响亮的称呼。", original: "每个人心里都有一座仅仅由差异构成的城市，一座既无形象又无形态的城市，而那些特别的城市则填充了它。" },
+      { id: "zenobia_names", name: "则诺比亚", category: "names", excerpt: "则诺比亚的名字属于一位女王，而城市里住着的却是对女王一无所知的后代。", full: "则诺比亚的名字属于一位女王，而城市里住着的却是对女王一无所知的后代。\n名字把一段历史强加给现在，直到居民们误以为光荣的遗产就是他们自己的生活。", original: "既然如此，就无需将则诺比亚划归幸福的还是不幸福的城市。如果要区分，则另有两类：一类是经历岁月沧桑，而继续让欲望决定自己形态的城市；另一类要么被欲望抹杀掉，要么将欲望抹杀掉的城市。" },
+      { id: "irene", name: "伊雷妮", category: "names", excerpt: "伊雷妮的名字在地图上尚未标出，因为它只存在于那些还没有到达那里的人的口中。", full: "伊雷妮的名字在地图上尚未标出，因为它只存在于那些还没有到达那里的人的口中。\n它是一座关于未来的城市：只有当你放弃寻找，它才会以另一个名字出现。", original: "每个城市都该有自己的名字；也许我已经用其他名字讲过伊雷妮；也许我讲过的那些城市都只是伊雷妮。" },
     ];
 
     // ============================================================
@@ -576,6 +936,14 @@
       if (group.length > 2) {
         links.push({ source: group[0], target: group[group.length - 1], type: "intra" });
       }
+      // Add extra intra-group cross-links to make clusters more web-like
+      for (let i = 0; i < group.length; i++) {
+        for (let j = i + 2; j < group.length; j++) {
+          if (Math.random() < 0.25) {
+            links.push({ source: group[i], target: group[j], type: "intra" });
+          }
+        }
+      }
     });
 
     const echoLinks = [
@@ -601,10 +969,11 @@
     });
 
     const simulation = d3.forceSimulation(cities)
-      .force("link", d3.forceLink(links).id(d => d.id).distance(d => d.type === "echo" ? 200 : 75))
-      .force("charge", d3.forceManyBody().strength(-220))
+      .force("link", d3.forceLink(links).id(d => d.id).distance(d => d.type === "echo" ? 170 : 50))
+      .force("charge", d3.forceManyBody().strength(-95).distanceMax(240))
       .force("center", d3.forceCenter(width / 2, height / 2))
-      .force("collide", d3.forceCollide().radius(22));
+      .force("collide", d3.forceCollide().radius(12))
+      .force("radial", d3.forceRadial(d => d.category === "hidden" ? 75 : 55, width / 2, height / 2).strength(0.16));
 
     // ============================================================
     // Advanced rendering definitions
@@ -666,22 +1035,22 @@
     // ============================================================
     const linkGroup = g.append("g").attr("class", "links");
 
-    const linkGlow = linkGroup.selectAll("line.glow")
+    let linkGlow = linkGroup.selectAll("line.glow")
       .data(links)
       .join("line")
       .attr("class", "link-glow")
       .attr("stroke", d => categories[d.source.category].color)
-      .attr("stroke-width", 8)
+      .attr("stroke-width", 9)
       .attr("stroke-opacity", 0)
       .attr("stroke-linecap", "round");
 
-    const linkCore = linkGroup.selectAll("line.core")
+    let linkCore = linkGroup.selectAll("line.core")
       .data(links)
       .join("line")
       .attr("class", "link-core")
-      .attr("stroke", d => d.type === "echo" ? "rgba(255,255,255,0.14)" : categories[d.source.category].color)
-      .attr("stroke-opacity", d => d.type === "echo" ? 0.25 : 0.35)
-      .attr("stroke-width", d => d.type === "echo" ? 1 : 1.4)
+      .attr("stroke", d => d.type === "echo" ? "rgba(255,255,255,0.16)" : categories[d.source.category].color)
+      .attr("stroke-opacity", d => d.type === "echo" ? 0.28 : 0.38)
+      .attr("stroke-width", d => d.type === "echo" ? 1 : 1.5)
       .attr("stroke-dasharray", d => d.type === "echo" ? "4,4" : "0");
 
     // ============================================================
@@ -703,27 +1072,27 @@
     // Outer pulse ring (animated via CSS)
     cityNode.append("circle")
       .attr("class", "node-pulse")
-      .attr("r", d => d.category === "hidden" ? 18 : 14)
+      .attr("r", d => d.category === "hidden" ? 17 : 13)
       .attr("fill", "none")
       .attr("stroke", d => categories[d.category].color)
-      .attr("stroke-width", 1)
-      .attr("stroke-opacity", 0.25);
+      .attr("stroke-width", 1.2)
+      .attr("stroke-opacity", 0.2);
 
     // Middle glow ring
     cityNode.append("circle")
       .attr("class", "node-halo")
-      .attr("r", d => d.category === "hidden" ? 14 : 11)
+      .attr("r", d => d.category === "hidden" ? 12.5 : 9.5)
       .attr("fill", d => categories[d.category].color)
-      .attr("opacity", 0.18)
+      .attr("opacity", 0.2)
       .style("filter", d => `url(#glow-${d.category})`);
 
     // Core node
     cityNode.append("circle")
       .attr("class", "node-core")
-      .attr("r", d => d.category === "hidden" ? 8 : 6.5)
+      .attr("r", d => d.category === "hidden" ? 7.5 : 6)
       .attr("fill", d => `url(#node-grad-${d.category})`)
-      .attr("stroke", d => d.category === "thin" || d.category === "hidden" ? "rgba(255,255,255,0.9)" : "rgba(255,255,255,0.45)")
-      .attr("stroke-width", 1.8)
+      .attr("stroke", d => d.category === "thin" || d.category === "hidden" ? "rgba(255,255,255,0.95)" : "rgba(255,255,255,0.55)")
+      .attr("stroke-width", 2)
       .style("filter", d => `url(#glow-${d.category})`);
 
     // Floating particles around each node
@@ -733,11 +1102,11 @@
       for (let i = 0; i < count; i++) {
         self.append("circle")
           .attr("class", "node-particle")
-          .attr("r", Math.random() * 1.2 + 0.4)
+          .attr("r", Math.random() * 1.1 + 0.35)
           .attr("fill", categories[d.category].color)
           .attr("opacity", 0)
           .attr("data-angle", Math.random() * Math.PI * 2)
-          .attr("data-distance", (d.category === "hidden" ? 14 : 11) + Math.random() * 10)
+          .attr("data-distance", (d.category === "hidden" ? 12 : 9) + Math.random() * 9)
           .attr("data-speed", 0.005 + Math.random() * 0.01);
       }
     });
@@ -749,9 +1118,10 @@
       .attr("text-anchor", "middle")
       .attr("fill", "rgba(255,255,255,0.88)")
       .attr("font-size", "11px")
-      .attr("font-weight", "400")
+      .attr("font-weight", "500")
+      .attr("letter-spacing", "0.04em")
       .attr("pointer-events", "none")
-      .style("text-shadow", "0 1px 5px rgba(0,0,0,0.9)");
+      .style("text-shadow", "0 1px 6px rgba(0,0,0,0.95), 0 0 10px rgba(0,0,0,0.6)");
 
     // ============================================================
     // Node animation: orbital particles + pulse
@@ -776,7 +1146,7 @@
         });
 
         const pulse = group.select(".node-pulse");
-        const baseR = d.category === "hidden" ? 18 : 14;
+        const baseR = d.category === "hidden" ? 16 : 12;
         const pulseR = baseR + Math.sin(frame * 0.04 + d.id.charCodeAt(0)) * 2;
         pulse.attr("r", pulseR);
         pulse.attr("stroke-opacity", 0.15 + Math.sin(frame * 0.04 + d.id.charCodeAt(0)) * 0.1);
@@ -784,6 +1154,28 @@
       requestAnimationFrame(animateNodes);
     }
     animateNodes();
+
+    function renderLinks() {
+      linkGroup.selectAll("*").remove();
+
+      linkGlow = linkGroup.selectAll("line.glow")
+        .data(links)
+        .join("line")
+        .attr("class", "link-glow")
+        .attr("stroke", d => categories[(typeof d.source === "object" ? d.source.category : cities.find(c => c.id === d.source).category)].color)
+        .attr("stroke-width", 9)
+        .attr("stroke-opacity", 0)
+        .attr("stroke-linecap", "round");
+
+      linkCore = linkGroup.selectAll("line.core")
+        .data(links)
+        .join("line")
+        .attr("class", "link-core")
+        .attr("stroke", d => d.type === "echo" ? "rgba(255,255,255,0.16)" : categories[(typeof d.source === "object" ? d.source.category : cities.find(c => c.id === d.source).category)].color)
+        .attr("stroke-opacity", d => d.type === "echo" ? 0.28 : (d.type === "recombined" ? 0.45 : 0.38))
+        .attr("stroke-width", d => d.type === "echo" ? 1 : (d.type === "recombined" ? 2 : 1.5))
+        .attr("stroke-dasharray", d => d.type === "echo" ? "4,4" : "0");
+    }
 
     // ============================================================
     // Interaction: tooltip, focus/proximity, detail panel
@@ -837,37 +1229,50 @@
       const nearby = getNearbyCities(d.id, 1);
 
       cityNode.transition().duration(250)
-        .style("opacity", n => nearby.has(n.id) ? 1 : 0.15)
+        .style("opacity", n => nearby.has(n.id) ? 1 : 0.12)
         .each(function(n) {
           const group = d3.select(this);
           const isTarget = n.id === d.id;
           const isNearby = nearby.has(n.id);
           group.select(".node-core")
             .transition().duration(250)
-            .attr("r", isTarget ? (n.category === "hidden" ? 11 : 9) : (n.category === "hidden" ? 8 : 6.5))
+            .attr("r", isTarget ? (n.category === "hidden" ? 10.5 : 8) : (n.category === "hidden" ? 7 : 5.5))
             .style("filter", isTarget ? `url(#strong-glow-${n.category})` : (isNearby ? `url(#glow-${n.category})` : "none"));
           group.select(".node-halo")
             .transition().duration(250)
-            .attr("opacity", isTarget ? 0.35 : (isNearby ? 0.22 : 0.08));
+            .attr("opacity", isTarget ? 0.42 : (isNearby ? 0.26 : 0.08));
+          group.select(".node-pulse")
+            .transition().duration(250)
+            .attr("stroke-opacity", isTarget ? 0.4 : 0.15);
           group.select(".node-label")
             .transition().duration(250)
-            .attr("fill", isTarget ? categories[n.category].color : (isNearby ? "rgba(255,255,255,0.9)" : "rgba(255,255,255,0.35)"));
+            .attr("fill", isTarget ? categories[n.category].color : (isNearby ? "rgba(255,255,255,0.92)" : "rgba(255,255,255,0.32)"));
         });
 
       linkGlow.transition().duration(250)
-        .attr("stroke-opacity", l =>
-          (l.source.id === d.id || l.target.id === d.id) ? 0.45 : 0
-        );
+        .attr("stroke-opacity", l => {
+          const sId = typeof l.source === "object" ? l.source.id : l.source;
+          const tId = typeof l.target === "object" ? l.target.id : l.target;
+          return (sId === d.id || tId === d.id) ? 0.55 : 0;
+        });
       linkCore.transition().duration(250)
         .attr("stroke-opacity", l => {
-          const involved = l.source.id === d.id || l.target.id === d.id;
+          const sId = typeof l.source === "object" ? l.source.id : l.source;
+          const tId = typeof l.target === "object" ? l.target.id : l.target;
+          const involved = sId === d.id || tId === d.id;
+          const sCat = typeof l.source === "object" ? l.source.category : cities.find(c => c.id === l.source).category;
+          const tCat = typeof l.target === "object" ? l.target.category : cities.find(c => c.id === l.target).category;
           if (activeCategory !== "all") {
-            const sameCat = l.source.category === activeCategory && l.target.category === activeCategory;
+            const sameCat = sCat === activeCategory && tCat === activeCategory;
             if (!sameCat) return 0.04;
           }
-          return involved ? 0.9 : (l.type === "echo" ? 0.12 : 0.2);
+          return involved ? 0.95 : (l.type === "echo" ? 0.14 : (l.type === "recombined" ? 0.36 : 0.22));
         })
-        .attr("stroke-width", l => (l.source.id === d.id || l.target.id === d.id) ? 2.2 : (l.type === "echo" ? 1 : 1.4));
+        .attr("stroke-width", l => {
+          const sId = typeof l.source === "object" ? l.source.id : l.source;
+          const tId = typeof l.target === "object" ? l.target.id : l.target;
+          return (sId === d.id || tId === d.id) ? 2.6 : (l.type === "echo" ? 1 : (l.type === "recombined" ? 2 : 1.4));
+        });
     }
 
     function clearFocus() {
@@ -878,11 +1283,14 @@
           const group = d3.select(this);
           group.select(".node-core")
             .transition().duration(250)
-            .attr("r", n.category === "hidden" ? 8 : 6.5)
+            .attr("r", n.category === "hidden" ? 7 : 5.5)
             .style("filter", `url(#glow-${n.category})`);
           group.select(".node-halo")
             .transition().duration(250)
             .attr("opacity", 0.18);
+          group.select(".node-pulse")
+            .transition().duration(250)
+            .attr("stroke-opacity", 0.15);
           group.select(".node-label")
             .transition().duration(250)
             .attr("fill", "rgba(255,255,255,0.88)");
@@ -891,12 +1299,14 @@
       linkGlow.transition().duration(250).attr("stroke-opacity", 0);
       linkCore.transition().duration(250)
         .attr("stroke-opacity", l => {
+          const sCat = typeof l.source === "object" ? l.source.category : cities.find(c => c.id === l.source).category;
+          const tCat = typeof l.target === "object" ? l.target.category : cities.find(c => c.id === l.target).category;
           if (activeCategory !== "all") {
-            return (l.source.category === activeCategory && l.target.category === activeCategory) ? 0.9 : 0.04;
+            return (sCat === activeCategory && tCat === activeCategory) ? 0.9 : 0.04;
           }
-          return l.type === "echo" ? 0.25 : 0.35;
+          return l.type === "echo" ? 0.25 : (l.type === "recombined" ? 0.45 : 0.35);
         })
-        .attr("stroke-width", l => l.type === "echo" ? 1 : 1.4);
+        .attr("stroke-width", l => l.type === "echo" ? 1 : (l.type === "recombined" ? 2 : 1.4));
     }
 
     cityNode
@@ -932,15 +1342,225 @@
       clearFocus();
     }
 
+    function rebuildAdjacency() {
+      cities.forEach(c => adjacency.set(c.id, new Set()));
+      links.forEach(l => {
+        const sId = typeof l.source === "string" ? l.source : l.source.id;
+        const tId = typeof l.target === "string" ? l.target : l.target.id;
+        adjacency.get(sId).add(tId);
+        adjacency.get(tId).add(sId);
+      });
+    }
+
+    function mutateLinksOnClick() {
+      let changed = false;
+      const breakChance = 0.18;
+      const crossGroupChance = 0.65;
+
+      // 18% chance to break each intra-group link; when it breaks, 65% reconnect across groups
+      for (let i = links.length - 1; i >= 0; i--) {
+        const l = links[i];
+        if (l.type !== "intra") continue;
+        if (Math.random() < breakChance) {
+          const sId = typeof l.source === "string" ? l.source : l.source.id;
+          const sourceCity = typeof l.source === "object" ? l.source : cities.find(c => c.id === sId);
+          const oldCat = sourceCity.category;
+
+          const candidates = cities.filter(c => c.category !== oldCat && c.id !== sId);
+          candidates.sort((a, b) => {
+            const da = Math.hypot(a.x - sourceCity.x, a.y - sourceCity.y);
+            const db = Math.hypot(b.x - sourceCity.x, b.y - sourceCity.y);
+            return da - db;
+          });
+          const nearbyPool = candidates.slice(0, Math.max(1, Math.floor(candidates.length / 3)));
+          const target = nearbyPool[Math.floor(Math.random() * nearbyPool.length)];
+
+          if (Math.random() < crossGroupChance) {
+            links[i] = { source: sId, target: target.id, type: "recombined" };
+          } else {
+            links.splice(i, 1);
+          }
+          changed = true;
+        }
+      }
+
+      if (changed) {
+        rebuildAdjacency();
+        renderLinks();
+        simulation.force("link").links(links);
+        simulation.force("link").distance(d => d.type === "echo" ? 170 : (d.type === "recombined" ? 85 : 50));
+        simulation.alpha(0.9).restart();
+        updateVisibility();
+      }
+    }
+
+    // Reader panel
+    const reader = document.getElementById("reader");
+
+    function openReader(d) {
+      const cat = categories[d.category];
+      reader.querySelector(".category-badge").textContent = cat.label;
+      reader.querySelector(".category-badge").style.color = cat.color;
+      reader.querySelector(".category-badge").style.borderColor = cat.color;
+      reader.querySelector("h2").textContent = d.name;
+      reader.querySelector(".original").textContent = d.original || "暂无原文摘录";
+      reader.classList.add("visible");
+      overlay.classList.add("visible");
+      focusCity(d);
+    }
+
+    function closeReader() {
+      reader.classList.remove("visible");
+      if (!detail.classList.contains("visible")) overlay.classList.remove("visible");
+      clearFocus();
+    }
+
+    reader.querySelector(".close").addEventListener("click", closeReader);
+
+    // Intro panel
+    const intro = document.getElementById("intro");
+    const introClose = intro.querySelector(".intro-close");
+
+    function openIntro() {
+      intro.classList.add("visible");
+      overlay.classList.add("visible");
+    }
+
+    function closeIntro() {
+      intro.classList.remove("visible");
+      if (!detail.classList.contains("visible") && !reader.classList.contains("visible")) overlay.classList.remove("visible");
+    }
+
+    document.getElementById("show-intro").addEventListener("click", openIntro);
+    introClose.addEventListener("click", closeIntro);
+
+    // Auto-show intro on first visit
+    if (!localStorage.getItem("invisible-cities-intro-seen")) {
+      openIntro();
+      localStorage.setItem("invisible-cities-intro-seen", "1");
+    }
+
+    // Context menu
+    const contextMenu = document.getElementById("context-menu");
+    let contextCity = null;
+
+    svg.on("contextmenu", event => event.preventDefault());
+
+    cityNode.on("contextmenu", (event, d) => {
+      event.preventDefault();
+      event.stopPropagation();
+      contextCity = d;
+      const rect = contextMenu.getBoundingClientRect();
+      let left = event.clientX;
+      let top = event.clientY;
+      if (left + rect.width > window.innerWidth) left = window.innerWidth - rect.width - 8;
+      if (top + rect.height > window.innerHeight) top = window.innerHeight - rect.height - 8;
+      contextMenu.style.left = `${left}px`;
+      contextMenu.style.top = `${top}px`;
+      contextMenu.classList.add("visible");
+    });
+
+    document.addEventListener("click", () => contextMenu.classList.remove("visible"));
+    document.addEventListener("scroll", () => contextMenu.classList.remove("visible"), true);
+
+    contextMenu.addEventListener("click", event => {
+      const action = event.target.dataset.action;
+      if (!action || !contextCity) return;
+      if (action === "read") openReader(contextCity);
+      if (action === "disconnect") disconnectCity(contextCity);
+      if (action === "connect") startConnect(contextCity);
+      contextMenu.classList.remove("visible");
+    });
+
+    // Manual break / connect mode
+    let editMode = false;
+    let pendingConnectCity = null;
+    const toggleEdit = document.getElementById("toggle-edit");
+    const editHint = document.querySelector(".edit-hint");
+
+    function setEditMode(on) {
+      editMode = on;
+      toggleEdit.classList.toggle("active", on);
+      editHint.classList.toggle("visible", on);
+      pendingConnectCity = null;
+      svg.style("cursor", on ? "crosshair" : "grab");
+      cityNode.style("cursor", on ? "crosshair" : "pointer");
+    }
+
+    toggleEdit.addEventListener("click", () => setEditMode(!editMode));
+
+    function disconnectCity(city) {
+      const connected = links.filter(l => {
+        const sId = typeof l.source === "object" ? l.source.id : l.source;
+        const tId = typeof l.target === "object" ? l.target.id : l.target;
+        return (sId === city.id || tId === city.id) && l.type !== "echo";
+      });
+      if (!connected.length) return;
+      // Remove a random non-echo link attached to this city
+      const l = connected[Math.floor(Math.random() * connected.length)];
+      const idx = links.indexOf(l);
+      if (idx >= 0) links.splice(idx, 1);
+      rebuildAdjacency();
+      renderLinks();
+      simulation.force("link").links(links);
+      simulation.alpha(0.7).restart();
+      updateVisibility();
+      if (focusedCityId === city.id || adjacency.get(city.id).has(focusedCityId)) focusCity(cities.find(c => c.id === focusedCityId) || city);
+    }
+
+    function startConnect(city) {
+      if (!editMode) setEditMode(true);
+      pendingConnectCity = city;
+      editHint.textContent = `已选择「${city.name}」，点击另一座城市完成连接`;
+    }
+
+    function finishConnect(targetCity) {
+      if (!pendingConnectCity || pendingConnectCity.id === targetCity.id) return;
+      const exists = links.some(l => {
+        const sId = typeof l.source === "object" ? l.source.id : l.source;
+        const tId = typeof l.target === "object" ? l.target.id : l.target;
+        return (sId === pendingConnectCity.id && tId === targetCity.id) || (sId === targetCity.id && tId === pendingConnectCity.id);
+      });
+      if (!exists) {
+        links.push({ source: pendingConnectCity.id, target: targetCity.id, type: "recombined" });
+        rebuildAdjacency();
+        renderLinks();
+        simulation.force("link").links(links);
+        simulation.force("link").distance(d => d.type === "echo" ? 170 : (d.type === "recombined" ? 85 : 50));
+        simulation.alpha(0.7).restart();
+        updateVisibility();
+      }
+      pendingConnectCity = null;
+      editHint.textContent = "连接模式：点击两个城市建立连接；右键城市可拆解其连接";
+    }
+
     cityNode.on("click", (event, d) => {
       event.stopPropagation();
+      if (editMode) {
+        if (pendingConnectCity) {
+          finishConnect(d);
+        } else {
+          startConnect(d);
+        }
+        return;
+      }
+      mutateLinksOnClick();
       openDetail(d);
     });
 
-    overlay.addEventListener("click", closeDetail);
+    overlay.addEventListener("click", () => {
+      closeDetail();
+      closeReader();
+      closeIntro();
+    });
     detail.querySelector(".close").addEventListener("click", closeDetail);
     document.addEventListener("keydown", e => {
-      if (e.key === "Escape") closeDetail();
+      if (e.key === "Escape") {
+        closeDetail();
+        closeReader();
+        closeIntro();
+        if (editMode) setEditMode(false);
+      }
     });
 
     // ============================================================
@@ -951,11 +1571,16 @@
         .style("opacity", d => activeCategory === "all" || d.category === activeCategory ? 1 : 0.12);
       linkCore.transition().duration(300)
         .attr("stroke-opacity", l => {
-          const sCat = l.source.category;
-          const tCat = l.target.category;
-          if (activeCategory === "all") return l.type === "echo" ? 0.25 : 0.35;
+          const sCat = typeof l.source === "object" ? l.source.category : cities.find(c => c.id === l.source).category;
+          const tCat = typeof l.target === "object" ? l.target.category : cities.find(c => c.id === l.target).category;
+          if (activeCategory === "all") {
+            if (l.type === "echo") return 0.25;
+            if (l.type === "recombined") return 0.45;
+            return 0.35;
+          }
           return (sCat === activeCategory && tCat === activeCategory) ? 0.9 : 0.04;
-        });
+        })
+        .attr("stroke-width", l => l.type === "echo" ? 1 : (l.type === "recombined" ? 2 : 1.4));
       linkGlow.transition().duration(300).attr("stroke-opacity", 0);
     }
 
