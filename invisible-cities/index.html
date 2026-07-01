@@ -962,14 +962,21 @@
 
     const descCache = new Map();
     let linkTexts = null;
-    (async () => {
+    let linkTextsLoaded = false;
+    const linkTextsPromise = (async () => {
       try {
         const res = await fetch('link-texts.json', { cache: 'no-store' });
         if (res.ok) linkTexts = await res.json();
       } catch (e) {
         console.warn('Failed to load link-texts.json, using fallback pool.', e);
+      } finally {
+        linkTextsLoaded = true;
       }
     })();
+    async function awaitLinkTexts() {
+      if (linkTextsLoaded) return;
+      await Promise.race([linkTextsPromise, new Promise(r => setTimeout(r, 800))]);
+    }
 
     const cities = [
       { id: "zora", name: "迪奥米拉", category: "memory", excerpt: "从那⾥出发，向东⽅⾛三天，你会到达迪奥⽶拉，这城市有六⼗个银⾊的圆屋顶，诸神的青铜塑像，铺铅板的街道，⼀个⽔晶剧场，还有⼀只⾦鸡在塔楼顶上每天报晓。", full: "从那⾥出发，向东⽅⾛三天，你会到达迪奥⽶拉，这城市有六⼗个银⾊的圆屋顶，诸神的青铜塑像，铺铅板的街道，⼀个⽔晶剧场，还有⼀只⾦鸡在塔楼顶上每天报晓。旅客们熟悉这些美景，因为他们在别的城市也见过。", original: "从那⾥出发，向东⽅⾛三天，你会到达迪奥⽶拉，这城市有六⼗\n个银⾊的圆屋顶，诸神的青铜塑像，铺铅板的街道，⼀个⽔晶剧场，\n还有⼀只⾦鸡在塔楼顶上每天报晓。旅客们熟悉这些美景，因为他们\n在别的城市也见过。然⽽这座城市的独特品质在于，倘若九⽉的黄昏\n来到此地，⽩昼渐短，你将看到炸⾷店门⼜同时亮起多彩的灯光，听\n见某处凉台上传来⼥⼈的叫声：啊！真让⼈羡慕那些⼈，他们觉得⾃\n⼰曾经度过这样的⼀个夜晚并且在那时是幸福的。" },
@@ -1238,6 +1245,7 @@
     async function fetchPairDescription(action, cityA, cityB) {
       const cacheKey = `${action}:${cityA.id}:${cityB.id}`;
       if (descCache.has(cacheKey)) return descCache.get(cacheKey);
+      await awaitLinkTexts();
       const key = `${cityA.id}:${cityB.id}`;
       if (linkTexts && linkTexts[action] && linkTexts[action][key]) {
         const text = linkTexts[action][key];
