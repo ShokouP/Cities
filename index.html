@@ -1213,8 +1213,27 @@
       links.push({ source: a, target: b, type: "echo" });
     });
 
-    function formatTime() {
-      return new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    const silentVerses = {
+      recombine: [
+        "两座城在沉默中靠近，彼此交换了一个未说出口的名字。",
+        "星光绕过它们，像一封没有署名的信投入夜空。",
+        "它们在远处相望，仿佛早已相识，又仿佛从未相遇。",
+        "一种尚未成形的关系在它们之间漂浮，像雾中的桥。",
+        "它们的影子轻轻叠了一下，又各自散开。"
+      ],
+      break: [
+        "它们静静分离，像两页书被风翻开到不同的章节。",
+        "夜色填补了它们之间的距离，不动声色。",
+        "一条看不见的线松开了，没有声响，只有轻微的颤动。",
+        "它们退回各自的光晕里，仿佛那场相遇从未发生。",
+        "星图在此处留出一小块空白，等待下一次命名。"
+      ]
+    };
+
+    function randomSilentVerse(action, cityA, cityB) {
+      const pool = silentVerses[action] || silentVerses.recombine;
+      const verse = pool[Math.floor(Math.random() * pool.length)];
+      return `${cityA.name} 与 ${cityB.name}：${verse}`;
     }
 
     function createLogEntry(action, cityA, cityB) {
@@ -1231,7 +1250,7 @@
       list.prepend(entry);
       return {
         setDesc: (desc) => {
-          entry.querySelector('.log-desc').textContent = desc || '（无回响）';
+          entry.querySelector('.log-desc').textContent = desc || randomSilentVerse(action, cityA, cityB);
         }
       };
     }
