@@ -70,6 +70,8 @@
       /* Only let the browser handle two-finger pinch zoom; all single-finger
          gestures go to D3 so nodes can be dragged and taps/long-presses work. */
       touch-action: pinch-zoom;
+      user-select: none;
+      -webkit-user-select: none;
     }
 
     #viz:active {
@@ -1928,6 +1930,8 @@
         const t = event.touches[0];
         nodeDragStart = { x: t.clientX, y: t.clientY };
         focusCity(d);
+        // Prevent the browser from selecting text / showing the context menu while dragging.
+        event.preventDefault();
       })
       .on("touchmove", () => {
         if (!isTouchDevice || !nodeDragStart) return;
