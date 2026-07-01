@@ -10,23 +10,34 @@
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <style>
     :root {
-      --bg-deep: #0b0b14;
-      --bg-mid: #151525;
-      --panel-bg: rgba(18, 18, 32, 0.97);
-      --text-primary: #f2f2f5;
-      --text-secondary: #9a9ab8;
-      --memory: #e8b86d;
-      --desires: #e74c3c;
-      --signs: #9b59b6;
-      --thin: #ecf0f1;
-      --trading: #f39c12;
-      --eyes: #3498db;
-      --dead: #95a5a6;
-      --sky: #1abc9c;
-      --continuous: #2ecc71;
-      --hidden: #5d8aa8;
-      --names: #e67e22;
-      --read-bg: rgba(12, 12, 20, 0.98);
+      --bg-deep: #0a0a12;
+      --bg-mid: #131320;
+      --panel-bg: rgba(16, 16, 28, 0.97);
+      --text-primary: #f0f0f2;
+      --text-secondary: #8888a0;
+      --memory: #b8a078;
+      --desires: #8a5a5a;
+      --signs: #6a5a8a;
+      --thin: #c8c4bc;
+      --trading: #9a8a5a;
+      --eyes: #5a7a8a;
+      --dead: #7a7a7a;
+      --sky: #4a7a7a;
+      --continuous: #5a7a5a;
+      --hidden: #4a5a6a;
+      --names: #8a6a5a;
+      --node-memory: #c9b08a;
+      --node-desires: #a06a6a;
+      --node-signs: #7a6a9a;
+      --node-thin: #d8d4cc;
+      --node-trading: #aa9a6a;
+      --node-eyes: #6a8a9a;
+      --node-dead: #8a8a8a;
+      --node-sky: #5a8a8a;
+      --node-continuous: #6a8a6a;
+      --node-hidden: #5a6a7a;
+      --node-names: #9a7a6a;
+      --read-bg: rgba(10, 10, 16, 0.98);
     }
 
     * {
@@ -560,7 +571,175 @@
       opacity: 1;
     }
 
+    #link-log {
+      position: fixed;
+      top: 66px;
+      right: 20px;
+      width: 280px;
+      max-height: calc(100vh - 120px);
+      z-index: 18;
+      background: var(--panel-bg);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 14px;
+      box-shadow: -8px 0 40px rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(14px);
+      display: flex;
+      flex-direction: column;
+      transform: translateX(0);
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+
+    #link-log.hidden {
+      transform: translateX(120%);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    #link-log .log-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    #link-log .log-header h3 {
+      margin: 0;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+
+    #link-log .log-toggle {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-size: 16px;
+      line-height: 1;
+      padding: 0;
+      width: 22px;
+      height: 22px;
+      display: grid;
+      place-items: center;
+      transition: color 0.2s ease;
+    }
+
+    #link-log .log-toggle:hover {
+      color: var(--text-primary);
+    }
+
+    #link-log .log-config {
+      padding: 10px 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    #link-log .log-config label {
+      display: block;
+      font-size: 10px;
+      color: var(--text-secondary);
+      margin-bottom: 4px;
+    }
+
+    #link-log .log-config input {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 6px;
+      padding: 5px 8px;
+      color: var(--text-primary);
+      font-size: 11px;
+      font-family: inherit;
+    }
+
+    #link-log .log-config input:focus {
+      outline: none;
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    #link-log .log-list {
+      padding: 10px 14px 14px;
+      overflow-y: auto;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-height: 120px;
+    }
+
+    #link-log .log-entry {
+      font-size: 11px;
+      line-height: 1.6;
+      color: #d0d0e0;
+      padding: 8px 10px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.04);
+      border-left: 2px solid var(--text-secondary);
+      animation: logIn 0.25s ease;
+    }
+
+    @keyframes logIn {
+      from { opacity: 0; transform: translateY(-6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    #link-log .log-entry.break { border-left-color: #e74c3c; }
+    #link-log .log-entry.recombine { border-left-color: #2ecc71; }
+
+    #link-log .log-meta {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 4px;
+      font-size: 10px;
+      color: var(--text-secondary);
+    }
+
+    #link-log .log-cities {
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+
+    #link-log .log-desc {
+      color: #c8c8e0;
+    }
+
+    #show-log {
+      position: fixed;
+      top: 66px;
+      right: 20px;
+      z-index: 19;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-secondary);
+      padding: 5px 11px;
+      border-radius: 999px;
+      font-size: 11px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      backdrop-filter: blur(4px);
+      display: none;
+    }
+
+    #show-log:hover {
+      background: rgba(255, 255, 255, 0.14);
+      color: var(--text-primary);
+    }
+
     @media (max-width: 768px) {
+      #link-log {
+        top: 112px;
+        right: 16px;
+        width: calc(100vw - 32px);
+        max-height: calc(100vh - 150px);
+      }
+
+      #show-log {
+        top: 66px;
+        right: 16px;
+      }
+
       header h1 {
         font-size: 18px;
       }
@@ -666,6 +845,7 @@
   <button id="reset-view">重置视角</button>
   <button id="toggle-edit" title="手动拆解/连接">连接模式</button>
   <button id="show-intro" title="项目简介">简介</button>
+  <button id="show-log" title="连接日志">日志</button>
 
   <div id="intro">
     <div class="intro-card">
@@ -718,22 +898,68 @@
     </div>
   </aside>
 
+  <aside id="link-log">
+    <div class="log-header">
+      <h3>连接回响</h3>
+      <button class="log-toggle" aria-label="隐藏">×</button>
+    </div>
+    <div class="log-list"></div>
+  </aside>
+
   <div class="edit-hint">连接模式：点击两个城市建立连接；右键城市可拆解其连接</div>
 
   <script>
     const categories = {
-      memory: { label: "记忆之城", color: "#e8b86d" },
-      desires: { label: "欲望之城", color: "#e74c3c" },
-      signs: { label: "符号之城", color: "#9b59b6" },
-      thin: { label: "轻盈之城", color: "#ecf0f1" },
-      trading: { label: "贸易之城", color: "#f39c12" },
-      eyes: { label: "眼睛之城", color: "#3498db" },
-      dead: { label: "死亡之城", color: "#95a5a6" },
-      sky: { label: "天空之城", color: "#1abc9c" },
-      continuous: { label: "连绵之城", color: "#2ecc71" },
-      hidden: { label: "隐蔽之城", color: "#5d8aa8" },
-      names: { label: "名字之城", color: "#e67e22" },
+      memory: { label: "记忆之城", color: "#c9b08a", glyph: "arch" },
+      desires: { label: "欲望之城", color: "#a06a6a", glyph: "flame" },
+      signs: { label: "符号之城", color: "#7a6a9a", glyph: "sigil" },
+      thin: { label: "轻盈之城", color: "#d8d4cc", glyph: "feather" },
+      trading: { label: "贸易之城", color: "#aa9a6a", glyph: "scale" },
+      eyes: { label: "眼睛之城", color: "#6a8a9a", glyph: "eye" },
+      dead: { label: "死亡之城", color: "#8a8a8a", glyph: "gate" },
+      sky: { label: "天空之城", color: "#5a8a8a", glyph: "star" },
+      continuous: { label: "连绵之城", color: "#6a8a6a", glyph: "maze" },
+      hidden: { label: "隐蔽之城", color: "#5a6a7a", glyph: "mask" },
+      names: { label: "名字之城", color: "#9a7a6a", glyph: "page" },
     };
+
+    const aiConfig = {
+      key: "sk-7bae5a46708a4c668d3c9077b596a74d",
+      endpoint: "https://api.deepseek.com/chat/completions",
+      model: "deepseek-v4-flash",
+      temperature: 0.6,
+      maxTokens: 256,
+      describeChance: 0.5,
+    };
+
+    const fallbackVerses = {
+      recombine: [
+        "两座城市的影子在星光中重叠，诞生出一种尚未命名的颜色。",
+        "一条新的丝线穿过夜空，把两处的低语缝进同一首诗。",
+        "它们彼此靠近，像两页书在风中偶然合拢。",
+        "远方的钟声与近处的潮汐在此刻同时响起。",
+        "两颗星辰交换了秘密，星座的形状因此改变。",
+        "一座城的记忆落在另一座城的屋顶，像一场温柔的入侵。",
+        "它们之间亮起一盏灯，照亮了彼此从未见过的走廊。",
+        "两个名字在黑暗中轻轻触碰，发出玻璃般的轻响。",
+        "河流在此改道，把一座城的故事带向另一座城。",
+        "它们的连接是一枚新的印章，盖在夜空的信封上。"
+      ],
+      break: [
+        "两根琴弦同时松开，余音各自飘向不同的山谷。",
+        "它们之间的桥沉入水中，只留下一圈圈散开的涟漪。",
+        "一页纸被风撕成两半，分别落在两个季节里。",
+        "星光在此分岔，各自寻找归途。",
+        "一声低语消失在走廊尽头，门轻轻合上。",
+        "两条路重新分开，像从未交汇过一样。",
+        "一座城的倒影从另一座城的湖面退去。",
+        "它们之间的丝线断了，线头在夜风中微微颤抖。",
+        "两个名字被重新放回各自的抽屉，锁咔哒一声合上。",
+        "回声渐行渐远，终于听不见了。"
+      ]
+    };
+
+    const descCache = new Map();
 
     const cities = [
       { id: "zora", name: "迪奥米拉", category: "memory", excerpt: "从那⾥出发，向东⽅⾛三天，你会到达迪奥⽶拉，这城市有六⼗个银⾊的圆屋顶，诸神的青铜塑像，铺铅板的街道，⼀个⽔晶剧场，还有⼀只⾦鸡在塔楼顶上每天报晓。", full: "从那⾥出发，向东⽅⾛三天，你会到达迪奥⽶拉，这城市有六⼗个银⾊的圆屋顶，诸神的青铜塑像，铺铅板的街道，⼀个⽔晶剧场，还有⼀只⾦鸡在塔楼顶上每天报晓。旅客们熟悉这些美景，因为他们在别的城市也见过。", original: "从那⾥出发，向东⽅⾛三天，你会到达迪奥⽶拉，这城市有六⼗\n个银⾊的圆屋顶，诸神的青铜塑像，铺铅板的街道，⼀个⽔晶剧场，\n还有⼀只⾦鸡在塔楼顶上每天报晓。旅客们熟悉这些美景，因为他们\n在别的城市也见过。然⽽这座城市的独特品质在于，倘若九⽉的黄昏\n来到此地，⽩昼渐短，你将看到炸⾷店门⼜同时亮起多彩的灯光，听\n见某处凉台上传来⼥⼈的叫声：啊！真让⼈羡慕那些⼈，他们觉得⾃\n⼰曾经度过这样的⼀个夜晚并且在那时是幸福的。" },
@@ -915,14 +1141,15 @@
     const g = svg.append("g");
 
     const zoom = d3.zoom()
-      .scaleExtent([0.25, 5])
+      .scaleExtent([0.15, 5])
+      .translateExtent([[-width, -height], [2 * width, 2 * height]])
       .on("zoom", (event) => {
         g.attr("transform", event.transform);
       });
 
     svg.call(zoom);
 
-    // Build links: connect cities within same category (cluster), plus a few cross-category echoes
+    // Build links: sparse random intra-group connections + random cross-category echoes
     const links = [];
     const categoryGroups = {};
     cities.forEach(c => {
@@ -930,32 +1157,180 @@
       categoryGroups[c.category].push(c.id);
     });
     Object.values(categoryGroups).forEach(group => {
+      // Always keep a minimal random spanning backbone so the group isn't isolated
       for (let i = 0; i < group.length - 1; i++) {
-        links.push({ source: group[i], target: group[i + 1], type: "intra" });
+        if (Math.random() < 0.65) {
+          links.push({ source: group[i], target: group[i + 1], type: "intra" });
+        }
       }
-      if (group.length > 2) {
+      // Occasional closing link
+      if (group.length > 2 && Math.random() < 0.35) {
         links.push({ source: group[0], target: group[group.length - 1], type: "intra" });
       }
-      // Add extra intra-group cross-links to make clusters more web-like
+      // Sparse random cross-links within the group
       for (let i = 0; i < group.length; i++) {
         for (let j = i + 2; j < group.length; j++) {
-          if (Math.random() < 0.25) {
+          if (Math.random() < 0.12) {
             links.push({ source: group[i], target: group[j], type: "intra" });
           }
         }
       }
     });
 
-    const echoLinks = [
-      ["zora", "despina_desire"],
-      ["tamara", "isaura"],
-      ["valdrada", "beersheba"],
-      ["melania", "adelma"],
-      ["leonia", "penthesilea"],
-      ["raissa", "aglaura"],
-    ];
-    echoLinks.forEach(([a, b]) => {
+    // Random cross-category echo links (4-8 links)
+    const echoPairs = [];
+    for (let i = 0; i < cities.length; i++) {
+      for (let j = i + 1; j < cities.length; j++) {
+        if (cities[i].category !== cities[j].category) {
+          echoPairs.push([cities[i].id, cities[j].id]);
+        }
+      }
+    }
+    // shuffle and pick a handful
+    for (let i = echoPairs.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [echoPairs[i], echoPairs[j]] = [echoPairs[j], echoPairs[i]];
+    }
+    const echoCount = 4 + Math.floor(Math.random() * 5);
+    echoPairs.slice(0, echoCount).forEach(([a, b]) => {
       links.push({ source: a, target: b, type: "echo" });
+    });
+
+    function formatTime() {
+      return new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    }
+
+    function createLogEntry(action, cityA, cityB) {
+      const list = document.querySelector('#link-log .log-list');
+      if (!list) return { setDesc: () => {} };
+      const entry = document.createElement('div');
+      entry.className = `log-entry ${action}`;
+      const actionLabel = action === 'break' ? '拆解' : '重组';
+      entry.innerHTML = `
+        <div class="log-meta"><span>${formatTime()}</span> · <span>${actionLabel}</span></div>
+        <div class="log-cities">${cityA.name} ⟷ ${cityB.name}</div>
+        <div class="log-desc">正在等待回响……</div>
+      `;
+      list.prepend(entry);
+      return {
+        setDesc: (desc) => {
+          entry.querySelector('.log-desc').textContent = desc || '（无回响）';
+        }
+      };
+    }
+
+    const apiQueue = [];
+    let apiQueueRunning = false;
+    async function runApiQueue() {
+      if (apiQueueRunning) return;
+      apiQueueRunning = true;
+      while (apiQueue.length) {
+        const { task, resolve, reject } = apiQueue.shift();
+        try {
+          const result = await task();
+          resolve(result);
+        } catch (err) {
+          reject(err);
+        }
+        if (apiQueue.length) await new Promise(r => setTimeout(r, 300));
+      }
+      apiQueueRunning = false;
+    }
+    function enqueueApi(task) {
+      return new Promise((resolve, reject) => {
+        apiQueue.push({ task, resolve, reject });
+        runApiQueue();
+      });
+    }
+
+    async function fetchPairDescription(action, cityA, cityB) {
+      const cacheKey = `${action}:${cityA.id}:${cityB.id}`;
+      if (descCache.has(cacheKey)) return descCache.get(cacheKey);
+      const apiKey = aiConfig.key;
+      if (!apiKey) return null;
+      const themeNames = {
+        memory: "城市与记忆", desires: "城市与欲望", signs: "城市与符号",
+        thin: "轻盈的城市", trading: "城市与贸易", eyes: "城市与眼睛",
+        names: "城市与名字", dead: "城市与死者", sky: "城市与天空",
+        continuous: "连绵的城市", hidden: "隐蔽的城市"
+      };
+      const aTheme = themeNames[cityA.category] || cityA.category;
+      const bTheme = themeNames[cityB.category] || cityB.category;
+      const aClip = (cityA.excerpt || "").slice(0, 120);
+      const bClip = (cityB.excerpt || "").slice(0, 120);
+      const systemPrompt = `你是卡尔维诺《看不见的城市》的意象评论员。每次用户给出两座城市时，请只根据我提供的内容，用一句话（不超过35个汉字）诗意地描述它们“连接”或“拆解”时在星空中留下的回响。只输出这一句话，不要解释、不要标题、不要括号。`;
+      const userPrompt = action === 'break'
+        ? `《看不见的城市》中，"${cityA.name}"（${aTheme}）的意象是：${aClip}；"${cityB.name}"（${bTheme}）的意象是：${bClip}。这两座城市之间的连接被拆解。请用一句话（不超过35字）诗意地描述这次分离在城市星空中留下的回响。`
+        : `《看不见的城市》中，"${cityA.name}"（${aTheme}）的意象是：${aClip}；"${cityB.name}"（${bTheme}）的意象是：${bClip}。这两座城市产生了新的连接。请用一句话（不超过35字）诗意地描述这两座城市组合在一起会诞生怎样的新意象或意义。`;
+
+      const fallback = action === 'break'
+        ? `${cityA.name} 与 ${cityB.name} 的回响散去。`
+        : `${cityA.name} 与 ${cityB.name} 在星空中产生新的共鸣。`;
+
+      const romanticFallback = () => {
+        const pool = fallbackVerses[action] || fallbackVerses.recombine;
+        const verse = pool[Math.floor(Math.random() * pool.length)];
+        return `${cityA.name} 与 ${cityB.name}：${verse}`;
+      };
+
+      return enqueueApi(async () => {
+        for (let attempt = 0; attempt < 2; attempt++) {
+          try {
+            const res = await fetch(aiConfig.endpoint, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${apiKey}`
+              },
+              body: JSON.stringify({
+                model: aiConfig.model,
+                messages: [
+                  { role: 'system', content: systemPrompt },
+                  { role: 'user', content: userPrompt }
+                ],
+                temperature: aiConfig.temperature,
+                max_tokens: aiConfig.maxTokens,
+                thinking: { type: "disabled" }
+              })
+            });
+            if (!res.ok) {
+              const errText = await res.text().catch(() => '');
+              throw new Error(`HTTP ${res.status}: ${errText}`);
+            }
+            const data = await res.json();
+            const text = data.choices?.[0]?.message?.content?.trim();
+            if (!text) throw new Error('Empty response');
+            descCache.set(cacheKey, text);
+            return text;
+          } catch (err) {
+            console.error(`DeepSeek API error (attempt ${attempt + 1}):`, err);
+            if (attempt === 0) await new Promise(r => setTimeout(r, 500));
+          }
+        }
+        return romanticFallback();
+      });
+    }
+
+    function logLinkEvent(action, cityA, cityB) {
+      const { setDesc } = createLogEntry(action, cityA, cityB);
+      if (action === 'break' || Math.random() < aiConfig.describeChance) {
+        fetchPairDescription(action, cityA, cityB).then(setDesc);
+      } else {
+        setDesc(null);
+      }
+    }
+
+    // Link log panel toggle
+    const linkLog = document.getElementById('link-log');
+    const showLogBtn = document.getElementById('show-log');
+
+    linkLog.querySelector('.log-toggle').addEventListener('click', () => {
+      linkLog.classList.add('hidden');
+      showLogBtn.style.display = 'block';
+    });
+    showLogBtn.addEventListener('click', () => {
+      linkLog.classList.remove('hidden');
+      showLogBtn.style.display = 'none';
     });
 
     // Build adjacency map for proximity highlighting
@@ -968,12 +1343,25 @@
       adjacency.get(tId).add(sId);
     });
 
+    // Scatter initial positions to avoid perfectly circular clusters
+    const centerX = width / 2;
+    const centerY = height / 2;
+    cities.forEach((d, i) => {
+      const angle = Math.random() * Math.PI * 2;
+      const radius = Math.sqrt(Math.random()) * Math.min(width, height) * 0.42;
+      d.x = centerX + Math.cos(angle) * radius + (Math.random() - 0.5) * 120;
+      d.y = centerY + Math.sin(angle) * radius + (Math.random() - 0.5) * 120;
+      d.vx = (Math.random() - 0.5) * 0.6;
+      d.vy = (Math.random() - 0.5) * 0.6;
+    });
+
     const simulation = d3.forceSimulation(cities)
-      .force("link", d3.forceLink(links).id(d => d.id).distance(d => d.type === "echo" ? 170 : 50))
-      .force("charge", d3.forceManyBody().strength(-95).distanceMax(240))
-      .force("center", d3.forceCenter(width / 2, height / 2))
-      .force("collide", d3.forceCollide().radius(12))
-      .force("radial", d3.forceRadial(d => d.category === "hidden" ? 75 : 55, width / 2, height / 2).strength(0.16));
+      .force("link", d3.forceLink(links).id(d => d.id).distance(d => d.type === "echo" ? 320 : (d.type === "recombined" ? 160 : 110)).strength(0.12))
+      .force("charge", d3.forceManyBody().strength(-260).distanceMax(520))
+      .force("center", d3.forceCenter(width / 2, height / 2).strength(0.02))
+      .force("collide", d3.forceCollide().radius(20))
+      .force("x", d3.forceX(width / 2).strength(0.012))
+      .force("y", d3.forceY(height / 2).strength(0.012));
 
     // ============================================================
     // Advanced rendering definitions
@@ -988,7 +1376,7 @@
         .attr("width", "300%")
         .attr("height", "300%");
       filter.append("feGaussianBlur")
-        .attr("stdDeviation", "3")
+        .attr("stdDeviation", "2.5")
         .attr("result", "coloredBlur");
       filter.append("feMerge")
         .call(merge => {
@@ -1003,10 +1391,10 @@
         .attr("width", "400%")
         .attr("height", "400%");
       strongGlow.append("feGaussianBlur")
-        .attr("stdDeviation", "5")
+        .attr("stdDeviation", "4")
         .attr("result", "coloredBlur");
       strongGlow.append("feGaussianBlur")
-        .attr("stdDeviation", "8")
+        .attr("stdDeviation", "7")
         .attr("result", "wideBlur");
       const merge = strongGlow.append("feMerge");
       merge.append("feMergeNode").attr("in", "wideBlur");
@@ -1015,12 +1403,12 @@
 
       const grad = defs.append("radialGradient")
         .attr("id", `node-grad-${key}`)
-        .attr("cx", "35%")
-        .attr("cy", "35%")
-        .attr("r", "65%");
-      grad.append("stop").attr("offset", "0%").attr("stop-color", "#ffffff").attr("stop-opacity", 0.9);
-      grad.append("stop").attr("offset", "40%").attr("stop-color", info.color).attr("stop-opacity", 1);
-      grad.append("stop").attr("offset", "100%").attr("stop-color", info.color).attr("stop-opacity", 0.7);
+        .attr("cx", "40%")
+        .attr("cy", "40%")
+        .attr("r", "70%");
+      grad.append("stop").attr("offset", "0%").attr("stop-color", "#ffffff").attr("stop-opacity", 0.55);
+      grad.append("stop").attr("offset", "35%").attr("stop-color", info.color).attr("stop-opacity", 0.95);
+      grad.append("stop").attr("offset", "100%").attr("stop-color", info.color).attr("stop-opacity", 0.6);
     });
 
     // Link gradient for highlighted paths
@@ -1054,8 +1442,48 @@
       .attr("stroke-dasharray", d => d.type === "echo" ? "4,4" : "0");
 
     // ============================================================
-    // Render city nodes: extensible group structure
-    // ============================================================
+    // Glyph path generators (centered at 0,0, roughly 10x10)
+    function glyphPath(type) {
+      switch (type) {
+        // memory: arch / gate of remembrance
+        case 'arch':
+          return "M-7,5 L-7,0 A7,7 0 0,1 7,0 L7,5 L5,5 L5,0 A5,5 0 0,0 -5,0 L-5,5 Z";
+        // desires: flame
+        case 'flame':
+          return "M0,7 C-4,4 -6,1 -3,-4 C-2,-6 -1,-7 0,-9 C1,-7 2,-6 3,-4 C6,1 4,4 0,7 Z M0,4 C-2,2 -2,-1 0,-3 C2,-1 2,2 0,4 Z";
+        // signs: sigil / inscribed diamond
+        case 'sigil':
+          return "M0,-8 L7,0 L0,8 L-7,0 Z M0,-5 L0,5 M-4,0 L4,0 M-2,-2 L2,2 M-2,2 L2,-2";
+        // thin: feather
+        case 'feather':
+          return "M0,8 C-3,4 -6,-1 -1,-8 C-1,-8 1,-8 1,-8 C6,-1 3,4 0,8 Z M0,6 L0,-6 M-2,2 L2,2 M-2,-1 L2,-1 M-1,-4 L1,-4";
+        // trading: scale
+        case 'scale':
+          return "M0,-7 L0,7 M-6,-2 A3,3 0 0,0 0,-2 A3,3 0 0,0 6,-2 M-6,-2 L-8,-4 M6,-2 L8,-4 M-2,-2 L2,-2";
+        // eyes: eye
+        case 'eye':
+          return "M-8,0 Q0,-7 8,0 Q0,7 -8,0 Z M0,-3 A3,3 0 1,0 0,3 A3,3 0 1,0 0,-3";
+        // dead: gate / threshold
+        case 'gate':
+          return "M-7,7 L-7,-4 A7,7 0 0,1 7,-4 L7,7 L5,7 L5,-4 A5,5 0 0,0 -5,-4 L-5,7 Z M-2,7 L-2,-1 L2,-1 L2,7";
+        // sky: star
+        case 'star':
+          return "M0,-8 L1.8,-2.8 L7,-2.8 L3,1.2 L4.6,7 L0,3.6 L-4.6,7 L-3,1.2 L-7,-2.8 L-1.8,-2.8 Z";
+        // continuous: maze
+        case 'maze':
+          return "M-7,-7 L7,-7 L7,7 L-7,7 Z M-7,-3 L3,-3 L3,3 L-3,3 L-3,-7 M7,3 L-7,3 M0,7 L0,0";
+        // hidden: mask
+        case 'mask':
+          return "M-7,-2 C-7,-8 7,-8 7,-2 C7,6 0,9 0,9 C0,9 -7,6 -7,-2 Z M-3.5,-1 A1.5,1.5 0 1,0 -3.5,2 A1.5,1.5 0 1,0 -3.5,-1 M3.5,-1 A1.5,1.5 0 1,0 3.5,2 A1.5,1.5 0 1,0 3.5,-1 M-2,4 Q0,5 2,4";
+        // names: page / scroll
+        case 'page':
+          return "M-5,-7 L5,-7 L5,7 L-5,7 C-6,7 -7,6 -7,5 L-7,-5 C-7,-6 -6,-7 -5,-7 Z M-4,-4 L4,-4 M-4,-1 L4,-1 M-4,2 L2,2";
+        default:
+          return "M0,-5 A5,5 0 1,1 0,5 A5,5 0 1,1 0,-5";
+      }
+    }
+
+    // Render city nodes: theme-based glyph + ambient halo
     const nodeLayer = g.append("g").attr("class", "nodes");
 
     const cityNode = nodeLayer.selectAll("g.city-node")
@@ -1069,52 +1497,54 @@
         .on("drag", dragged)
         .on("end", dragended));
 
-    // Outer pulse ring (animated via CSS)
-    cityNode.append("circle")
-      .attr("class", "node-pulse")
-      .attr("r", d => d.category === "hidden" ? 17 : 13)
-      .attr("fill", "none")
-      .attr("stroke", d => categories[d.category].color)
-      .attr("stroke-width", 1.2)
-      .attr("stroke-opacity", 0.2);
-
-    // Middle glow ring
+    // Ambient halo (soft fill)
     cityNode.append("circle")
       .attr("class", "node-halo")
-      .attr("r", d => d.category === "hidden" ? 12.5 : 9.5)
+      .attr("r", d => d.category === "hidden" ? 14 : 11)
       .attr("fill", d => categories[d.category].color)
-      .attr("opacity", 0.2)
+      .attr("opacity", 0.12)
       .style("filter", d => `url(#glow-${d.category})`);
 
-    // Core node
+    // Glyph path
+    cityNode.append("path")
+      .attr("class", "node-glyph")
+      .attr("d", d => glyphPath(categories[d.category].glyph))
+      .attr("fill", d => d.category === "thin" ? "rgba(255,255,255,0.85)" : categories[d.category].color)
+      .attr("fill-opacity", 0.9)
+      .attr("stroke", "rgba(255,255,255,0.6)")
+      .attr("stroke-width", 0.6)
+      .attr("stroke-linejoin", "round")
+      .style("filter", d => `url(#glow-${d.category})`);
+
+    // Subtle outer ring
     cityNode.append("circle")
-      .attr("class", "node-core")
-      .attr("r", d => d.category === "hidden" ? 7.5 : 6)
-      .attr("fill", d => `url(#node-grad-${d.category})`)
-      .attr("stroke", d => d.category === "thin" || d.category === "hidden" ? "rgba(255,255,255,0.95)" : "rgba(255,255,255,0.55)")
-      .attr("stroke-width", 2)
-      .style("filter", d => `url(#glow-${d.category})`);
+      .attr("class", "node-ring")
+      .attr("r", d => d.category === "hidden" ? 16 : 13)
+      .attr("fill", "none")
+      .attr("stroke", d => categories[d.category].color)
+      .attr("stroke-width", 0.7)
+      .attr("stroke-opacity", 0.22);
 
-    // Floating particles around each node
+    // Floating dust around each node
     cityNode.each(function(d) {
       const self = d3.select(this);
-      const count = 4 + Math.floor(Math.random() * 4);
+      const count = 1 + Math.floor(Math.random() * 2);
       for (let i = 0; i < count; i++) {
         self.append("circle")
-          .attr("class", "node-particle")
-          .attr("r", Math.random() * 1.1 + 0.35)
+          .attr("class", "node-dust")
+          .attr("r", Math.random() * 0.7 + 0.2)
           .attr("fill", categories[d.category].color)
           .attr("opacity", 0)
           .attr("data-angle", Math.random() * Math.PI * 2)
-          .attr("data-distance", (d.category === "hidden" ? 12 : 9) + Math.random() * 9)
-          .attr("data-speed", 0.005 + Math.random() * 0.01);
+          .attr("data-distance", (d.category === "hidden" ? 14 : 11) + Math.random() * 6)
+          .attr("data-speed", 0.003 + Math.random() * 0.006);
       }
     });
 
     cityNode.append("text")
       .attr("class", "node-label")
       .text(d => d.name)
-      .attr("dy", 24)
+      .attr("dy", 26)
       .attr("text-anchor", "middle")
       .attr("fill", "rgba(255,255,255,0.88)")
       .attr("font-size", "11px")
@@ -1131,7 +1561,7 @@
       frame++;
       cityNode.each(function(d) {
         const group = d3.select(this);
-        const particles = group.selectAll(".node-particle");
+        const particles = group.selectAll(".node-dust");
         particles.each(function() {
           const p = d3.select(this);
           let angle = +p.attr("data-angle");
@@ -1141,15 +1571,15 @@
           p.attr("data-angle", angle);
           p.attr("cx", Math.cos(angle) * dist);
           p.attr("cy", Math.sin(angle) * dist);
-          const opacity = 0.35 + Math.sin(frame * 0.05 + angle) * 0.25;
+          const opacity = 0.3 + Math.sin(frame * 0.05 + angle) * 0.2;
           p.attr("opacity", Math.max(0, opacity));
         });
 
-        const pulse = group.select(".node-pulse");
-        const baseR = d.category === "hidden" ? 16 : 12;
-        const pulseR = baseR + Math.sin(frame * 0.04 + d.id.charCodeAt(0)) * 2;
-        pulse.attr("r", pulseR);
-        pulse.attr("stroke-opacity", 0.15 + Math.sin(frame * 0.04 + d.id.charCodeAt(0)) * 0.1);
+        const ring = group.select(".node-ring");
+        const baseR = d.category === "hidden" ? 16 : 13;
+        const ringR = baseR + Math.sin(frame * 0.03 + d.id.charCodeAt(0)) * 1.2;
+        ring.attr("r", ringR);
+        ring.attr("stroke-opacity", 0.18 + Math.sin(frame * 0.03 + d.id.charCodeAt(0)) * 0.08);
       });
       requestAnimationFrame(animateNodes);
     }
@@ -1234,16 +1664,17 @@
           const group = d3.select(this);
           const isTarget = n.id === d.id;
           const isNearby = nearby.has(n.id);
-          group.select(".node-core")
+          group.select(".node-glyph")
             .transition().duration(250)
-            .attr("r", isTarget ? (n.category === "hidden" ? 10.5 : 8) : (n.category === "hidden" ? 7 : 5.5))
+            .attr("transform", isTarget ? "scale(1.45)" : (isNearby ? "scale(1.15)" : "scale(0.85)"))
             .style("filter", isTarget ? `url(#strong-glow-${n.category})` : (isNearby ? `url(#glow-${n.category})` : "none"));
           group.select(".node-halo")
             .transition().duration(250)
-            .attr("opacity", isTarget ? 0.42 : (isNearby ? 0.26 : 0.08));
-          group.select(".node-pulse")
+            .attr("opacity", isTarget ? 0.35 : (isNearby ? 0.22 : 0.08))
+            .attr("r", isTarget ? (n.category === "hidden" ? 18 : 15) : (n.category === "hidden" ? 14 : 11));
+          group.select(".node-ring")
             .transition().duration(250)
-            .attr("stroke-opacity", isTarget ? 0.4 : 0.15);
+            .attr("stroke-opacity", isTarget ? 0.45 : 0.18);
           group.select(".node-label")
             .transition().duration(250)
             .attr("fill", isTarget ? categories[n.category].color : (isNearby ? "rgba(255,255,255,0.92)" : "rgba(255,255,255,0.32)"));
@@ -1281,16 +1712,17 @@
         .style("opacity", n => activeCategory === "all" || n.category === activeCategory ? 1 : 0.12)
         .each(function(n) {
           const group = d3.select(this);
-          group.select(".node-core")
+          group.select(".node-glyph")
             .transition().duration(250)
-            .attr("r", n.category === "hidden" ? 7 : 5.5)
+            .attr("transform", "scale(1)")
             .style("filter", `url(#glow-${n.category})`);
           group.select(".node-halo")
             .transition().duration(250)
-            .attr("opacity", 0.18);
-          group.select(".node-pulse")
+            .attr("opacity", 0.12)
+            .attr("r", n.category === "hidden" ? 14 : 11);
+          group.select(".node-ring")
             .transition().duration(250)
-            .attr("stroke-opacity", 0.15);
+            .attr("stroke-opacity", 0.22);
           group.select(".node-label")
             .transition().duration(250)
             .attr("fill", "rgba(255,255,255,0.88)");
@@ -1355,15 +1787,30 @@
     function mutateLinksOnClick() {
       let changed = false;
       const breakChance = 0.18;
-      const crossGroupChance = 0.65;
+      const crossGroupChance = 0.75;
+      const maxEventsPerClick = 2;
+      let events = 0;
 
-      // 18% chance to break each intra-group link; when it breaks, 65% reconnect across groups
+      // 32% chance to break each intra-group link; when it breaks, 75% reconnect across groups
+      // limit number of events per click to avoid API avalanche
+      const indices = [];
       for (let i = links.length - 1; i >= 0; i--) {
         const l = links[i];
-        if (l.type !== "intra") continue;
+        if (l.type === "intra") indices.push(i);
+      }
+      // shuffle to avoid always hitting the same links
+      for (let i = indices.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [indices[i], indices[j]] = [indices[j], indices[i]];
+      }
+
+      for (const i of indices) {
+        if (events >= maxEventsPerClick) break;
+        const l = links[i];
         if (Math.random() < breakChance) {
           const sId = typeof l.source === "string" ? l.source : l.source.id;
           const sourceCity = typeof l.source === "object" ? l.source : cities.find(c => c.id === sId);
+          const oldTarget = typeof l.target === "object" ? l.target : cities.find(c => c.id === (typeof l.target === "string" ? l.target : l.target.id));
           const oldCat = sourceCity.category;
 
           const candidates = cities.filter(c => c.category !== oldCat && c.id !== sId);
@@ -1377,9 +1824,12 @@
 
           if (Math.random() < crossGroupChance) {
             links[i] = { source: sId, target: target.id, type: "recombined" };
+            logLinkEvent('recombine', sourceCity, target);
           } else {
             links.splice(i, 1);
+            if (oldTarget) logLinkEvent('break', sourceCity, oldTarget);
           }
+          events++;
           changed = true;
         }
       }
@@ -1388,8 +1838,8 @@
         rebuildAdjacency();
         renderLinks();
         simulation.force("link").links(links);
-        simulation.force("link").distance(d => d.type === "echo" ? 170 : (d.type === "recombined" ? 85 : 50));
-        simulation.alpha(0.9).restart();
+        simulation.force("link").distance(d => d.type === "echo" ? 220 : (d.type === "recombined" ? 110 : 70));
+        simulation.alpha(1.1).restart();
         updateVisibility();
       }
     }
@@ -1499,11 +1949,18 @@
       // Remove a random non-echo link attached to this city
       const l = connected[Math.floor(Math.random() * connected.length)];
       const idx = links.indexOf(l);
-      if (idx >= 0) links.splice(idx, 1);
+      if (idx >= 0) {
+        const otherId = (typeof l.source === "object" ? l.source.id : l.source) === city.id
+          ? (typeof l.target === "object" ? l.target.id : l.target)
+          : (typeof l.source === "object" ? l.source.id : l.source);
+        const otherCity = cities.find(c => c.id === otherId);
+        links.splice(idx, 1);
+        if (otherCity) logLinkEvent('break', city, otherCity);
+      }
       rebuildAdjacency();
       renderLinks();
       simulation.force("link").links(links);
-      simulation.alpha(0.7).restart();
+      simulation.alpha(1.1).restart();
       updateVisibility();
       if (focusedCityId === city.id || adjacency.get(city.id).has(focusedCityId)) focusCity(cities.find(c => c.id === focusedCityId) || city);
     }
@@ -1523,11 +1980,12 @@
       });
       if (!exists) {
         links.push({ source: pendingConnectCity.id, target: targetCity.id, type: "recombined" });
+        logLinkEvent('recombine', pendingConnectCity, targetCity);
         rebuildAdjacency();
         renderLinks();
         simulation.force("link").links(links);
-        simulation.force("link").distance(d => d.type === "echo" ? 170 : (d.type === "recombined" ? 85 : 50));
-        simulation.alpha(0.7).restart();
+        simulation.force("link").distance(d => d.type === "echo" ? 220 : (d.type === "recombined" ? 110 : 70));
+        simulation.alpha(1.1).restart();
         updateVisibility();
       }
       pendingConnectCity = null;
@@ -1602,7 +2060,7 @@
     // Drag functions
     // ============================================================
     function dragstarted(event, d) {
-      if (!event.active) simulation.alphaTarget(0.3).restart();
+      if (!event.active) simulation.alphaTarget(0.55).restart();
       d.fx = d.x;
       d.fy = d.y;
     }
@@ -1625,8 +2083,11 @@
       width = window.innerWidth;
       height = window.innerHeight;
       svg.attr("width", width).attr("height", height);
-      simulation.force("center", d3.forceCenter(width / 2, height / 2));
-      simulation.alpha(0.3).restart();
+      zoom.translateExtent([[-width, -height], [2 * width, 2 * height]]);
+      simulation.force("center", d3.forceCenter(width / 2, height / 2).strength(0.02));
+      simulation.force("x", d3.forceX(width / 2).strength(0.012));
+      simulation.force("y", d3.forceY(height / 2).strength(0.012));
+      simulation.alpha(0.5).restart();
       resizeStarfield();
       initNebula();
     });
