@@ -67,7 +67,9 @@
       inset: 0;
       z-index: 1;
       cursor: grab;
-      touch-action: none;
+      /* Only let the browser handle two-finger pinch zoom; all single-finger
+         gestures go to D3 so nodes can be dragged and taps/long-presses work. */
+      touch-action: pinch-zoom;
     }
 
     #viz:active {
@@ -805,7 +807,7 @@
       .desktop-only { display: none; }
 
       #viz {
-        touch-action: pan-x pan-y;
+        touch-action: pinch-zoom;
       }
 
       #link-log {
@@ -1909,6 +1911,7 @@
 
     // Touch interaction: tap to focus, long-press handled separately.
     let nodeDragged = false;
+    let nodeDragStart = null;
     cityNode
       .on("mouseenter", !isTouchDevice ? (event, d) => {
         showTooltip(event, d);
@@ -1922,10 +1925,12 @@
       .on("touchstart", (event, d) => {
         if (!isTouchDevice) return;
         nodeDragged = false;
+        const t = event.touches[0];
+        nodeDragStart = { x: t.clientX, y: t.clientY };
         focusCity(d);
-      }, { passive: true })
+      })
       .on("touchmove", () => {
-        if (!isTouchDevice) return;
+        if (!isTouchDevice || !nodeDragStart) return;
         nodeDragged = true;
       }, { passive: true })
       .on("touchend", (event, d) => {
@@ -1934,6 +1939,7 @@
         if (!nodeDragged && !detail.classList.contains("visible") && !reader.classList.contains("visible") && !mobileSheet.classList.contains("visible")) {
           openDetail(d);
         }
+        nodeDragStart = null;
       });
 
     if (isTouchDevice) {
