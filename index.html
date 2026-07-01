@@ -1430,6 +1430,11 @@
       return `${cityA.name} 与 ${cityB.name}：${verse}`;
     }
 
+    function formatTime() {
+      const now = new Date();
+      return `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+    }
+
     function createLogEntry(action, cityA, cityB) {
       const list = document.querySelector('#link-log .log-list');
       if (!list) return { setDesc: () => {} };
@@ -2133,6 +2138,13 @@
       if (action) handleContextAction(action);
     });
     mobileSheet.addEventListener("click", event => {
+      const action = event.target.dataset.action;
+      if (action === "cancel") return closeContextMenu();
+      if (action) handleContextAction(action);
+    });
+    // Also listen to pointerup on the mobile sheet so touches that originated
+    // on the sheet handle or buttons reliably trigger the action.
+    mobileSheet.addEventListener("pointerup", event => {
       const action = event.target.dataset.action;
       if (action === "cancel") return closeContextMenu();
       if (action) handleContextAction(action);
