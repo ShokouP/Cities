@@ -1903,6 +1903,7 @@
     }
 
     // Touch interaction: tap to focus, long-press handled separately.
+    let nodeDragged = false;
     cityNode
       .on("mouseenter", !isTouchDevice ? (event, d) => {
         showTooltip(event, d);
@@ -1915,12 +1916,17 @@
       } : null)
       .on("touchstart", (event, d) => {
         if (!isTouchDevice) return;
+        nodeDragged = false;
         focusCity(d);
+      }, { passive: true })
+      .on("touchmove", () => {
+        if (!isTouchDevice) return;
+        nodeDragged = true;
       }, { passive: true })
       .on("touchend", (event, d) => {
         if (!isTouchDevice) return;
-        // On a clean tap (no panel open), open the detail panel.
-        if (!detail.classList.contains("visible") && !reader.classList.contains("visible") && !mobileSheet.classList.contains("visible")) {
+        // Only treat as a tap if the finger didn't visibly drag the node.
+        if (!nodeDragged && !detail.classList.contains("visible") && !reader.classList.contains("visible") && !mobileSheet.classList.contains("visible")) {
           openDetail(d);
         }
       });
@@ -2369,20 +2375,17 @@
     // Drag functions
     // ============================================================
     function dragstarted(event, d) {
-      if (isTouchDevice) return; // single-finger drag reserved for pan/scroll on mobile
       if (!event.active) simulation.alphaTarget(0.55).restart();
       d.fx = d.x;
       d.fy = d.y;
     }
 
     function dragged(event, d) {
-      if (isTouchDevice) return;
       d.fx = event.x;
       d.fy = event.y;
     }
 
     function dragended(event, d) {
-      if (isTouchDevice) return;
       if (!event.active) simulation.alphaTarget(0);
       d.fx = null;
       d.fy = null;
