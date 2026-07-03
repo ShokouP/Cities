@@ -258,7 +258,8 @@ const GAME_TIME_LIMIT=300;
 const LANE_H=140,LANES_Y=[110,310,510],LANE_NAMES=['暴露面','横向移动通道','核心资产区'];
 const LANE_X0=120,LANE_X1=1080,LANE_W=LANE_X1-LANE_X0;
 const TOWER_HP=1400,CORE_HP=3600;
-const TOWER_ATK=20,TOWER_ATK_SPD=1.0,TOWER_RANGE=120;
+const TOWER_ATK=20,TOWER_ATK_SPD=1.0,TOWER_RANGE=120,TOWER_LATE_SCALE=1.5;
+function getTowerAtk(){return game&&game.time>=FAST_REGEN_TIME?Math.round(TOWER_ATK*TOWER_LATE_SCALE):TOWER_ATK;}
 const BLUE_TOWER_X=280,RED_TOWER_X=920,TOWER_W=32,TOWER_H=60;
 const CORE_W=36,PER_LANE_CORE_H=100;
 const DEPLOY_ZONE_BLUE=420,DEPLOY_ZONE_RED=780;
@@ -833,11 +834,12 @@ function loop(now){
       const enemies=game.units.filter(u=>u.alive&&u.team!==t.team&&u.lane===t.lane&&Math.abs(u.x-t.x)<TOWER_RANGE);
       if(enemies.length>0){
         const target=enemies.sort((a,b)=>Math.abs(a.x-t.x)-Math.abs(b.x-t.x))[0];
-        target.hp-=TOWER_ATK;
-        spawnFloatingText(target.x,target.y,Math.round(TOWER_ATK),t.team);
+        const towerAtk=getTowerAtk();
+        target.hp-=towerAtk;
+        spawnFloatingText(target.x,target.y,towerAtk,t.team);
         spawnLaser(t.x,t._y,target.x,target.y,t.team==='blue'?'#60a0ff':'#ff6060');
         if(target.hp<=0)target.die();
-        t.atkCd=TOWER_ATK_SPD;
+        t.atkCd=t.atkSpdMul>0?TOWER_ATK_SPD/t.atkSpdMul:TOWER_ATK_SPD;
       }
     }
   });
