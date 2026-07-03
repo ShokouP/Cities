@@ -847,16 +847,46 @@ function endGame(winner,msg){
   const playerWon=winner===playerTeam;
   const titleColor=winner==='draw'?'#f0c030':(playerWon?'#3cf58b':'#f53c3c');
   const titleText=winner==='draw'?'平局':(playerWon?'任务完成':'任务失败');
+  const advice=generateEndGameAdvice(winner,playerWon);
   if(tutorialDay>=0){
     const nextLabel=tutorialDay+1<TUTORIAL_STEPS.length?'进入下一天':'完成教学';
-    ov.innerHTML=`<h1 style="color:${titleColor}">${titleText}</h1><p style="white-space:pre-line">${msg}</p><div style="display:flex;gap:16px;justify-content:center;"><button id="tutorial-next-btn">${nextLabel}</button><button id="restart-defend-btn">防守方（蓝队）</button><button id="restart-attack-btn">进攻方（红队）</button></div>`;
+    ov.innerHTML=`<h1 style="color:${titleColor}">${titleText}</h1><p style="white-space:pre-line">${msg}</p><p style="color:#7eb896;font-size:12px;max-width:min(500px,90vw);margin-top:-8px;">${advice}</p><div style="display:flex;gap:16px;justify-content:center;"><button id="tutorial-next-btn">${nextLabel}</button><button id="restart-defend-btn">防守方（蓝队）</button><button id="restart-attack-btn">进攻方（红队）</button></div>`;
     document.getElementById('tutorial-next-btn').addEventListener('click',()=>nextTutorialDayOrMenu());
   }else{
-    ov.innerHTML=`<h1 style="color:${titleColor}">${titleText}</h1><p style="white-space:pre-line">${msg}</p><div style="display:flex;gap:16px;"><button id="restart-defend-btn">防守方（蓝队）</button><button id="restart-attack-btn">进攻方（红队）</button></div>`;
+    ov.innerHTML=`<h1 style="color:${titleColor}">${titleText}</h1><p style="white-space:pre-line">${msg}</p><p style="color:#7eb896;font-size:12px;max-width:min(500px,90vw);margin-top:-8px;">${advice}</p><div style="display:flex;gap:16px;"><button id="restart-defend-btn">防守方（蓝队）</button><button id="restart-attack-btn">进攻方（红队）</button></div>`;
   }
   document.getElementById('restart-defend-btn').addEventListener('click',()=>{tutorialDay=-1;startGame('blue');});
   document.getElementById('restart-attack-btn').addEventListener('click',()=>{tutorialDay=-1;startGame('red');});
   updateTip();
+}
+function generateEndGameAdvice(winner,playerWon){
+  if(winner==='draw')return '双方势均力敌。尝试调整卡组节奏，抓住对手费用空档。';
+  const playerCores=playerTeam==='blue'?game.coreHpPerLane:game.aiCoreHpPerLane;
+  const aiCores=playerTeam==='blue'?game.aiCoreHpPerLane:game.coreHpPerLane;
+  const playerTowers=game.towers.filter(t=>t.team===playerTeam&&t.alive).length;
+  const aiTowers=game.towers.filter(t=>t.team!==playerTeam&&t.alive).length;
+  const playerCoreTotal=playerCores.reduce((a,b)=>a+b,0);
+  const aiCoreTotal=aiCores.reduce((a,b)=>a+b,0);
+  const defending=playerTeam==='blue';
+  if(playerWon){
+    if(aiCoreTotal<=0)return '完胜！核心被彻底摧毁，攻防节奏掌控得当。';
+    if(aiTowers===0)return '优秀。拆除了所有节点塔，再部署高费单位扩大优势。';
+    return '胜利。保持当前节奏，注意算力领先时果断施压。';
+  }
+  const tips=[];
+  const lostLanes=playerCores.map((hp,i)=>hp<=0?i:-1).filter(i=>i>=0);
+  if(lostLanes.length>0)tips.push(`${lostLanes.map(i=>LANE_NAMES[i]).join('、')}核心失守，注意分路均衡防守。`);
+  if(defending){
+    if(playerTowers<=1)tips.push('节点塔损失严重，提前部署防火墙/WAF建立前线。');
+    if(aiCoreTotal>CORE_HP*2.5)tips.push('敌方核心血量健康，尝试用IDS+蜜罐拖延，再反打。');
+    else tips.push('局势接近翻盘，抓住下一波算力差发起反击。');
+  }else{
+    if(aiTowers>=5)tips.push('敌方防守塔完整，优先用钓鱼邮件/零日漏洞绕过正面。');
+    if(playerCoreTotal>aiCoreTotal)tips.push('核心血量领先但时间耗尽，下次加快进攻节奏。');
+    else tips.push('核心血量落后，避免无效消耗，攒费打一波强力突破。');
+  }
+  if(tips.length===0)tips.push('复盘战斗，优化出牌时机和 lane 分配。');
+  return '诊断：'+tips.join(' ');
 }
 
 // ── Render ──
