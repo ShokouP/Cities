@@ -7,6 +7,13 @@
       "runtimeArgs": ["-m", "http.server", "8080"],
       "port": 8080,
       "cwd": "${workspaceFolder}/invisible-cities"
+    },
+    {
+      "name": "lightspeed-grid",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "3456"],
+      "port": 3456,
+      "cwd": "${workspaceFolder}"
     }
   ]
 }
