@@ -1,0 +1,48 @@
+- generic [ref=f9e2]:
+  - generic [ref=f9e3]:
+    - generic [ref=f9e4]:
+      - generic [ref=f9e5]: 算力
+      - generic [ref=f9e6]: 8/10
+    - generic [ref=f9e7]:
+      - generic [ref=f9e8]: 核心服务器
+      - generic [ref=f9e9]: "5000"
+    - generic [ref=f9e10]:
+      - generic [ref=f9e11]: 计时
+      - generic [ref=f9e12]: 00:06
+    - generic [ref=f9e13]:
+      - generic [ref=f9e14]: AI核心
+      - generic [ref=f9e15]: "5000"
+    - generic [ref=f9e16]:
+      - generic [ref=f9e17]: AI算力
+      - generic [ref=f9e18]: 3/10
+  - generic [ref=f9e21]:
+    - generic [ref=f9e38] [cursor=pointer]:
+      - generic [ref=f9e39]: IDS
+      - generic [ref=f9e40]: "4"
+      - generic [ref=f9e41]: 建筑
+      - generic [ref=f9e42]: 范围伤害·打飞行·揭示隐身
+      - generic [ref=f9e43]: 建筑
+    - generic [ref=f9e26] [cursor=pointer]:
+      - generic [ref=f9e27]: 蜜罐
+      - generic [ref=f9e28]: "2"
+      - generic [ref=f9e29]: 建筑
+      - generic [ref=f9e30]: 死后爆炸200·吸引地面改道
+      - generic [ref=f9e31]: 建筑
+    - generic [ref=f9e44] [cursor=pointer]:
+      - generic [ref=f9e45]: EDR
+      - generic [ref=f9e46]: "3"
+      - generic [ref=f9e47]: 地面单位
+      - generic [ref=f9e48]: 优先打血量最低的
+      - generic [ref=f9e49]: 地面
+    - generic [ref=f9e32] [cursor=pointer]:
+      - generic [ref=f9e33]: WAF
+      - generic [ref=f9e34]: "2"
+      - generic [ref=f9e35]: 建筑
+      - generic [ref=f9e36]: 专杀SQL注入(×2)
+      - generic [ref=f9e37]: 建筑
+    - generic [ref=f9e50] [cursor=pointer]:
+      - generic [ref=f9e51]: 补丁管理
+      - generic [ref=f9e52]: "3"
+      - generic [ref=f9e53]: 法术
+      - generic [ref=f9e54]: 给单座建筑回血40%
+      - generic [ref=f9e55]: 法术

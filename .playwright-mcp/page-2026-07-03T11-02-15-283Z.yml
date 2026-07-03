@@ -1,0 +1,48 @@
+- generic [ref=f13e2]:
+  - generic [ref=f13e3]:
+    - generic [ref=f13e4]:
+      - generic [ref=f13e5]: 算力
+      - generic [ref=f13e6]: 10/10
+    - generic [ref=f13e7]:
+      - generic [ref=f13e8]: 核心服务器
+      - generic [ref=f13e9]: "15000"
+    - generic [ref=f13e10]:
+      - generic [ref=f13e11]: 计时
+      - generic [ref=f13e12]: 00:07
+    - generic [ref=f13e13]:
+      - generic [ref=f13e14]: AI核心
+      - generic [ref=f13e15]: "15000"
+    - generic [ref=f13e16]:
+      - generic [ref=f13e17]: AI算力
+      - generic [ref=f13e18]: 3/10
+  - generic [ref=f13e21]:
+    - generic [ref=f13e26] [cursor=pointer]:
+      - generic [ref=f13e27]: EDR
+      - generic [ref=f13e28]: "3"
+      - generic [ref=f13e29]: 地面单位
+      - generic [ref=f13e30]: 优先打血量最低的
+      - generic [ref=f13e31]: 地面
+    - generic [ref=f13e32] [cursor=pointer]:
+      - generic [ref=f13e33]: WAF
+      - generic [ref=f13e34]: "2"
+      - generic [ref=f13e35]: 建筑
+      - generic [ref=f13e36]: 专杀SQL注入(×2)
+      - generic [ref=f13e37]: 建筑
+    - generic [ref=f13e38] [cursor=pointer]:
+      - generic [ref=f13e39]: 蜜罐
+      - generic [ref=f13e40]: "2"
+      - generic [ref=f13e41]: 建筑
+      - generic [ref=f13e42]: 死后爆炸200·吸引地面改道
+      - generic [ref=f13e43]: 建筑
+    - generic [ref=f13e44] [cursor=pointer]:
+      - generic [ref=f13e45]: 应急响应
+      - generic [ref=f13e46]: "5"
+      - generic [ref=f13e47]: 法术
+      - generic [ref=f13e48]: 全图清场·消灭所有敌方单位
+      - generic [ref=f13e49]: 法术
+    - generic [ref=f13e50] [cursor=pointer]:
+      - generic [ref=f13e51]: IDS
+      - generic [ref=f13e52]: "4"
+      - generic [ref=f13e53]: 建筑
+      - generic [ref=f13e54]: 范围伤害·打飞行·揭示隐身
+      - generic [ref=f13e55]: 建筑

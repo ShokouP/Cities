@@ -1,0 +1,48 @@
+- generic [ref=f15e2]:
+  - generic [ref=f15e3]:
+    - generic [ref=f15e4]:
+      - generic [ref=f15e5]: 算力
+      - generic [ref=f15e6]: 10/10
+    - generic [ref=f15e7]:
+      - generic [ref=f15e8]: 核心服务器
+      - generic [ref=f15e9]: "15000"
+    - generic [ref=f15e10]:
+      - generic [ref=f15e11]: 计时
+      - generic [ref=f15e12]: 00:05
+    - generic [ref=f15e13]:
+      - generic [ref=f15e14]: AI核心
+      - generic [ref=f15e15]: "15000"
+    - generic [ref=f15e16]:
+      - generic [ref=f15e17]: AI算力
+      - generic [ref=f15e18]: 0/10
+  - generic [ref=f15e21]:
+    - generic [ref=f15e26] [cursor=pointer]:
+      - generic [ref=f15e27]: WAF
+      - generic [ref=f15e28]: "2"
+      - generic [ref=f15e29]: 建筑
+      - generic [ref=f15e30]: 专杀SQL注入(×2)
+      - generic [ref=f15e31]: 建筑
+    - generic [ref=f15e32] [cursor=pointer]:
+      - generic [ref=f15e33]: 应急响应
+      - generic [ref=f15e34]: "5"
+      - generic [ref=f15e35]: 法术
+      - generic [ref=f15e36]: 全图清场·消灭所有敌方单位
+      - generic [ref=f15e37]: 法术
+    - generic [ref=f15e38] [cursor=pointer]:
+      - generic [ref=f15e39]: 防火墙
+      - generic [ref=f15e40]: "3"
+      - generic [ref=f15e41]: 建筑
+      - generic [ref=f15e42]: 纯阻挡，横跨路面
+      - generic [ref=f15e43]: 建筑
+    - generic [ref=f15e44] [cursor=pointer]:
+      - generic [ref=f15e45]: EDR
+      - generic [ref=f15e46]: "3"
+      - generic [ref=f15e47]: 地面单位
+      - generic [ref=f15e48]: 优先打血量最低的
+      - generic [ref=f15e49]: 地面
+    - generic [ref=f15e50] [cursor=pointer]:
+      - generic [ref=f15e51]: 加密传输
+      - generic [ref=f15e52]: "3"
+      - generic [ref=f15e53]: 法术
+      - generic [ref=f15e54]: 套塔·600护盾
+      - generic [ref=f15e55]: 法术

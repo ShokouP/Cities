@@ -1,0 +1,78 @@
+- generic [ref=f1e2]:
+  - generic [ref=f1e3]:
+    - generic [ref=f1e5]:
+      - generic [ref=f1e6]: 算力
+      - generic [ref=f1e7]: 10/10
+    - generic [ref=f1e11]:
+      - generic [ref=f1e12]: 核心服务器
+      - generic [ref=f1e13]: "18000"
+    - generic [ref=f1e22]:
+      - generic [ref=f1e23]: 计时
+      - generic [ref=f1e24]: 00:07
+    - generic [ref=f1e26]:
+      - generic [ref=f1e27]: AI核心
+      - generic [ref=f1e28]: "18000"
+    - generic [ref=f1e36]:
+      - generic [ref=f1e37]:
+        - generic [ref=f1e38]: AI算力
+        - generic [ref=f1e39]: 4/10
+      - generic [ref=f1e42]: 下一波：暴力破解 → 暴露面 (1.8s)
+  - generic [ref=f1e44]: 点击手牌选中 → 点击战场蓝色部署区放置单位 → 守住三路核心服务器
+  - generic [ref=f1e47]:
+    - generic [ref=f1e53] [cursor=pointer]:
+      - generic [ref=f1e56]:
+        - generic [ref=f1e57]: IDS
+        - generic [ref=f1e58]: "4"
+      - generic [ref=f1e59]:
+        - generic [ref=f1e60]: 范围伤害·打飞行·跨路·揭示隐身
+        - generic [ref=f1e61]:
+          - generic [ref=f1e62]:
+            - text: HP
+            - generic [ref=f1e63]: "650"
+          - generic [ref=f1e64]:
+            - text: ATK
+            - generic [ref=f1e65]: 40/s
+          - generic [ref=f1e66]:
+            - text: ⏱
+            - generic [ref=f1e67]: 50s
+      - generic [ref=f1e69]: 建筑
+    - generic [ref=f1e71] [cursor=pointer]:
+      - generic [ref=f1e74]:
+        - generic [ref=f1e75]: EDR
+        - generic [ref=f1e76]: "3"
+      - generic [ref=f1e77]:
+        - generic [ref=f1e78]: 优先打血量最低的·死后反打
+        - generic [ref=f1e79]:
+          - generic [ref=f1e80]:
+            - text: HP
+            - generic [ref=f1e81]: "420"
+          - generic [ref=f1e82]:
+            - text: ATK
+            - generic [ref=f1e83]: 80/s
+      - generic [ref=f1e85]: 地面
+    - generic [ref=f1e87] [cursor=pointer]:
+      - generic [ref=f1e90]:
+        - generic [ref=f1e91]: 加密传输
+        - generic [ref=f1e92]: "3"
+      - generic [ref=f1e94]: 套塔·800护盾
+      - generic [ref=f1e96]: 法术
+    - generic [ref=f1e98] [cursor=pointer]:
+      - generic [ref=f1e101]:
+        - generic [ref=f1e102]: 补丁管理
+        - generic [ref=f1e103]: "2"
+      - generic [ref=f1e105]: 给单座建筑回血45%
+      - generic [ref=f1e107]: 法术
+    - generic [ref=f1e109] [cursor=pointer]:
+      - generic [ref=f1e112]:
+        - generic [ref=f1e113]: 溯源小队
+        - generic [ref=f1e114]: "7"
+      - generic [ref=f1e115]:
+        - generic [ref=f1e116]: 高费重甲·直捣红队核心塔
+        - generic [ref=f1e117]:
+          - generic [ref=f1e118]:
+            - text: HP
+            - generic [ref=f1e119]: "1200"
+          - generic [ref=f1e120]:
+            - text: ATK
+            - generic [ref=f1e121]: 160/s
+      - generic [ref=f1e123]: 地面

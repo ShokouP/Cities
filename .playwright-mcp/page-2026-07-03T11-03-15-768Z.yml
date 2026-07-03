@@ -1,0 +1,48 @@
+- generic [ref=f14e2]:
+  - generic [ref=f14e3]:
+    - generic [ref=f14e4]:
+      - generic [ref=f14e5]: 算力
+      - generic [ref=f14e6]: 10/10
+    - generic [ref=f14e7]:
+      - generic [ref=f14e8]: 核心服务器
+      - generic [ref=f14e9]: "15000"
+    - generic [ref=f14e10]:
+      - generic [ref=f14e11]: 计时
+      - generic [ref=f14e12]: 00:05
+    - generic [ref=f14e13]:
+      - generic [ref=f14e14]: AI核心
+      - generic [ref=f14e15]: "15000"
+    - generic [ref=f14e16]:
+      - generic [ref=f14e17]: AI算力
+      - generic [ref=f14e18]: 1/10
+  - generic [ref=f14e21]:
+    - generic [ref=f14e26] [cursor=pointer]:
+      - generic [ref=f14e27]: 加密传输
+      - generic [ref=f14e28]: "3"
+      - generic [ref=f14e29]: 法术
+      - generic [ref=f14e30]: 套塔·600护盾
+      - generic [ref=f14e31]: 法术
+    - generic [ref=f14e32] [cursor=pointer]:
+      - generic [ref=f14e33]: WAF
+      - generic [ref=f14e34]: "2"
+      - generic [ref=f14e35]: 建筑
+      - generic [ref=f14e36]: 专杀SQL注入(×2)
+      - generic [ref=f14e37]: 建筑
+    - generic [ref=f14e38] [cursor=pointer]:
+      - generic [ref=f14e39]: 补丁管理
+      - generic [ref=f14e40]: "3"
+      - generic [ref=f14e41]: 法术
+      - generic [ref=f14e42]: 给单座建筑回血40%
+      - generic [ref=f14e43]: 法术
+    - generic [ref=f14e44] [cursor=pointer]:
+      - generic [ref=f14e45]: IDS
+      - generic [ref=f14e46]: "4"
+      - generic [ref=f14e47]: 建筑
+      - generic [ref=f14e48]: 范围伤害·打飞行·揭示隐身
+      - generic [ref=f14e49]: 建筑
+    - generic [ref=f14e50] [cursor=pointer]:
+      - generic [ref=f14e51]: EDR
+      - generic [ref=f14e52]: "3"
+      - generic [ref=f14e53]: 地面单位
+      - generic [ref=f14e54]: 优先打血量最低的
+      - generic [ref=f14e55]: 地面

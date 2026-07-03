@@ -1,0 +1,5 @@
+[    5296ms] ReferenceError: pTeam is not defined
+    at render (http://localhost:3457/lightspeed-grid.html:715:24)
+    at loop (http://localhost:3457/lightspeed-grid.html:620:3)
+    at startGame (http://localhost:3457/lightspeed-grid.html:353:72)
+    at HTMLButtonElement.<anonymous> (http://localhost:3457/lightspeed-grid.html:878:74)

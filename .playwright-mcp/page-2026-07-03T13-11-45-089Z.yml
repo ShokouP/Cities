@@ -1,0 +1,86 @@
+- generic [ref=f7e2]:
+  - generic [ref=f7e3]:
+    - generic [ref=f7e5]:
+      - generic [ref=f7e6]: 算力
+      - generic [ref=f7e7]: 7/10
+    - generic [ref=f7e11]:
+      - generic [ref=f7e12]: 核心服务器
+      - generic [ref=f7e13]: "18000"
+    - generic [ref=f7e22]:
+      - generic [ref=f7e23]: 计时
+      - generic [ref=f7e24]: 00:00
+    - generic [ref=f7e26]:
+      - generic [ref=f7e27]: AI核心
+      - generic [ref=f7e28]: "18000"
+    - generic [ref=f7e36]:
+      - generic [ref=f7e37]:
+        - generic [ref=f7e38]: AI算力
+        - generic [ref=f7e39]: 5/10
+      - generic [ref=f7e42]: 下一波：加密传输 → 横向移动通道 (3.0s)
+  - generic [ref=f7e44]: 点击手牌选中 → 点击战场我方部署区放置单位 → 摧毁对方核心服务器
+  - generic [ref=f7e47]:
+    - generic [ref=f7e55] [cursor=pointer]:
+      - generic [ref=f7e58]:
+        - generic [ref=f7e59]: SQL注入
+        - generic [ref=f7e60]: "5"
+      - generic [ref=f7e61]:
+        - generic [ref=f7e62]: 对数据库塔伤害×2
+        - generic [ref=f7e63]:
+          - generic [ref=f7e64]:
+            - text: HP
+            - generic [ref=f7e65]: "420"
+          - generic [ref=f7e66]:
+            - text: ATK
+            - generic [ref=f7e67]: 110/s
+      - generic [ref=f7e69]: 地面
+    - generic:
+      - generic:
+        - generic:
+          - generic: 零日漏洞
+          - generic: "8"
+        - generic:
+          - generic: 500伤害·无视护盾
+          - generic:
+            - generic:
+              - text: ATK
+              - generic: "500"
+        - generic:
+          - generic: 法术
+    - generic [ref=f7e71] [cursor=pointer]:
+      - generic [ref=f7e74]:
+        - generic [ref=f7e75]: 勒索软件
+        - generic [ref=f7e76]: "6"
+      - generic [ref=f7e77]:
+        - generic [ref=f7e78]: 高血量肉盾·坦克
+        - generic [ref=f7e79]:
+          - generic [ref=f7e80]:
+            - text: HP
+            - generic [ref=f7e81]: "850"
+          - generic [ref=f7e82]:
+            - text: ATK
+            - generic [ref=f7e83]: 85/s
+      - generic [ref=f7e85]: 地面
+    - generic [ref=f7e87] [cursor=pointer]:
+      - generic [ref=f7e90]:
+        - generic [ref=f7e91]: 暴力破解
+        - generic [ref=f7e92]: "2"
+      - generic [ref=f7e93]:
+        - generic [ref=f7e94]: 越打越疼（每3秒+12）
+        - generic [ref=f7e95]:
+          - generic [ref=f7e96]:
+            - text: HP
+            - generic [ref=f7e97]: "190"
+          - generic [ref=f7e98]:
+            - text: ATK
+            - generic [ref=f7e99]: 55/s
+      - generic [ref=f7e101]: 地面
+    - generic [ref=f7e103] [cursor=pointer]:
+      - generic [ref=f7e106]:
+        - generic [ref=f7e107]: DDoS
+        - generic [ref=f7e108]: "5"
+      - generic [ref=f7e109]:
+        - generic [ref=f7e110]: 范围瘫痪3秒+120伤害
+        - generic [ref=f7e112]:
+          - text: ATK
+          - generic [ref=f7e113]: "120"
+      - generic [ref=f7e115]: 法术

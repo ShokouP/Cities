@@ -1,0 +1,173 @@
+- generic [active] [ref=f18e1]:
+  - img [ref=f18e2]:
+    - generic [ref=f18e99]:
+      - generic [ref=f18e100] [cursor=pointer]:
+        - generic: 迪奥米拉
+      - generic [ref=f18e106] [cursor=pointer]:
+        - generic: 伊西多拉
+      - generic [ref=f18e111] [cursor=pointer]:
+        - generic: 扎伊拉
+      - generic [ref=f18e117] [cursor=pointer]:
+        - generic: 左拉
+      - generic [ref=f18e123] [cursor=pointer]:
+        - generic: 莫里利亚
+      - generic [ref=f18e129] [cursor=pointer]:
+        - generic: 多罗泰亚
+      - generic [ref=f18e134] [cursor=pointer]:
+        - generic: 阿纳斯塔西亚
+      - generic [ref=f18e139] [cursor=pointer]:
+        - generic: 苔斯皮那
+      - generic [ref=f18e144] [cursor=pointer]:
+        - generic: 菲朵拉
+      - generic [ref=f18e149] [cursor=pointer]:
+        - generic: 佐贝伊德
+      - generic [ref=f18e154] [cursor=pointer]:
+        - generic: 塔马拉
+      - generic [ref=f18e160] [cursor=pointer]:
+        - generic: 吉尔玛
+      - generic [ref=f18e166] [cursor=pointer]:
+        - generic: 佐艾
+      - generic [ref=f18e172] [cursor=pointer]:
+        - generic: 伊帕奇亚
+      - generic [ref=f18e177] [cursor=pointer]:
+        - generic: 奥利维亚
+      - generic [ref=f18e183] [cursor=pointer]:
+        - generic: 伊萨乌拉
+      - generic [ref=f18e188] [cursor=pointer]:
+        - generic: 珍诺比亚
+      - generic [ref=f18e194] [cursor=pointer]:
+        - generic: 阿尔米拉
+      - generic [ref=f18e200] [cursor=pointer]:
+        - generic: 索伏洛尼亚
+      - generic [ref=f18e205] [cursor=pointer]:
+        - generic: 奥塔维亚
+      - generic [ref=f18e210] [cursor=pointer]:
+        - generic: 欧菲米亚
+      - generic [ref=f18e215] [cursor=pointer]:
+        - generic: 克洛艾
+      - generic [ref=f18e220] [cursor=pointer]:
+        - generic: 埃乌特洛比亚
+      - generic [ref=f18e225] [cursor=pointer]:
+        - generic: 艾尔西里亚
+      - generic [ref=f18e231] [cursor=pointer]:
+        - generic: 斯麦拉尔迪那
+      - generic [ref=f18e236] [cursor=pointer]:
+        - generic: 瓦尔德拉达
+      - generic [ref=f18e242] [cursor=pointer]:
+        - generic: 珍茹德
+      - generic [ref=f18e247] [cursor=pointer]:
+        - generic: 宝琪
+      - generic [ref=f18e253] [cursor=pointer]:
+        - generic: 菲利德
+      - generic [ref=f18e259] [cursor=pointer]:
+        - generic: 莫里亚纳
+      - generic [ref=f18e264] [cursor=pointer]:
+        - generic: 梅拉尼亚
+      - generic [ref=f18e269] [cursor=pointer]:
+        - generic: 阿德尔玛
+      - generic [ref=f18e274] [cursor=pointer]:
+        - generic: 埃乌萨皮娅
+      - generic [ref=f18e280] [cursor=pointer]:
+        - generic: 阿尔嘉
+      - generic [ref=f18e286] [cursor=pointer]:
+        - generic: 劳多米亚
+      - generic [ref=f18e291] [cursor=pointer]:
+        - generic: 埃乌多西亚
+      - generic [ref=f18e296] [cursor=pointer]:
+        - generic: 贝尔萨贝阿
+      - generic [ref=f18e301] [cursor=pointer]:
+        - generic: 泰克拉
+      - generic [ref=f18e307] [cursor=pointer]:
+        - generic: 佩林奇亚
+      - generic [ref=f18e312] [cursor=pointer]:
+        - generic: 安德里亚
+      - generic [ref=f18e317] [cursor=pointer]:
+        - generic: 莱奥尼亚
+      - generic [ref=f18e323] [cursor=pointer]:
+        - generic: 特鲁德
+      - generic [ref=f18e328] [cursor=pointer]:
+        - generic: 普罗科比亚
+      - generic [ref=f18e333] [cursor=pointer]:
+        - generic: 切奇利雅
+      - generic [ref=f18e339] [cursor=pointer]:
+        - generic: 潘特熙莱雅
+      - generic [ref=f18e344] [cursor=pointer]:
+        - generic: 欧林达
+      - generic [ref=f18e350] [cursor=pointer]:
+        - generic: 莱萨
+      - generic [ref=f18e356] [cursor=pointer]:
+        - generic: 马洛奇亚
+      - generic [ref=f18e362] [cursor=pointer]:
+        - generic: 特奥朵拉
+      - generic [ref=f18e368] [cursor=pointer]:
+        - generic: 贝莱尼切
+      - generic [ref=f18e374] [cursor=pointer]:
+        - generic: 阿格劳拉
+      - generic [ref=f18e379] [cursor=pointer]:
+        - generic: 莱安德拉
+      - generic [ref=f18e384] [cursor=pointer]:
+        - generic: 皮拉
+      - generic [ref=f18e390] [cursor=pointer]:
+        - generic: 克拉莉切
+      - generic [ref=f18e395] [cursor=pointer]:
+        - generic: 伊莱那
+  - banner:
+    - heading "看不见的城市" [level=1] [ref=f18e400]
+    - paragraph [ref=f18e401]: 卡尔维诺 · 55 座城市的诗意星座
+  - generic:
+    - button "全部" [ref=f18e402] [cursor=pointer]
+    - button "记忆之城" [ref=f18e403] [cursor=pointer]
+    - button "欲望之城" [ref=f18e404] [cursor=pointer]
+    - button "符号之城" [ref=f18e405] [cursor=pointer]
+    - button "轻盈之城" [ref=f18e406] [cursor=pointer]
+    - button "贸易之城" [ref=f18e407] [cursor=pointer]
+    - button "眼睛之城" [ref=f18e408] [cursor=pointer]
+    - button "死亡之城" [ref=f18e409] [cursor=pointer]
+    - button "天空之城" [ref=f18e410] [cursor=pointer]
+    - button "连绵之城" [ref=f18e411] [cursor=pointer]
+    - button "隐蔽之城" [ref=f18e412] [cursor=pointer]
+    - button "名字之城" [ref=f18e413] [cursor=pointer]
+  - button "重置视角" [ref=f18e414] [cursor=pointer]
+  - button "连接模式" [ref=f18e415] [cursor=pointer]
+  - button "简介" [ref=f18e416] [cursor=pointer]
+  - generic [ref=f18e418]:
+    - button "关闭" [ref=f18e419] [cursor=pointer]: ×
+    - heading "欢迎来到《看不见的城市》" [level=2] [ref=f18e420]
+    - paragraph [ref=f18e421]: 这里是卡尔维诺五十五座城市的中文交互式星座。每一座城市都是一颗发光的节点，按照「记忆、欲望、符号、轻盈……」十一类主题聚成星群。
+    - list [ref=f18e422]:
+      - listitem [ref=f18e423]:
+        - strong [ref=f18e424]: 悬停
+        - text: 城市，查看它的名字、主题与一句摘录。
+      - listitem [ref=f18e425]:
+        - strong [ref=f18e426]: 点击
+        - text: 城市，右侧会展开详情面板，展示对它的文学描述。
+      - listitem [ref=f18e427]:
+        - strong [ref=f18e428]: 右键
+        - text: 城市，选择「阅读原文」，即可阅读该书对应章节的完整原文。
+      - listitem [ref=f18e429]: 点击城市时，连接会按一定概率自动「拆解」并「重组」，不同主题的城市会彼此产生回声。
+      - listitem [ref=f18e430]: 开启右上角「连接模式」，可以手动选择两座城市建立新连接，或右键城市拆解它的连接。
+      - listitem [ref=f18e431]: 点击顶部的主题标签，可以只高亮某一类城市，其他城市会淡入背景。
+      - listitem [ref=f18e432]: 拖动背景可以平移，滚动鼠标可以缩放；按「重置视角」回到初始画面。
+    - paragraph [ref=f18e433]: 愿你在这座星空里，重新遇见马可·波罗向忽必烈汗讲述的那些城市。
+    - generic [ref=f18e434]: 文字摘录与原文来自 Italo Calvino《看不见的城市》（张密等译本）。本项目仅供文学阅读与可视化学习使用。
+  - generic [ref=f18e435]:
+    - button "阅读原文" [ref=f18e437] [cursor=pointer]
+    - button "拆解连接" [ref=f18e438] [cursor=pointer]
+    - button "连接城市" [ref=f18e439] [cursor=pointer]
+    - button "取消" [ref=f18e440] [cursor=pointer]
+  - generic:
+    - heading [level=4]
+    - paragraph
+  - complementary [ref=f18e442]:
+    - button "关闭" [ref=f18e443] [cursor=pointer]: ×
+    - generic [ref=f18e444]:
+      - heading [level=2]
+  - complementary [ref=f18e446]:
+    - button "关闭" [ref=f18e447] [cursor=pointer]: ×
+    - generic [ref=f18e448]:
+      - heading [level=2]
+  - complementary [ref=f18e450]:
+    - generic [ref=f18e451]:
+      - heading "连接回响" [level=3] [ref=f18e452]
+      - button "隐藏" [ref=f18e453] [cursor=pointer]: ×
+  - generic: 连接模式：点击两个城市建立连接；右键城市可拆解其连接

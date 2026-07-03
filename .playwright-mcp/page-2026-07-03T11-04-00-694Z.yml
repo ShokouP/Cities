@@ -1,0 +1,24 @@
+- generic [ref=f15e2]:
+  - generic [ref=f15e3]:
+    - generic [ref=f15e4]:
+      - generic [ref=f15e5]: 算力
+      - generic [ref=f15e6]: 5/10
+    - generic [ref=f15e7]:
+      - generic [ref=f15e8]: 核心服务器
+      - generic [ref=f15e9]: "5000"
+    - generic [ref=f15e10]:
+      - generic [ref=f15e11]: 计时
+      - generic [ref=f15e12]: 00:00
+    - generic [ref=f15e13]:
+      - generic [ref=f15e14]: AI核心
+      - generic [ref=f15e15]: "5000"
+    - generic [ref=f15e16]:
+      - generic [ref=f15e17]: AI算力
+      - generic [ref=f15e18]: 5/10
+  - generic [ref=f15e22]:
+    - heading "光 速 城" [level=1] [ref=f15e23]
+    - paragraph [ref=f15e24]:
+      - text: Lightspeed Grid · 网络安全攻防
+      - text: 点击卡牌选择，再点击战场部署
+      - text: 防守三条路线，保护核心服务器
+    - button "入 侵 检 测 中 …" [ref=f15e25] [cursor=pointer]

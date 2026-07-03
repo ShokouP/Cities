@@ -1,0 +1,80 @@
+- generic [ref=f8e2]:
+  - generic [ref=f8e3]:
+    - generic [ref=f8e5]:
+      - generic [ref=f8e6]: 算力
+      - generic [ref=f8e7]: 2/10
+    - generic [ref=f8e11]:
+      - generic [ref=f8e12]: 核心服务器
+      - generic [ref=f8e13]: "18000"
+    - generic [ref=f8e22]:
+      - generic [ref=f8e23]: 计时
+      - generic [ref=f8e24]: 00:15
+    - generic [ref=f8e26]:
+      - generic [ref=f8e27]: AI核心
+      - generic [ref=f8e28]: "18000"
+    - generic [ref=f8e36]:
+      - generic [ref=f8e37]:
+        - generic [ref=f8e38]: AI算力
+        - generic [ref=f8e39]: 8/10
+      - generic [ref=f8e42]: 下一波：SQL注入 → 横向移动通道 (0.9s)
+  - generic [ref=f8e44]: 点击手牌选中 → 点击战场我方部署区放置单位 → 摧毁对方核心服务器
+  - generic [ref=f8e47]:
+    - generic:
+      - generic:
+        - generic:
+          - generic: 加密传输
+          - generic: "3"
+        - generic:
+          - generic: 套塔·800护盾
+        - generic:
+          - generic: 法术
+    - generic:
+      - generic:
+        - generic:
+          - generic: 应急响应
+          - generic: "6"
+        - generic:
+          - generic: 全图清场·消灭所有敌方单位
+        - generic:
+          - generic: 法术
+    - generic [ref=f8e120] [cursor=pointer]:
+      - generic [ref=f8e123]:
+        - generic [ref=f8e124]: 补丁管理
+        - generic [ref=f8e125]: "2"
+      - generic [ref=f8e127]: 给单座建筑回血45%
+      - generic [ref=f8e129]: 法术
+    - generic:
+      - generic:
+        - generic:
+          - generic: 溯源小队
+          - generic: "7"
+        - generic:
+          - generic: 高费重甲·直捣红队核心塔
+          - generic:
+            - generic:
+              - text: HP
+              - generic: "1200"
+            - generic:
+              - text: ATK
+              - generic: 160/s
+        - generic:
+          - generic: 地面
+    - generic:
+      - generic:
+        - generic:
+          - generic: IDS
+          - generic: "4"
+        - generic:
+          - generic: 范围伤害·打飞行·跨路·揭示隐身
+          - generic:
+            - generic:
+              - text: HP
+              - generic: "650"
+            - generic:
+              - text: ATK
+              - generic: 40/s
+            - generic:
+              - text: ⏱
+              - generic: 50s
+        - generic:
+          - generic: 建筑

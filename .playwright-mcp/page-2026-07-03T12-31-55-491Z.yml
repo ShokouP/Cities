@@ -1,0 +1,94 @@
+- generic [ref=f18e2]:
+  - generic [ref=f18e3]:
+    - generic [ref=f18e5]:
+      - generic [ref=f18e6]: 算力
+      - generic [ref=f18e7]: 5/10
+    - generic [ref=f18e11]:
+      - generic [ref=f18e12]: 核心服务器
+      - generic [ref=f18e13]: "6248"
+    - generic [ref=f18e22]:
+      - generic [ref=f18e23]: 计时
+      - generic [ref=f18e24]: 00:55
+    - generic [ref=f18e26]:
+      - generic [ref=f18e27]: AI核心
+      - generic [ref=f18e28]: "15000"
+    - generic [ref=f18e37]:
+      - generic [ref=f18e38]: AI算力
+      - generic [ref=f18e39]: 2/10
+  - generic [ref=f18e43]: 点击手牌选中 → 点击战场蓝色部署区放置单位 → 守住三路核心服务器
+  - generic [ref=f18e44]:
+    - generic: 应急响应启动 · 全图清场
+  - generic [ref=f18e46]:
+    - generic [ref=f18e217] [cursor=pointer]:
+      - generic [ref=f18e218]:
+        - generic [ref=f18e219]: 蜜罐
+        - generic [ref=f18e220]: "2"
+      - generic [ref=f18e222]:
+        - generic [ref=f18e223]:
+          - generic [ref=f18e224]: ◇
+          - generic [ref=f18e225]: 建筑
+        - generic [ref=f18e226]: 死后爆炸200·吸引地面改道
+      - generic [ref=f18e227]:
+        - generic [ref=f18e228]:
+          - generic [ref=f18e229]:
+            - text: HP
+            - generic [ref=f18e230]: "300"
+          - generic [ref=f18e231]:
+            - text: ⏱
+            - generic [ref=f18e232]: 30s
+        - generic [ref=f18e233]: 建筑
+    - generic [ref=f18e235] [cursor=pointer]:
+      - generic [ref=f18e236]:
+        - generic [ref=f18e237]: 补丁管理
+        - generic [ref=f18e238]: "3"
+      - generic [ref=f18e240]:
+        - generic [ref=f18e241]:
+          - generic [ref=f18e242]: ✦
+          - generic [ref=f18e243]: 法术
+        - generic [ref=f18e244]: 给单座建筑回血40%
+      - generic [ref=f18e246]: 法术
+    - generic [ref=f18e248] [cursor=pointer]:
+      - generic [ref=f18e249]:
+        - generic [ref=f18e250]: 加密传输
+        - generic [ref=f18e251]: "3"
+      - generic [ref=f18e253]:
+        - generic [ref=f18e254]:
+          - generic [ref=f18e255]: ✦
+          - generic [ref=f18e256]: 法术
+        - generic [ref=f18e257]: 套塔·600护盾
+      - generic [ref=f18e259]: 法术
+    - generic [ref=f18e261] [cursor=pointer]:
+      - generic [ref=f18e262]:
+        - generic [ref=f18e263]: IDS
+        - generic [ref=f18e264]: "4"
+      - generic [ref=f18e266]:
+        - generic [ref=f18e267]:
+          - generic [ref=f18e268]: ◇
+          - generic [ref=f18e269]: 建筑
+        - generic [ref=f18e270]: 范围伤害·打飞行·揭示隐身
+      - generic [ref=f18e271]:
+        - generic [ref=f18e272]:
+          - generic [ref=f18e273]:
+            - text: HP
+            - generic [ref=f18e274]: "600"
+          - generic [ref=f18e275]:
+            - text: ATK
+            - generic [ref=f18e276]: 30/s
+          - generic [ref=f18e277]:
+            - text: ⏱
+            - generic [ref=f18e278]: 40s
+        - generic [ref=f18e279]: 建筑
+    - generic [ref=f18e281] [cursor=pointer]:
+      - generic [ref=f18e282]:
+        - generic [ref=f18e283]: 防火墙
+        - generic [ref=f18e284]: "3"
+      - generic [ref=f18e286]:
+        - generic [ref=f18e287]:
+          - generic [ref=f18e288]: ◇
+          - generic [ref=f18e289]: 建筑
+        - generic [ref=f18e290]: 纯阻挡，横跨路面
+      - generic [ref=f18e291]:
+        - generic [ref=f18e293]:
+          - text: HP
+          - generic [ref=f18e294]: "800"
+        - generic [ref=f18e295]: 建筑

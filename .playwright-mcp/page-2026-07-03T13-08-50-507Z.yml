@@ -1,0 +1,29 @@
+- generic [ref=f4e2]:
+  - generic [ref=f4e3]:
+    - generic [ref=f4e5]:
+      - generic [ref=f4e6]: 算力
+      - generic [ref=f4e7]: 5/10
+    - generic [ref=f4e11]:
+      - generic [ref=f4e12]: 核心服务器
+      - generic [ref=f4e13]: "5000"
+    - generic [ref=f4e22]:
+      - generic [ref=f4e23]: 计时
+      - generic [ref=f4e24]: 00:00
+    - generic [ref=f4e26]:
+      - generic [ref=f4e27]: AI核心
+      - generic [ref=f4e28]: "5000"
+    - generic [ref=f4e36]:
+      - generic [ref=f4e37]:
+        - generic [ref=f4e38]: AI算力
+        - generic [ref=f4e39]: 5/10
+      - generic [ref=f4e42]: 侦察中…
+  - generic [ref=f4e44]: 点击手牌选中 → 点击战场蓝色部署区放置单位 → 守住三路核心服务器
+  - generic [ref=f4e48]:
+    - heading "光 速 城" [level=1] [ref=f4e49]
+    - paragraph [ref=f4e50]:
+      - text: Lightspeed Grid · 网络安全攻防
+      - text: 拖卡牌到战场部署 · 单位自动前进交战
+      - text: 左路暴露面 → 中路横向移动 → 右路核心资产区
+    - generic [ref=f4e51]:
+      - button "防 守 方（蓝 队）" [ref=f4e52] [cursor=pointer]
+      - button "进 攻 方（红 队）" [ref=f4e53] [cursor=pointer]

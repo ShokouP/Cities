@@ -1,0 +1,23 @@
+- generic [ref=f5e2]:
+  - generic [ref=f5e3]:
+    - generic [ref=f5e4]:
+      - generic [ref=f5e5]: 算力
+      - generic [ref=f5e6]: 5/10
+    - generic [ref=f5e7]:
+      - generic [ref=f5e8]: 核心服务器
+      - generic [ref=f5e9]: "5000"
+    - generic [ref=f5e10]:
+      - generic [ref=f5e11]: 计时
+      - generic [ref=f5e12]: 00:00
+    - generic [ref=f5e13]:
+      - generic [ref=f5e14]: AI核心
+      - generic [ref=f5e15]: "5000"
+    - generic [ref=f5e16]:
+      - generic [ref=f5e17]: AI算力
+      - generic [ref=f5e18]: 5/10
+  - generic [ref=f5e22]:
+    - heading "光 速 城" [level=1] [ref=f5e23]
+    - paragraph [ref=f5e24]:
+      - text: Lightspeed Grid · 网络安全攻防
+      - text: 拖放卡牌部署防线，守住核心服务器
+    - button "入 侵 检 测 中 …" [ref=f5e25] [cursor=pointer]

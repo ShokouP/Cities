@@ -1,0 +1,82 @@
+- generic [ref=f6e2]:
+  - generic [ref=f6e3]:
+    - generic [ref=f6e5]:
+      - generic [ref=f6e6]: 算力
+      - generic [ref=f6e7]: 7/10
+    - generic [ref=f6e11]:
+      - generic [ref=f6e12]: 核心服务器
+      - generic [ref=f6e13]: "18000"
+    - generic [ref=f6e22]:
+      - generic [ref=f6e23]: 计时
+      - generic [ref=f6e24]: 00:00
+    - generic [ref=f6e26]:
+      - generic [ref=f6e27]: AI核心
+      - generic [ref=f6e28]: "18000"
+    - generic [ref=f6e36]:
+      - generic [ref=f6e37]:
+        - generic [ref=f6e38]: AI算力
+        - generic [ref=f6e39]: 4/10
+      - generic [ref=f6e42]: 下一波：蜜罐 → 暴露面 (3.1s)
+  - generic [ref=f6e44]: 点击手牌选中 → 点击战场我方部署区放置单位 → 摧毁对方核心服务器
+  - generic [ref=f6e47]:
+    - generic:
+      - generic:
+        - generic:
+          - generic: 零日漏洞
+          - generic: "8"
+        - generic:
+          - generic: 500伤害·无视护盾
+          - generic:
+            - generic:
+              - text: ATK
+              - generic: "500"
+        - generic:
+          - generic: 法术
+    - generic [ref=f6e55] [cursor=pointer]:
+      - generic [ref=f6e58]:
+        - generic [ref=f6e59]: 钓鱼邮件
+        - generic [ref=f6e60]: "4"
+      - generic [ref=f6e61]:
+        - generic [ref=f6e62]: 飞过地面防线·直击塔
+        - generic [ref=f6e63]:
+          - generic [ref=f6e64]:
+            - text: HP
+            - generic [ref=f6e65]: "240"
+          - generic [ref=f6e66]:
+            - text: ATK
+            - generic [ref=f6e67]: 60/s
+      - generic [ref=f6e69]: 飞行
+    - generic [ref=f6e71] [cursor=pointer]:
+      - generic [ref=f6e74]:
+        - generic [ref=f6e75]: SQL注入
+        - generic [ref=f6e76]: "5"
+      - generic [ref=f6e77]:
+        - generic [ref=f6e78]: 对数据库塔伤害×2
+        - generic [ref=f6e79]:
+          - generic [ref=f6e80]:
+            - text: HP
+            - generic [ref=f6e81]: "420"
+          - generic [ref=f6e82]:
+            - text: ATK
+            - generic [ref=f6e83]: 110/s
+      - generic [ref=f6e85]: 地面
+    - generic [ref=f6e87] [cursor=pointer]:
+      - generic [ref=f6e90]:
+        - generic [ref=f6e91]: 后门
+        - generic [ref=f6e92]: "5"
+      - generic [ref=f6e93]:
+        - generic [ref=f6e94]: 隐匿·每9秒生小兵
+        - generic [ref=f6e95]:
+          - generic [ref=f6e96]:
+            - text: HP
+            - generic [ref=f6e97]: "280"
+          - generic [ref=f6e98]:
+            - text: ⏱
+            - generic [ref=f6e99]: 30s
+      - generic [ref=f6e101]: 建筑
+    - generic [ref=f6e103] [cursor=pointer]:
+      - generic [ref=f6e106]:
+        - generic [ref=f6e107]: 网络扫描
+        - generic [ref=f6e108]: "3"
+      - generic [ref=f6e110]: 揭示对方部署4秒
+      - generic [ref=f6e112]: 法术
