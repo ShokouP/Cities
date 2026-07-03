@@ -214,37 +214,37 @@ const MAX_POWER=10,START_POWER=7,POWER_REGEN=1.0,POWER_REGEN_FAST=1.5,FAST_REGEN
 const GAME_TIME_LIMIT=300;
 const LANE_H=140,LANES_Y=[110,310,510],LANE_NAMES=['暴露面','横向移动通道','核心资产区'];
 const LANE_X0=120,LANE_X1=1080,LANE_W=LANE_X1-LANE_X0;
-const TOWER_HP=2400,CORE_HP=6000;
-const TOWER_ATK=35,TOWER_ATK_SPD=0.8,TOWER_RANGE=140;
+const TOWER_HP=1400,CORE_HP=3600;
+const TOWER_ATK=20,TOWER_ATK_SPD=1.0,TOWER_RANGE=120;
 const BLUE_TOWER_X=280,RED_TOWER_X=920,TOWER_W=32,TOWER_H=60;
 const CORE_W=36,PER_LANE_CORE_H=100;
 const DEPLOY_ZONE_BLUE=420,DEPLOY_ZONE_RED=780;
-const DRAW_INTERVAL=15;
+const DRAW_INTERVAL=5;
 const ROLE_HINTS={
   blue:'守住三路核心服务器 · 点击手牌 → 点击我方部署区',
   red:'摧毁三路核心服务器 · 点击手牌 → 点击我方部署区'
 };
 
 const BLUE_CARDS=[
-  {id:'firewall',name:'防火墙',cost:2,type:'building',hp:1100,atk:0,atkSpd:0,range:0,speed:0,duration:0,desc:'纯阻挡，横跨路面',tag:'建筑',color:'#3c8cf5'},
-  {id:'waf',name:'WAF',cost:3,type:'building',hp:500,atk:70,atkSpd:0.55,range:220,speed:0,duration:0,desc:'专杀SQL注入(×2)·对空·可跨路',tag:'建筑',color:'#5ca8f0',bonusVs:'sql_inject',flyTarget:true,crossLane:true},
-  {id:'ids',name:'IDS',cost:4,type:'building',hp:650,atk:40,atkSpd:0.35,range:300,speed:0,duration:50,desc:'范围伤害·打飞行·跨路·揭示隐身',tag:'建筑',color:'#50e890',flyTarget:true,aoe:true,crossLane:true},
-  {id:'edr',name:'EDR',cost:3,type:'ground',hp:420,atk:80,atkSpd:0.45,range:90,speed:95,duration:0,desc:'优先打血量最低的·死后反打',tag:'地面',color:'#4088e0',prioLowest:true,deathDmg:120},
-  {id:'honeypot',name:'蜜罐',cost:2,type:'building',hp:380,atk:0,atkSpd:0,range:0,speed:0,duration:35,desc:'死后爆炸240·吸引全图地面改道',tag:'建筑',color:'#e0b040',taunt:true,deathDmg:240,tauntRange:300},
-  {id:'patch',name:'补丁管理',cost:2,type:'spell',hp:0,atk:0,atkSpd:0,range:0,speed:0,duration:0,desc:'给单座建筑回血45%',tag:'法术',color:'#60d080',spell:'heal',healPct:0.45},
+  {id:'firewall',name:'防火墙',cost:2,type:'building',hp:700,atk:0,atkSpd:0,range:0,speed:0,duration:0,desc:'纯阻挡，横跨路面',tag:'建筑',color:'#3c8cf5'},
+  {id:'waf',name:'WAF',cost:3,type:'building',hp:340,atk:45,atkSpd:0.65,range:180,speed:0,duration:0,desc:'专杀SQL注入(×2)·对空·可跨路',tag:'建筑',color:'#5ca8f0',bonusVs:'sql_inject',flyTarget:true,crossLane:true},
+  {id:'ids',name:'IDS',cost:4,type:'building',hp:420,atk:28,atkSpd:0.45,range:220,speed:0,duration:40,desc:'范围伤害·打飞行·跨路·揭示隐身',tag:'建筑',color:'#50e890',flyTarget:true,aoe:true,crossLane:true},
+  {id:'edr',name:'EDR',cost:3,type:'ground',hp:300,atk:60,atkSpd:0.55,range:80,speed:85,duration:0,desc:'优先打血量最低的·死后反打',tag:'地面',color:'#4088e0',prioLowest:true,deathDmg:80},
+  {id:'honeypot',name:'蜜罐',cost:2,type:'building',hp:260,atk:0,atkSpd:0,range:0,speed:0,duration:25,desc:'死后爆炸160·吸引全图地面改道',tag:'建筑',color:'#e0b040',taunt:true,deathDmg:160,tauntRange:260},
+  {id:'patch',name:'补丁管理',cost:2,type:'spell',hp:0,atk:0,atkSpd:0,range:0,speed:0,duration:0,desc:'给单座建筑回血30%',tag:'法术',color:'#60d080',spell:'heal',healPct:0.30},
   {id:'emergency',name:'应急响应',cost:6,type:'spell',hp:0,atk:0,atkSpd:0,range:0,speed:0,duration:0,desc:'全图清场·消灭所有敌方单位',tag:'法术',color:'#f06040',spell:'killAll'},
-  {id:'encrypt',name:'加密传输',cost:3,type:'spell',hp:0,atk:0,atkSpd:0,range:0,speed:0,duration:0,desc:'套塔·800护盾',tag:'法术',color:'#70c0f0',spell:'shield',shieldAmt:800},
-  {id:'threat_hunter',name:'溯源小队',cost:7,type:'ground',hp:1200,atk:160,atkSpd:0.9,range:85,speed:65,duration:0,desc:'高费重甲·直捣红队核心塔',tag:'地面',color:'#20d0a0',prioCore:true},
+  {id:'encrypt',name:'加密传输',cost:3,type:'spell',hp:0,atk:0,atkSpd:0,range:0,speed:0,duration:0,desc:'套塔·500护盾',tag:'法术',color:'#70c0f0',spell:'shield',shieldAmt:500},
+  {id:'threat_hunter',name:'溯源小队',cost:7,type:'ground',hp:750,atk:110,atkSpd:1.1,range:75,speed:55,duration:0,desc:'高费重甲·直捣红队核心塔',tag:'地面',color:'#20d0a0',prioCore:true},
 ];
 const RED_CARDS=[
-  {id:'scan',name:'网络扫描',cost:3,type:'spell',hp:0,atk:0,atkSpd:0,range:0,speed:0,duration:0,desc:'揭示对方部署4秒',tag:'法术',color:'#f08040',spell:'reveal',revealTime:4},
-  {id:'phish',name:'钓鱼邮件',cost:4,type:'flying',hp:240,atk:60,atkSpd:0.75,range:75,speed:130,duration:0,desc:'飞过地面防线·直击塔',tag:'飞行',color:'#e0c040'},
-  {id:'sql_inject',name:'SQL注入',cost:5,type:'ground',hp:420,atk:110,atkSpd:0.85,range:65,speed:75,duration:0,desc:'对数据库塔伤害×2',tag:'地面',color:'#e04040',bonusVs:'db_tower'},
-  {id:'bruteforce',name:'暴力破解',cost:2,type:'ground',hp:190,atk:55,atkSpd:0.55,range:55,speed:70,duration:0,desc:'越打越疼（每3秒+12）',tag:'地面',color:'#f06030',ramping:true},
-  {id:'zeroday',name:'零日漏洞',cost:8,type:'spell',hp:0,atk:500,atkSpd:0,range:0,speed:0,duration:0,desc:'500伤害·无视护盾',tag:'法术',color:'#c030c0',spell:'directDmg',dmg:500,pierceShield:true},
-  {id:'ddos',name:'DDoS',cost:5,type:'spell',hp:0,atk:120,atkSpd:0,range:0,speed:0,duration:0,desc:'范围瘫痪3秒+120伤害',tag:'法术',color:'#a03030',spell:'aoeStun',dmg:120,stun:3,aoeRange:120},
-  {id:'ransomware',name:'勒索软件',cost:6,type:'ground',hp:850,atk:85,atkSpd:0.7,range:60,speed:50,duration:0,desc:'高血量肉盾·坦克',tag:'地面',color:'#d02020',heavy:true},
-  {id:'backdoor',name:'后门',cost:5,type:'building',hp:280,atk:0,atkSpd:0,range:0,speed:0,duration:30,desc:'隐匿·每9秒生小兵',tag:'建筑',color:'#9040d0',stealth:true,spawnCd:9,spawnUnit:'minion'},
+  {id:'scan',name:'网络扫描',cost:2,type:'spell',hp:0,atk:0,atkSpd:0,range:0,speed:0,duration:0,desc:'揭示对方部署4秒',tag:'法术',color:'#f08040',spell:'reveal',revealTime:4},
+  {id:'phish',name:'钓鱼邮件',cost:4,type:'flying',hp:380,atk:90,atkSpd:0.6,range:65,speed:160,duration:0,desc:'飞过地面防线·直击塔',tag:'飞行',color:'#e0c040'},
+  {id:'sql_inject',name:'SQL注入',cost:5,type:'ground',hp:620,atk:155,atkSpd:0.7,range:55,speed:95,duration:0,desc:'对数据库塔伤害×2',tag:'地面',color:'#e04040',bonusVs:'db_tower'},
+  {id:'bruteforce',name:'暴力破解',cost:2,type:'ground',hp:320,atk:75,atkSpd:0.45,range:45,speed:90,duration:0,desc:'越打越疼（每3秒+18）',tag:'地面',color:'#f06030',ramping:true},
+  {id:'zeroday',name:'零日漏洞',cost:7,type:'spell',hp:0,atk:800,atkSpd:0,range:0,speed:0,duration:0,desc:'800伤害·无视护盾',tag:'法术',color:'#c030c0',spell:'directDmg',dmg:800,pierceShield:true},
+  {id:'ddos',name:'DDoS',cost:4,type:'spell',hp:0,atk:200,atkSpd:0,range:0,speed:0,duration:0,desc:'范围瘫痪3秒+200伤害',tag:'法术',color:'#a03030',spell:'aoeStun',dmg:200,stun:3,aoeRange:160},
+  {id:'ransomware',name:'勒索软件',cost:6,type:'ground',hp:1300,atk:125,atkSpd:0.6,range:50,speed:60,duration:0,desc:'高血量肉盾·坦克',tag:'地面',color:'#d02020',heavy:true},
+  {id:'backdoor',name:'后门',cost:4,type:'building',hp:520,atk:0,atkSpd:0,range:0,speed:0,duration:40,desc:'隐匿·每6秒生小兵',tag:'建筑',color:'#9040d0',stealth:true,spawnCd:6,spawnUnit:'minion'},
 ];
 
 let game=null,animId=null,selectedCard=null,mouseX=0,mouseY=0;
@@ -355,7 +355,7 @@ class Unit{
     }
   }
   spawnMinion(){
-    const mc={id:'minion',name:'后门小兵',type:'ground',hp:100,atk:40,atkSpd:0.6,range:55,speed:90};
+    const mc={id:'minion',name:'后门小兵',type:'ground',hp:200,atk:70,atkSpd:0.5,range:55,speed:110};
     game.units.push(new Unit(mc,this.team,this.lane,this.x+(this.team==='blue'?20:-20)));
   }
   die(){
@@ -383,25 +383,29 @@ function createGame(){
     ],units:[],time:0,aiTimer:0,aiNext:2.5,
     aiNextCard:null,aiNextLane:0,aiNextX:DEPLOY_ZONE_RED,
     playerDeck:[... (isAttack?RED_CARDS:BLUE_CARDS)],playerHand:[],handSize:5,
-    aiDeck:[... (isAttack?BLUE_CARDS:RED_CARDS.filter(c=>c.id!=='zeroday'))],
+    aiDeck:[... (isAttack?BLUE_CARDS:RED_CARDS)],
     gameOver:false,winner:null,defeatMsg:'',revealTimer:0,
     drawCooldown:0
   };
 }
-function drawHand(g){
-  if(g.drawCooldown>0)return;
-  let drawn=false;
-  while(g.playerHand.length<g.handSize&&g.playerDeck.length>0){
-    const i=Math.floor(Math.random()*g.playerDeck.length);
-    g.playerHand.push(g.playerDeck.splice(i,1)[0]);
-    drawn=true;
-  }
-  if(drawn)g.drawCooldown=DRAW_INTERVAL;
+function drawHand(g,forceOne){
+  if(g.drawCooldown>0&&!forceOne)return;
+  if(g.playerHand.length>=g.handSize||g.playerDeck.length===0)return;
+  const i=Math.floor(Math.random()*g.playerDeck.length);
+  g.playerHand.push(g.playerDeck.splice(i,1)[0]);
+  g.drawCooldown=DRAW_INTERVAL;
 }
 function startGame(team){
   playerTeam=team||'blue';
   document.getElementById('overlay').style.display='none';
-  game=createGame();drawHand(game);selectedCard=null;
+  game=createGame();
+  // initial fill: draw up to handSize ignoring cooldown
+  while(game.playerHand.length<game.handSize&&game.playerDeck.length>0){
+    const i=Math.floor(Math.random()*game.playerDeck.length);
+    game.playerHand.push(game.playerDeck.splice(i,1)[0]);
+  }
+  game.drawCooldown=DRAW_INTERVAL;
+  selectedCard=null;
   rebuildCardHand();updateTip();if(animId)cancelAnimationFrame(animId);loop(performance.now());
 }
 
@@ -536,7 +540,7 @@ function tryDeployAt(canvasX, canvasY) {
   else game.units.push(new Unit(card, team, lane, dx));
   game.power -= card.cost;
   game.playerHand.splice(slot, 1); game.playerDeck.push(card);
-  selectedCard = null; drawHand(game); rebuildCardHand(); updateTip();
+  selectedCard = null; drawHand(game,true); rebuildCardHand(); updateTip();
 }
 
 // ── Canvas Click ──
