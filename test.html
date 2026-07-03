@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Lightspeed Grid Smoke Test</title>
+<style>
+  body { background:#050705; color:#3cf58b; font-family:'Share Tech Mono',monospace; padding:20px; }
+  .pass { color:#3cf58b; }
+  .fail { color:#f53c3c; }
+  pre { white-space:pre-wrap; }
+</style>
+</head>
+<body>
+<h1>光速城 Smoke Test</h1>
+<div id="out"></div>
+<iframe id="gameFrame" src="index.html" style="width:1px;height:1px;opacity:0;"></iframe>
+<script>
+const out=document.getElementById('out');
+let passed=0,failed=0;
+function log(msg,ok){
+  const d=document.createElement('div');d.className=ok?'pass':'fail';
+  d.textContent=(ok?'[PASS] ':'[FAIL] ')+msg;out.appendChild(d);
+  if(ok)passed++;else failed++;
+}
+function finish(){
+  const d=document.createElement('div');d.style.marginTop='12px';
+  d.textContent=`结果: ${passed} 通过, ${failed} 失败`;
+  d.style.color=failed===0?'#3cf58b':'#f53c3c';
+  out.appendChild(d);
+}
+
+window.addEventListener('message',e=>{
+  if(e.data?.type!=='lg-smoke')return;
+  log(e.data.name,e.data.ok);
+  if(e.data.done)finish();
+});
+
+const frame=document.getElementById('gameFrame');
+frame.onload=()=>{
+  const win=frame.contentWindow;
+  try{
+    win.postMessage({type:'lg-run-smoke'},'*');
+  }catch(err){
+    log('发起 smoke 测试失败: '+err,false);finish();
+  }
+};
+</script>
+</body>
+</html>

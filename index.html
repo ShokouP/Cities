@@ -1295,6 +1295,28 @@ document.getElementById('intro').addEventListener('click',skipIntro);
 document.addEventListener('keydown',skipIntro);
 typeIntro();
 
+window.addEventListener('message',e=>{
+  if(e.data?.type!=='lg-run-smoke')return;
+  const report=(name,ok)=>e.source.postMessage({type:'lg-smoke',name,ok},'*');
+  try{
+    skipIntro();
+    startGame('blue');
+    report('startGame blue',!!game&&!game.gameOver);
+    const card=game.playerHand[0];
+    selectedCard=card;
+    tryDeployAt(DEPLOY_ZONE_BLUE,LANES_Y[1]);
+    report('deploy card',game.units.length>0||!selectedCard);
+    const before=game.aiCoreHpPerLane[0];
+    game.aiCoreHpPerLane[0]=0;game.aiCoreHpPerLane[1]=0;game.aiCoreHpPerLane[2]=0;
+    loop(performance.now());
+    report('victory ends game',game.gameOver&&game.winner==='blue');
+    game.aiCoreHpPerLane[0]=before;
+  }catch(err){
+    report('smoke exception: '+err,false);
+  }
+  e.source.postMessage({type:'lg-smoke',name:'done',ok:true,done:true},'*');
+});
+
 (function initBg(){
   const ctx=canvas.getContext('2d');ctx.fillStyle='#080d0a';ctx.fillRect(0,0,CANVAS_W,CANVAS_H);
   ctx.strokeStyle='rgba(20,45,30,0.25)';ctx.lineWidth=0.5;
