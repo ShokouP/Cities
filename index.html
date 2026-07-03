@@ -1284,15 +1284,6 @@ function skipIntro(){
     document.getElementById('overlay').style.display='flex';
   },600);
 }
-function finishIntro(){
-  if(introDone)return;
-  if(!introDone&&(introIndex<INTRO_LINES.length-1||introChar<INTRO_LINES[introIndex].length)){
-    skipIntro();return;
-  }
-  introDone=true;clearTimeout(introRaf);
-  document.getElementById('intro').style.display='none';
-  document.getElementById('overlay').style.display='flex';
-}
 document.getElementById('intro').addEventListener('click',skipIntro);
 document.addEventListener('keydown',skipIntro);
 typeIntro();
