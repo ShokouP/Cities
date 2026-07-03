@@ -861,8 +861,16 @@ function endGame(winner,msg){
 
 // ── Render ──
 function render(g){
+  // Screen shake
+  let sx=0,sy=0;
+  if(shakeTimer>0){
+    const intensity=8*shakeTimer/0.35;
+    sx=(Math.random()-0.5)*intensity;
+    sy=(Math.random()-0.5)*intensity;
+  }
   const ctx=canvas.getContext('2d');ctx.clearRect(0,0,CANVAS_W,CANVAS_H);
   ctx.fillStyle='#080d0a';ctx.fillRect(0,0,CANVAS_W,CANVAS_H);
+  ctx.save();ctx.translate(sx,sy);
 
   // ── Side panels ──
   // Blue side (left)
@@ -1070,6 +1078,13 @@ function render(g){
     }
     // Deployment preview ghost
     drawDeployGhost(ctx, g);
+  }
+  ctx.restore();
+  // Screen flash overlay
+  if(flashTimer>0){
+    const fa=flashTimer/0.25;
+    ctx.fillStyle=`rgba(255,40,40,${fa*0.35})`;
+    ctx.fillRect(0,0,CANVAS_W,CANVAS_H);
   }
 }
 
