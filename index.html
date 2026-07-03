@@ -21,19 +21,33 @@
   }
   @media (max-width: 700px) {
     #app { height: 100dvh; max-height: none; border: none; border-radius: 0; }
-    #hud { padding: 0 6px; gap: 4px; }
+    #hud { padding: 2px 4px; gap: 2px; min-height: 32px; }
     #hud .hud-label { display: none; }
-    #tip-bar { min-height: 16px; }
-    #tip-text { font-size: 7px; }
-    #canvas-wrap { overflow-x: auto; overflow-y: hidden; }
+    .hud-value { font-size: 11px !important; }
+    .hud-row { gap: 2px; }
+    .hud-item { gap: 0; }
+    .power-bar, .core-bar { width: 34px; height: 3px; }
+    .core-bars { gap: 1px; }
+    .mini-core-bar { width: 10px; height: 2px; }
+    #ai-threat { max-width: 60px; font-size: 6px; margin-top: 0; }
+    #tip-bar { min-height: 14px; padding: 1px 4px; }
+    #tip-text { font-size: 6px; }
+    #canvas-wrap { overflow-x: auto; overflow-y: hidden; min-height: 220px; }
     canvas { min-width: 720px; height: 100%; }
-    #card-hand { min-height: 78px; max-height: 96px; padding: 4px 6px; }
-    .card { width: clamp(96px, 22vw, 120px); height: clamp(70px, 19vw, 88px); margin: 0 3px; }
-    .card-name { max-width: 58px; }
+    #card-hand { min-height: 68px; max-height: 84px; padding: 2px 4px; justify-content: flex-start; }
+    .card { width: 72px !important; height: 60px !important; margin: 0 2px; }
+    .card-inner { grid-template-columns: 22px 1fr !important; grid-template-rows: 11px 1fr 11px !important; padding: 2px 3px 2px 2px !important; }
+    .card-pixel { width: 20px !important; height: 56px !important; }
+    .card-pixel canvas { width: 16px !important; height: 52px !important; }
+    .card-name { font-size: 8px !important; max-width: 42px !important; }
+    .card-cost { font-size: 9px !important; min-width: 10px !important; }
     .card-desc { display: none; }
-    .card-stats { font-size: 7px; gap: 4px; }
-    .card-tag { font-size: 6px; padding: 0 2px; }
-    #ai-threat { max-width: 70px; }
+    .card-stats { font-size: 5px !important; gap: 2px !important; margin-top: 2px !important; }
+    .card-tag { font-size: 5px !important; padding: 0 1px !important; }
+    #overlay h1 { font-size: 20px; letter-spacing: 2px; }
+    #overlay p { font-size: 10px; }
+    #overlay button { padding: 8px 16px; font-size: 12px; letter-spacing: 1px; width: min(260px, 80vw); }
+    #overlay div { gap: 8px; }
   }
   #hud {
     min-height:40px; display:flex; align-items:center; justify-content:space-between;
