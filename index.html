@@ -170,7 +170,17 @@
     border-bottom:1px solid #1a3a2a; background:rgba(0,0,0,0.25); padding:2px 8px;
   }
   #tip-text { font-size:clamp(8px, 2.2vw, 10px); color:#4a7a5a; text-align:center; }
-  #overlay button:hover { background:rgba(60,245,139,0.1); box-shadow:0 0 24px rgba(60,245,139,0.25); }
+  #intro {
+    position:absolute; inset:0; z-index:20; background:#050705;
+    display:flex; flex-direction:column; align-items:flex-start; justify-content:flex-start;
+    padding:40px; font-family:'Share Tech Mono',monospace; color:#3cf58b;
+    overflow:hidden; cursor:pointer;
+  }
+  #intro-line { font-size:clamp(13px,3vw,16px); line-height:1.6; white-space:pre-wrap; text-shadow:0 0 8px rgba(60,245,139,0.35); }
+  #intro-cursor { display:inline-block; width:8px; height:1em; background:#3cf58b; animation:blink 0.8s infinite; vertical-align:middle; }
+  @keyframes blink { 50% { opacity:0; } }
+  #intro-skip { position:absolute; bottom:20px; right:24px; color:#4a7a5a; font-size:11px; letter-spacing:1px; }
+  #overlay { display:none; }
 </style>
 </head>
 <body>
@@ -212,6 +222,7 @@
     <div id="message"></div>
   </div>
   <div id="card-hand"></div>
+  <div id="intro"><span id="intro-line"></span><span id="intro-cursor"></span><div id="intro-skip">点击跳过 &gt;&gt;</div></div>
   <div id="overlay">
     <h1>光 速 城</h1>
     <p>Lightspeed Grid · 网络安全攻防<br>拖卡牌到战场部署 · 单位自动前进交战<br>左路暴露面 → 中路横向移动 → 右路核心资产区</p>
@@ -1218,6 +1229,55 @@ function roundRect(ctx,x,y,w,h,r){
 document.getElementById('start-defend-btn').addEventListener('click',()=>{tutorialDay=-1;startGame('blue');});
 document.getElementById('start-attack-btn').addEventListener('click',()=>{tutorialDay=-1;startGame('red');});
 document.getElementById('start-tutorial-btn').addEventListener('click',()=>startTutorial(0));
+
+// Intro cinematic
+const INTRO_LINES=[
+  '> 系统启动中...',
+  '> 正在接入光速城核心网络',
+  '> 检测到异常流量：红队攻击链已激活',
+  '> 蓝队防御节点在线',
+  '> 命令：守住三路核心服务器',
+  '> 光 速 城 · Lightspeed Grid',
+  '> [按任意键或点击跳过]'
+];
+let introIndex=0,introChar=0,introDone=false,introRaf=null;
+function typeIntro(){
+  const lineEl=document.getElementById('intro-line');
+  if(introIndex>=INTRO_LINES.length){
+    introDone=true;lineEl.innerHTML=INTRO_LINES.join('\n');return;
+  }
+  const line=INTRO_LINES[introIndex];
+  if(introChar<=line.length){
+    const shown=INTRO_LINES.slice(0,introIndex).join('\n')+(introIndex>0?'\n':'')+line.slice(0,introChar);
+    lineEl.textContent=shown;
+    introChar++;
+    introRaf=setTimeout(typeIntro, introChar===1?600:45);
+  }else{
+    introIndex++;introChar=0;introRaf=setTimeout(typeIntro,400);
+  }
+}
+function skipIntro(){
+  if(introDone)return;
+  introDone=true;clearTimeout(introRaf);
+  document.getElementById('intro-line').innerHTML=INTRO_LINES.join('\n');
+  setTimeout(()=>{
+    document.getElementById('intro').style.display='none';
+    document.getElementById('overlay').style.display='flex';
+  },600);
+}
+function finishIntro(){
+  if(introDone)return;
+  if(!introDone&&(introIndex<INTRO_LINES.length-1||introChar<INTRO_LINES[introIndex].length)){
+    skipIntro();return;
+  }
+  introDone=true;clearTimeout(introRaf);
+  document.getElementById('intro').style.display='none';
+  document.getElementById('overlay').style.display='flex';
+}
+document.getElementById('intro').addEventListener('click',skipIntro);
+document.addEventListener('keydown',skipIntro);
+typeIntro();
+
 (function initBg(){
   const ctx=canvas.getContext('2d');ctx.fillStyle='#080d0a';ctx.fillRect(0,0,CANVAS_W,CANVAS_H);
   ctx.strokeStyle='rgba(20,45,30,0.25)';ctx.lineWidth=0.5;
