@@ -405,11 +405,13 @@ function rebuildCardHand(){
           `<span class="card-tag ${tagClass}">${tagText}</span>`+
         `</div>`+
       `</div>`;
-    d.addEventListener('click',e=>{e.stopPropagation();onCardClick(card);});
-    d.addEventListener('mouseenter',e=>showTooltip(e,card));
-    d.addEventListener('mouseleave',hideTooltip);
+    d.addEventListener('click', e => { e.stopPropagation(); onCardClick(card); });
+    d.addEventListener('mouseenter', e => showTooltip(e, card));
+    d.addEventListener('mouseleave', hideTooltip);
+    d.draggable = true;
+    d.addEventListener('dragstart', e => { e.dataTransfer.setData('text/plain', i); e.dataTransfer.effectAllowed = 'copy'; onCardClick(card); });
     ctr.appendChild(d);
-    drawCardPixel(`pc-${i}`,card,accent);
+    drawCardPixel(`pc-${i}`, card, accent);
   });
 }
 function drawCardPixel(canvasId,card,accent){
@@ -481,35 +483,46 @@ function showTooltip(e,card){
 }
 function hideTooltip(){document.getElementById('tooltip').style.display='none';}
 
-// ── Canvas Click ──
-canvas.addEventListener('click',e=>{
-  if(!game||game.gameOver||!selectedCard)return;
-  const slot=game.playerHand.indexOf(selectedCard);
-  if(slot<0||game.power<game.playerHand[slot].cost)return;
-  const rect=canvas.getBoundingClientRect();
-  const cx=(e.clientX-rect.left)*(CANVAS_W/rect.width);
-  const cy=(e.clientY-rect.top)*(CANVAS_H/rect.height);
-  let lane=-1;
-  for(let i=0;i<3;i++){if(cy>=LANES_Y[i]-LANE_H/2&&cy<=LANES_Y[i]+LANE_H/2){lane=i;break;}}
-  if(lane<0)return;
-  const card=game.playerHand[slot];
-  const team=playerTeam;
-  let dx;
-  if(team==='blue'){
-    dx=Math.max(DEPLOY_ZONE_BLUE-160,Math.min(DEPLOY_ZONE_BLUE,cx));
-  }else{
-    dx=Math.max(DEPLOY_ZONE_RED,Math.min(DEPLOY_ZONE_RED+160,cx));
+function tryDeployAt(canvasX, canvasY) {
+  if (!game || game.gameOver || !selectedCard) return;
+  const slot = game.playerHand.indexOf(selectedCard);
+  if (slot < 0 || game.power < selectedCard.cost) return;
+  let lane = -1;
+  for (let i = 0; i < 3; i++) {
+    if (canvasY >= LANES_Y[i] - LANE_H / 2 && canvasY <= LANES_Y[i] + LANE_H / 2) { lane = i; break; }
   }
-  if(card.type==='spell')castSpell(card,team,lane,dx,cy);
-  else game.units.push(new Unit(card,team,lane,dx));
-  game.power-=card.cost;
-  game.playerHand.splice(slot,1);game.playerDeck.push(card);
-  selectedCard=null;drawHand(game);rebuildCardHand();updateTip();
+  if (lane < 0) return;
+  const card = game.playerHand[slot];
+  const team = playerTeam;
+  let dx;
+  if (team === 'blue') dx = Math.max(DEPLOY_ZONE_BLUE - 160, Math.min(DEPLOY_ZONE_BLUE, canvasX));
+  else dx = Math.max(DEPLOY_ZONE_RED, Math.min(DEPLOY_ZONE_RED + 160, canvasX));
+  if (card.type === 'spell') castSpell(card, team, lane, dx, canvasY);
+  else game.units.push(new Unit(card, team, lane, dx));
+  game.power -= card.cost;
+  game.playerHand.splice(slot, 1); game.playerDeck.push(card);
+  selectedCard = null; drawHand(game); rebuildCardHand(); updateTip();
+}
+
+// ── Canvas Click ──
+canvas.addEventListener('click', e => {
+  const rect = canvas.getBoundingClientRect();
+  const cx = (e.clientX - rect.left) * (CANVAS_W / rect.width);
+  const cy = (e.clientY - rect.top) * (CANVAS_H / rect.height);
+  tryDeployAt(cx, cy);
 });
-canvas.addEventListener('mousemove',e=>{
-  const rect=canvas.getBoundingClientRect();
-  mouseX=(e.clientX-rect.left)*(CANVAS_W/rect.width);
-  mouseY=(e.clientY-rect.top)*(CANVAS_H/rect.height);
+canvas.addEventListener('dragover', e => { e.preventDefault(); e.dataTransfer.dropEffect = 'copy'; });
+canvas.addEventListener('drop', e => {
+  e.preventDefault();
+  const rect = canvas.getBoundingClientRect();
+  const cx = (e.clientX - rect.left) * (CANVAS_W / rect.width);
+  const cy = (e.clientY - rect.top) * (CANVAS_H / rect.height);
+  tryDeployAt(cx, cy);
+});
+canvas.addEventListener('mousemove', e => {
+  const rect = canvas.getBoundingClientRect();
+  mouseX = (e.clientX - rect.left) * (CANVAS_W / rect.width);
+  mouseY = (e.clientY - rect.top) * (CANVAS_H / rect.height);
 });
 
 function castSpell(card,team,lane,x,y){
