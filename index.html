@@ -205,6 +205,7 @@
       <button id="start-defend-btn">防 守 方（蓝 队）</button>
       <button id="start-attack-btn">进 攻 方（红 队）</button>
     </div>
+    <button id="start-tutorial-btn" style="margin-top:8px;">教 学 模 式（三 日 PvE）</button>
   </div>
 </div>
 
@@ -224,6 +225,12 @@ const ROLE_HINTS={
   blue:'守住三路核心服务器 · 点击手牌 → 点击我方部署区',
   red:'摧毁三路核心服务器 · 点击手牌 → 点击我方部署区'
 };
+const TUTORIAL_STEPS=[
+  {day:1,team:'blue',title:'第一天：边界防御',desc:'用防火墙和WAF守住暴露面，别让钓鱼邮件飞进来。',aiDelay:4.0,powerBonus:2},
+  {day:1,team:'blue',title:'第二天：纵深防御',desc:'部署IDS侦测隐身单位，用蜜罐诱敌。',aiDelay:3.5,powerBonus:1},
+  {day:1,team:'blue',title:'第三天：红蓝对抗',desc:'综合运用防守卡牌抵御完整攻击链。',aiDelay:2.5,powerBonus:0}
+];
+let tutorialDay=-1,tutorialMessage='',tutorialTimer=0;
 
 const BLUE_CARDS=[
   {id:'firewall',name:'防火墙',cost:2,type:'building',hp:700,atk:0,atkSpd:0,range:0,speed:0,duration:0,desc:'纯阻挡，横跨路面',tag:'建筑',color:'#3c8cf5'},
@@ -407,6 +414,34 @@ function startGame(team){
   game.drawCooldown=DRAW_INTERVAL;
   selectedCard=null;
   rebuildCardHand();updateTip();if(animId)cancelAnimationFrame(animId);loop(performance.now());
+}
+function startTutorial(dayIndex){
+  dayIndex=dayIndex||0;
+  tutorialDay=dayIndex;
+  const step=TUTORIAL_STEPS[dayIndex];
+  playerTeam=step.team;
+  document.getElementById('overlay').style.display='none';
+  game=createGame();
+  game.power=Math.min(MAX_POWER,game.power+(step.powerBonus||0));
+  while(game.playerHand.length<game.handSize&&game.playerDeck.length>0){
+    const i=Math.floor(Math.random()*game.playerDeck.length);
+    game.playerHand.push(game.playerDeck.splice(i,1)[0]);
+  }
+  game.drawCooldown=DRAW_INTERVAL;
+  game.aiTimer=step.aiDelay;
+  selectedCard=null;
+  tutorialMessage=`${step.title}：${step.desc}`;
+  tutorialTimer=4.0;
+  showMessage(tutorialMessage);
+  rebuildCardHand();updateTip();if(animId)cancelAnimationFrame(animId);loop(performance.now());
+}
+function nextTutorialDayOrMenu(){
+  if(tutorialDay>=0&&tutorialDay+1<TUTORIAL_STEPS.length){
+    startTutorial(tutorialDay+1);
+  }else{
+    tutorialDay=-1;
+    document.getElementById('overlay').style.display='flex';
+  }
 }
 
 // ── Card Hand DOM ──
@@ -697,8 +732,14 @@ function loop(now){
   });
   // AI preview: always know next move
   if(!game.aiNextCard)planAiNextMove(game);
+  let aiDelay=2.0+Math.random()*2.0;
+  if(tutorialDay>=0)aiDelay=TUTORIAL_STEPS[tutorialDay].aiDelay;
   game.aiTimer-=dt;
-  if(game.aiTimer<=0){executeAiNextMove(game);planAiNextMove(game);game.aiTimer=2.0+Math.random()*2.0;}
+  if(game.aiTimer<=0){executeAiNextMove(game);planAiNextMove(game);game.aiTimer=aiDelay;}
+  if(tutorialDay>=0){
+    tutorialTimer=Math.max(0,tutorialTimer-dt);
+    if(tutorialTimer<=0){tutorialTimer=9999;document.getElementById('tip-text').textContent=`教学：${TUTORIAL_STEPS[tutorialDay].desc}`;}
+  }
   const totalCore=game.coreHpPerLane.reduce((a,b)=>a+b,0);
   const totalAiCore=game.aiCoreHpPerLane.reduce((a,b)=>a+b,0);
   const playerLost=playerTeam==='blue'?totalCore<=0:totalAiCore<=0;
@@ -744,9 +785,15 @@ function endGame(winner,msg){
   const playerWon=winner===playerTeam;
   const titleColor=winner==='draw'?'#f0c030':(playerWon?'#3cf58b':'#f53c3c');
   const titleText=winner==='draw'?'平局':(playerWon?'任务完成':'任务失败');
-  ov.innerHTML=`<h1 style="color:${titleColor}">${titleText}</h1><p style="white-space:pre-line">${msg}</p><div style="display:flex;gap:16px;"><button id="restart-defend-btn">防守方（蓝队）</button><button id="restart-attack-btn">进攻方（红队）</button></div>`;
-  document.getElementById('restart-defend-btn').addEventListener('click',()=>startGame('blue'));
-  document.getElementById('restart-attack-btn').addEventListener('click',()=>startGame('red'));
+  if(tutorialDay>=0){
+    const nextLabel=tutorialDay+1<TUTORIAL_STEPS.length?'进入下一天':'完成教学';
+    ov.innerHTML=`<h1 style="color:${titleColor}">${titleText}</h1><p style="white-space:pre-line">${msg}</p><div style="display:flex;gap:16px;justify-content:center;"><button id="tutorial-next-btn">${nextLabel}</button><button id="restart-defend-btn">防守方（蓝队）</button><button id="restart-attack-btn">进攻方（红队）</button></div>`;
+    document.getElementById('tutorial-next-btn').addEventListener('click',()=>nextTutorialDayOrMenu());
+  }else{
+    ov.innerHTML=`<h1 style="color:${titleColor}">${titleText}</h1><p style="white-space:pre-line">${msg}</p><div style="display:flex;gap:16px;"><button id="restart-defend-btn">防守方（蓝队）</button><button id="restart-attack-btn">进攻方（红队）</button></div>`;
+  }
+  document.getElementById('restart-defend-btn').addEventListener('click',()=>{tutorialDay=-1;startGame('blue');});
+  document.getElementById('restart-attack-btn').addEventListener('click',()=>{tutorialDay=-1;startGame('red');});
   updateTip();
 }
 
@@ -1030,8 +1077,9 @@ function roundRect(ctx,x,y,w,h,r){
 }
 
 // Init
-document.getElementById('start-defend-btn').addEventListener('click',()=>startGame('blue'));
-document.getElementById('start-attack-btn').addEventListener('click',()=>startGame('red'));
+document.getElementById('start-defend-btn').addEventListener('click',()=>{tutorialDay=-1;startGame('blue');});
+document.getElementById('start-attack-btn').addEventListener('click',()=>{tutorialDay=-1;startGame('red');});
+document.getElementById('start-tutorial-btn').addEventListener('click',()=>startTutorial(0));
 (function initBg(){
   const ctx=canvas.getContext('2d');ctx.fillStyle='#080d0a';ctx.fillRect(0,0,CANVAS_W,CANVAS_H);
   ctx.strokeStyle='rgba(20,45,30,0.25)';ctx.lineWidth=0.5;
