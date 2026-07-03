@@ -44,10 +44,27 @@
     .card-desc { display: none; }
     .card-stats { font-size: 5px !important; gap: 2px !important; margin-top: 2px !important; }
     .card-tag { font-size: 5px !important; padding: 0 1px !important; }
+    #overlay { gap: 10px; padding: 16px; }
     #overlay h1 { font-size: 20px; letter-spacing: 2px; }
-    #overlay p { font-size: 10px; }
-    #overlay button { padding: 8px 16px; font-size: 12px; letter-spacing: 1px; width: min(260px, 80vw); }
+    #overlay p { font-size: 10px; margin-bottom: 4px; }
+    #overlay button { padding: 8px 14px; font-size: 12px; letter-spacing: 1px; width: min(260px, 80vw); }
     #overlay div { gap: 8px; }
+    #intro { padding: 24px; }
+    #intro-line { font-size: 11px; line-height: 1.5; }
+    #intro-skip { font-size: 9px; bottom: 12px; right: 16px; }
+  }
+  @media (max-width: 380px) {
+    .hud-value { font-size: 9px !important; }
+    .power-bar, .core-bar { width: 28px; }
+    .mini-core-bar { width: 8px; }
+    #ai-threat { display: none; }
+    .card { width: 64px !important; height: 54px !important; }
+    .card-inner { grid-template-columns: 18px 1fr !important; grid-template-rows: 10px 1fr 10px !important; }
+    .card-pixel { width: 16px !important; height: 50px !important; }
+    .card-pixel canvas { width: 14px !important; height: 46px !important; }
+    .card-name { font-size: 7px !important; max-width: 36px !important; }
+    .card-cost { font-size: 8px !important; }
+    #card-hand { min-height: 60px; max-height: 76px; }
   }
   #hud {
     min-height:40px; display:flex; align-items:center; justify-content:space-between;
