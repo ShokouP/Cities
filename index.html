@@ -9,48 +9,75 @@
   * { margin:0; padding:0; box-sizing:border-box; }
   body {
     background:#0a0c0f; display:flex; justify-content:center; align-items:center;
-    height:100vh; overflow:hidden; font-family:'Share Tech Mono',monospace;
+    min-height:100vh; min-height:100dvh; overflow:hidden; font-family:'Share Tech Mono',monospace;
   }
   #app {
-    width:1200px; height:800px; background:#0d1117;
+    width:min(1200px, 100vw); height:min(800px, 100dvh);
+    max-width:1200px;
+    background:#0d1117;
     border:2px solid #1a3a2a; border-radius:6px; position:relative;
     box-shadow:0 0 40px rgba(0,255,100,0.06), inset 0 0 80px rgba(0,0,0,0.5);
     display:flex; flex-direction:column; user-select:none;
   }
+  @media (max-width: 700px) {
+    #app { height: 100dvh; max-height: none; border: none; border-radius: 0; }
+    #hud { padding: 0 6px; gap: 4px; }
+    #hud .hud-label { display: none; }
+    #tip-bar { min-height: 16px; }
+    #tip-text { font-size: 7px; }
+    #canvas-wrap { overflow-x: auto; overflow-y: hidden; }
+    canvas { min-width: 720px; height: 100%; }
+    #card-hand { min-height: 78px; max-height: 96px; padding: 4px 6px; }
+    .card { width: clamp(96px, 22vw, 120px); height: clamp(70px, 19vw, 88px); margin: 0 3px; }
+    .card-name { max-width: 58px; }
+    .card-desc { display: none; }
+    .card-stats { font-size: 7px; gap: 4px; }
+    .card-tag { font-size: 6px; padding: 0 2px; }
+    #ai-threat { max-width: 70px; }
+  }
   #hud {
-    height:48px; display:flex; align-items:center; justify-content:space-between;
-    padding:0 18px; border-bottom:1px solid #1a3a2a;
-    background:rgba(0,0,0,0.35); font-size:13px; color:#7eb896;
+    min-height:40px; display:flex; align-items:center; justify-content:space-between;
+    padding:0 10px; border-bottom:1px solid #1a3a2a;
+    background:rgba(0,0,0,0.35); font-size:clamp(10px,2.8vw,13px); color:#7eb896;
+    gap:6px;
   }
   .hud-item { display:flex; flex-direction:column; align-items:flex-start; gap:1px; }
   .hud-item.right { align-items:flex-end; }
-  .hud-row { display:flex; align-items:center; gap:6px; }
-  .hud-label { color:#4a6b5a; font-size:10px; text-transform:uppercase; letter-spacing:1px; }
-  .hud-value { color:#3cf58b; font-size:17px; font-weight:bold; }
+  .hud-row { display:flex; align-items:center; gap:clamp(2px,1vw,6px); }
+  .hud-label { color:#4a6b5a; font-size:clamp(7px,1.8vw,10px); text-transform:uppercase; letter-spacing:0.5px; }
+  .hud-value { color:#3cf58b; font-size:clamp(13px,3.6vw,17px); font-weight:bold; }
   .hud-value.danger { color:#f53c3c; animation:pulse 0.6s infinite; }
   #time-display.danger { color:#f53c3c; animation:pulse 0.6s infinite; }
-  .power-bar, .core-bar { width:70px; height:5px; background:#0f1812; border-radius:2px; overflow:hidden; border:1px solid #1a2e20; }
+  .power-bar, .core-bar { width:clamp(40px,11vw,70px); height:4px; background:#0f1812; border-radius:2px; overflow:hidden; border:1px solid #1a2e20; }
   .power-bar-inner { height:100%; background:linear-gradient(90deg,#3cf58b,#2ad46e); transition:width 0.15s; }
   .core-bar-inner { height:100%; background:linear-gradient(90deg,#3cf58b,#2ad46e); transition:width 0.15s; }
-  .core-bars { display:flex; gap:3px; margin-top:2px; }
-  .mini-core-bar { width:20px; height:4px; background:#0f1812; border-radius:1px; overflow:hidden; }
+  .core-bars { display:flex; gap:2px; margin-top:1px; }
+  .mini-core-bar { width:clamp(12px,3.5vw,20px); height:3px; background:#0f1812; border-radius:1px; overflow:hidden; }
   .mini-core-inner { height:100%; background:#3cf58b; transition:width 0.15s; }
   @keyframes pulse { 50% { opacity:0.4; } }
-  #canvas-wrap { flex:1; position:relative; overflow:hidden; }
+  #ai-threat { margin-top:1px; font-size:clamp(7px,1.8vw,9px); color:#c08080; max-width:90px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  #canvas-wrap { flex:1; position:relative; overflow:hidden; min-height:0; }
   canvas { display:block; width:100%; height:100%; }
   /* ── Card Hand ── */
-#card-hand {
-  height: 122px; display: flex; align-items: center; justify-content: center; gap: 0;
-  padding: 0 10px; border-top: 1px solid #1a3a2a; background: rgba(0,0,0,0.55);
-}
-.card {
-  width: 150px; height: 106px; background: #0b120f;
-  border: 2px solid #1a2e20; border-radius: 2px;
-  cursor: pointer; position: relative; overflow: hidden; flex-shrink: 0;
-  transition: all 0.12s ease; margin: 0 5px;
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.03);
-  image-rendering: pixelated;
-}
+  #card-hand {
+    height: auto; min-height: 90px; max-height: 122px;
+    display: flex; align-items: center; justify-content: center; gap: 0;
+    padding: 6px 8px; border-top: 1px solid #1a3a2a; background: rgba(0,0,0,0.55);
+    overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin; scrollbar-color: #1a3a2a #0a0c0f;
+  }
+  #card-hand::-webkit-scrollbar { height: 4px; }
+  #card-hand::-webkit-scrollbar-thumb { background: #1a3a2a; border-radius: 2px; }
+  .card {
+    width: clamp(110px, 18vw, 150px); height: clamp(80px, 16vw, 106px);
+    background: #0b120f;
+    border: 2px solid #1a2e20; border-radius: 2px;
+    cursor: pointer; position: relative; overflow: hidden; flex-shrink: 0;
+    transition: all 0.12s ease; margin: 0 4px;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.03);
+    image-rendering: pixelated;
+    touch-action: manipulation;
+  }
 .card::before {
   content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
   background: var(--card-accent, #3cf58b);
@@ -66,36 +93,35 @@
   box-shadow: 0 0 0 2px var(--card-accent, #3cf58b), 0 10px 26px rgba(0,0,0,0.6);
 }
 .card.unaffordable { opacity: 0.32; pointer-events: none; filter: grayscale(0.8); }
-.card-inner {
-  display: grid;
-  grid-template-columns: 44px 1fr;
-  grid-template-rows: 18px 1fr 18px;
-  height: 100%; padding: 5px 7px 5px 5px; position: relative; z-index: 1;
-}
-.card-pixel {
-  grid-row: 1 / 4; width: 38px; height: 90px;
-  background: #0a0f0c; border: 1px solid #1f3326;
-  display: flex; align-items: center; justify-content: center;
-  position: relative;
-}
-.card-pixel canvas { width: 32px; height: 84px; image-rendering: pixelated;
-}
-.card-header { grid-column: 2; display: flex; justify-content: space-between; align-items: center; }
-.card-name { font-size: 12px; font-weight: bold; color: #e8f0e8; letter-spacing: 0.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 78px; }
-.card-cost {
-  font-size: 14px; font-weight: bold; color: var(--card-accent, #3cf58b); line-height: 1;
-  min-width: 18px; text-align: right;
-}
-.card-body { grid-column: 2; display: flex; flex-direction: column; gap: 1px; padding-top: 2px; }
-.card-desc { font-size: 8px; color: #7a9a88; line-height: 1.3; }
-.card-stats { display: flex; gap: 8px; margin-top: auto; font-size: 8px; color: #5a7a6a; }
-.card-stat { display: flex; align-items: center; gap: 2px; }
-.card-stat-val { color: #a0c0aa; font-weight: bold; }
-.card-footer { grid-column: 2; display: flex; justify-content: space-between; align-items: center; }
-.card-tag {
-  font-size: 7px; padding: 1px 4px; letter-spacing: 0.5px; text-transform: uppercase;
-  background: rgba(0,0,0,0.4); color: var(--card-accent, #3cf58b); border: 1px solid rgba(255,255,255,0.12);
-}
+  .card-inner {
+    display: grid;
+    grid-template-columns: clamp(34px, 8vw, 44px) 1fr;
+    grid-template-rows: clamp(14px, 4vw, 18px) 1fr clamp(14px, 4vw, 18px);
+    height: 100%; padding: 4px 6px 4px 4px; position: relative; z-index: 1;
+  }
+  .card-pixel {
+    grid-row: 1 / 4; width: clamp(30px, 7vw, 38px); height: clamp(70px, 15vw, 90px);
+    background: #0a0f0c; border: 1px solid #1f3326;
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+  }
+  .card-pixel canvas { width: clamp(26px, 6vw, 32px); height: clamp(62px, 13vw, 84px); image-rendering: pixelated; }
+  .card-header { grid-column: 2; display: flex; justify-content: space-between; align-items: center; }
+  .card-name { font-size: clamp(9px, 2.6vw, 12px); font-weight: bold; color: #e8f0e8; letter-spacing: 0.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: clamp(52px, 14vw, 78px); }
+  .card-cost {
+    font-size: clamp(11px, 3.2vw, 14px); font-weight: bold; color: var(--card-accent, #3cf58b); line-height: 1;
+    min-width: 16px; text-align: right;
+  }
+  .card-body { grid-column: 2; display: flex; flex-direction: column; gap: 1px; padding-top: 2px; }
+  .card-desc { font-size: clamp(6px, 1.8vw, 8px); color: #7a9a88; line-height: 1.3; }
+  .card-stats { display: flex; gap: clamp(4px, 1.5vw, 8px); margin-top: auto; font-size: clamp(6px, 1.8vw, 8px); color: #5a7a6a; }
+  .card-stat { display: flex; align-items: center; gap: 2px; }
+  .card-stat-val { color: #a0c0aa; font-weight: bold; }
+  .card-footer { grid-column: 2; display: flex; justify-content: space-between; align-items: center; }
+  .card-tag {
+    font-size: clamp(5px, 1.6vw, 7px); padding: 1px 3px; letter-spacing: 0.5px; text-transform: uppercase;
+    background: rgba(0,0,0,0.4); color: var(--card-accent, #3cf58b); border: 1px solid rgba(255,255,255,0.12);
+  }
 .card-tag.flying { color: #d4b830; border-color: rgba(212,184,48,0.35); }
 .card-tag.spell { color: #b880f0; border-color: rgba(184,128,240,0.35); }
 .card-tag.building { color: #68a8e0; border-color: rgba(104,168,224,0.3); }
@@ -115,14 +141,21 @@
   #overlay {
     position:absolute; inset:0; z-index:15; background:rgba(0,0,0,0.7);
     display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px;
+    padding:20px; text-align:center;
   }
-  #overlay h1 { font-size:32px; color:#3cf58b; letter-spacing:4px; text-shadow:0 0 30px rgba(60,245,139,0.4); }
-  #overlay p { color:#7eb896; font-size:14px; max-width:500px; text-align:center; line-height:1.6; }
+  #overlay h1 { font-size:clamp(22px, 6vw, 32px); color:#3cf58b; letter-spacing:4px; text-shadow:0 0 30px rgba(60,245,139,0.4); }
+  #overlay p { color:#7eb896; font-size:clamp(11px, 3vw, 14px); max-width:min(500px, 90vw); text-align:center; line-height:1.6; }
+  #overlay div { flex-wrap:wrap; justify-content:center; }
   #overlay button {
     background:transparent; border:2px solid #3cf58b; color:#3cf58b;
-    padding:12px 40px; font-size:16px; font-family:inherit; cursor:pointer;
+    padding:clamp(8px, 3vw, 12px) clamp(24px, 10vw, 40px); font-size:clamp(13px, 4vw, 16px); font-family:inherit; cursor:pointer;
     letter-spacing:2px; border-radius:4px; transition:all 0.2s;
   }
+  #tip-bar {
+    min-height:18px; display:flex; align-items:center; justify-content:center;
+    border-bottom:1px solid #1a3a2a; background:rgba(0,0,0,0.25); padding:2px 8px;
+  }
+  #tip-text { font-size:clamp(8px, 2.2vw, 10px); color:#4a7a5a; text-align:center; }
   #overlay button:hover { background:rgba(60,245,139,0.1); box-shadow:0 0 24px rgba(60,245,139,0.25); }
 </style>
 </head>
@@ -156,8 +189,8 @@
       <div id="ai-threat" style="margin-top:3px;font-size:9px;color:#c08080;max-width:140px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">侦察中…</div>
     </div>
   </div>
-  <div style="height:22px;display:flex;align-items:center;justify-content:center;border-bottom:1px solid #1a3a2a;background:rgba(0,0,0,0.25);">
-    <span id="tip-text" style="font-size:10px;color:#4a7a5a;">点击手牌选中 → 点击战场蓝色部署区放置单位 → 守住三路核心服务器</span>
+  <div id="tip-bar">
+    <span id="tip-text">点击手牌选中 → 点击我方部署区放置单位 → 守住三路核心服务器</span>
   </div>
   <div id="canvas-wrap">
     <canvas id="game"></canvas>
@@ -216,6 +249,7 @@ const RED_CARDS=[
 
 let game=null,animId=null,selectedCard=null,mouseX=0,mouseY=0;
 let particleEffects=[],floatingTexts=[],nextUid=1;
+let shakeTimer=0,flashTimer=0;
 const canvas=document.getElementById('game');
 canvas.width=CANVAS_W;canvas.height=CANVAS_H;
 
@@ -648,7 +682,15 @@ function loop(now){
       }
     }
   });
-  game.towers.forEach(t=>{if(t.alive&&t.hp<=0){t.alive=false;spawnParticles(t.x,t._y,t.team==='blue'?'#2050d0':'#d03030',25);showMessage(`${LANE_NAMES[t.lane]}${t.team==='blue'?'蓝方':'红方'}节点塔被摧毁！`);}});
+  game.towers.forEach(t=>{
+    if(t.alive&&t.hp<=0){
+      t.alive=false;
+      spawnParticles(t.x,t._y,t.team==='blue'?'#2050d0':'#d03030',25);
+      showMessage(`${LANE_NAMES[t.lane]}${t.team==='blue'?'蓝方':'红方'}节点塔被摧毁！`);
+      shakeTimer=0.35;
+      flashTimer=0.25;
+    }
+  });
   // AI preview: always know next move
   if(!game.aiNextCard)planAiNextMove(game);
   game.aiTimer-=dt;
