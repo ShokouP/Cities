@@ -256,6 +256,8 @@ const BLUE_CARDS=[
   {id:'emergency',name:'应急响应',cost:6,type:'spell',hp:0,atk:0,atkSpd:0,range:0,speed:0,duration:0,desc:'全图清场·消灭所有敌方单位',tag:'法术',color:'#f06040',spell:'killAll'},
   {id:'encrypt',name:'加密传输',cost:3,type:'spell',hp:0,atk:0,atkSpd:0,range:0,speed:0,duration:0,desc:'套塔·500护盾',tag:'法术',color:'#70c0f0',spell:'shield',shieldAmt:500},
   {id:'threat_hunter',name:'溯源小队',cost:7,type:'ground',hp:750,atk:110,atkSpd:1.1,range:75,speed:55,duration:0,desc:'高费重甲·直捣红队核心塔',tag:'地面',color:'#20d0a0',prioCore:true},
+  {id:'mfa',name:'双因子验证',cost:2,type:'spell',hp:0,atk:0,atkSpd:0,range:0,speed:0,duration:0,desc:'全图8秒内敌方无法部署',tag:'法术',color:'#40c0a0',spell:'mfa',mfaTime:8},
+  {id:'training',name:'安全培训',cost:3,type:'spell',hp:0,atk:0,atkSpd:0,range:0,speed:0,duration:0,desc:'3秒内友方塔攻速翻倍',tag:'法术',color:'#50a0f0',spell:'training',trainTime:3},
 ];
 const RED_CARDS=[
   {id:'scan',name:'网络扫描',cost:2,type:'spell',hp:0,atk:0,atkSpd:0,range:0,speed:0,duration:0,desc:'揭示对方部署4秒',tag:'法术',color:'#f08040',spell:'reveal',revealTime:4},
@@ -266,6 +268,8 @@ const RED_CARDS=[
   {id:'ddos',name:'DDoS',cost:4,type:'spell',hp:0,atk:200,atkSpd:0,range:0,speed:0,duration:0,desc:'范围瘫痪3秒+200伤害',tag:'法术',color:'#a03030',spell:'aoeStun',dmg:200,stun:3,aoeRange:160},
   {id:'ransomware',name:'勒索软件',cost:6,type:'ground',hp:1300,atk:125,atkSpd:0.6,range:50,speed:60,duration:0,desc:'高血量肉盾·坦克',tag:'地面',color:'#d02020',heavy:true},
   {id:'backdoor',name:'后门',cost:4,type:'building',hp:520,atk:0,atkSpd:0,range:0,speed:0,duration:40,desc:'隐匿·每6秒生小兵',tag:'建筑',color:'#9040d0',stealth:true,spawnCd:6,spawnUnit:'minion'},
+  {id:'waterhole',name:'水坑攻击',cost:3,type:'spell',hp:0,atk:0,atkSpd:0,range:0,speed:0,duration:0,desc:'敌方最近塔5秒内攻速减半',tag:'法术',color:'#b06020',spell:'waterhole',whTime:5},
+  {id:'nday',name:'Nday漏洞',cost:5,type:'ground',hp:480,atk:95,atkSpd:0.55,range:60,speed:75,duration:0,desc:'对血量最低单位×2伤害',tag:'地面',color:'#d04080',prioLowest:true,bonusVs:'lowest_hp'},
 ];
 
 let game=null,animId=null,selectedCard=null,mouseX=0,mouseY=0;
@@ -288,6 +292,7 @@ class Unit{
     this.prioLowest=card.prioLowest||false;this.prioCore=card.prioCore||false;this.flyTarget=card.flyTarget||false;
     this.crossLane=card.crossLane||false;this.aoe=card.aoe||false;this.deathDmg=card.deathDmg||0;
     this.spawnCd=card.spawnCd||0;this.spawnTimer=0;this.revealed=false;this.stunned=0;this.target=null;
+    this.atkSpdMul=1;
   }
   update(dt){
     if(!this.alive)return;
@@ -352,11 +357,12 @@ class Unit{
   }
   move(dt){const d=this.team==='blue'?1:-1;this.x+=this.speed*d*dt;this.x=Math.max(LANE_X0,Math.min(LANE_X1,this.x));}
   attackTarget(dt){
-    if(this.atkCd>0||this.atk<=0)return;this.atkCd=this.atkSpd;
+    if(this.atkCd>0||this.atk<=0)return;this.atkCd=(this.atkSpd/this.atkSpdMul);
     let dmg=this.atk*(this.atkSpd>0?this.atkSpd:1);
     if(this.bonusVs){
       if(this.target.card&&this.target.card.id===this.bonusVs)dmg*=2;
       if(this.bonusVs==='db_tower'&&this.target.isTower&&this.target.lane===2)dmg*=2;
+      if(this.bonusVs==='lowest_hp'&&this.target.hp/this.target.maxHp<0.4)dmg*=2;
     }
     if(this.target.isCore){
       const coreArr=this.team==='blue'?game.aiCoreHpPerLane:game.coreHpPerLane;
@@ -397,18 +403,18 @@ function createGame(){
     coreHpPerLane:[CORE_HP,CORE_HP,CORE_HP],
     aiCoreHpPerLane:[CORE_HP,CORE_HP,CORE_HP],
     towers:[
-      {team:'blue',lane:0,x:BLUE_TOWER_X,_y:LANES_Y[0],hp:TOWER_HP,maxHp:TOWER_HP,alive:true,isTower:true,shield:0,atkCd:0},
-      {team:'blue',lane:1,x:BLUE_TOWER_X,_y:LANES_Y[1],hp:TOWER_HP,maxHp:TOWER_HP,alive:true,isTower:true,shield:0,atkCd:0},
-      {team:'blue',lane:2,x:BLUE_TOWER_X,_y:LANES_Y[2],hp:TOWER_HP,maxHp:TOWER_HP,alive:true,isTower:true,shield:0,atkCd:0},
-      {team:'red',lane:0,x:RED_TOWER_X,_y:LANES_Y[0],hp:TOWER_HP,maxHp:TOWER_HP,alive:true,isTower:true,shield:0,atkCd:0},
-      {team:'red',lane:1,x:RED_TOWER_X,_y:LANES_Y[1],hp:TOWER_HP,maxHp:TOWER_HP,alive:true,isTower:true,shield:0,atkCd:0},
-      {team:'red',lane:2,x:RED_TOWER_X,_y:LANES_Y[2],hp:TOWER_HP,maxHp:TOWER_HP,alive:true,isTower:true,shield:0,atkCd:0},
+      {team:'blue',lane:0,x:BLUE_TOWER_X,_y:LANES_Y[0],hp:TOWER_HP,maxHp:TOWER_HP,alive:true,isTower:true,shield:0,atkCd:0,atkSpdMul:1},
+      {team:'blue',lane:1,x:BLUE_TOWER_X,_y:LANES_Y[1],hp:TOWER_HP,maxHp:TOWER_HP,alive:true,isTower:true,shield:0,atkCd:0,atkSpdMul:1},
+      {team:'blue',lane:2,x:BLUE_TOWER_X,_y:LANES_Y[2],hp:TOWER_HP,maxHp:TOWER_HP,alive:true,isTower:true,shield:0,atkCd:0,atkSpdMul:1},
+      {team:'red',lane:0,x:RED_TOWER_X,_y:LANES_Y[0],hp:TOWER_HP,maxHp:TOWER_HP,alive:true,isTower:true,shield:0,atkCd:0,atkSpdMul:1},
+      {team:'red',lane:1,x:RED_TOWER_X,_y:LANES_Y[1],hp:TOWER_HP,maxHp:TOWER_HP,alive:true,isTower:true,shield:0,atkCd:0,atkSpdMul:1},
+      {team:'red',lane:2,x:RED_TOWER_X,_y:LANES_Y[2],hp:TOWER_HP,maxHp:TOWER_HP,alive:true,isTower:true,shield:0,atkCd:0,atkSpdMul:1},
     ],units:[],time:0,aiTimer:0,aiNext:2.5,
     aiNextCard:null,aiNextLane:0,aiNextX:DEPLOY_ZONE_RED,
     playerDeck:[... (isAttack?RED_CARDS:BLUE_CARDS)],playerHand:[],handSize:5,
     aiDeck:[... (isAttack?BLUE_CARDS:RED_CARDS)],
     gameOver:false,winner:null,defeatMsg:'',revealTimer:0,
-    drawCooldown:0
+    drawCooldown:0,mfaTimer:0,trainingTimer:0,waterholeTimer:0
   };
 }
 function drawHand(g,forceOne){
@@ -464,9 +470,10 @@ function nextTutorialDayOrMenu(){
 const CARD_COLORS={
   firewall:'#3c8cf5',waf:'#5ca8f0',ids:'#50e890',edr:'#4088e0',honeypot:'#e0b040',
   patch:'#60d080',emergency:'#f06040',encrypt:'#70c0f0',threat_hunter:'#20d0a0',
+  mfa:'#40c0a0',training:'#50a0f0',
   scan:'#f08040',phish:'#e0c040',sql_inject:'#e04040',bruteforce:'#f06030',
   zeroday:'#c030c0',ddos:'#a03030',ransomware:'#d02020',backdoor:'#9040d0',
-  minion:'#a040d0'
+  waterhole:'#b06020',nday:'#d04080',minion:'#a040d0'
 };
 function rebuildCardHand(){
   const ctr=document.getElementById('card-hand');ctr.innerHTML='';
@@ -575,6 +582,8 @@ function hideTooltip(){document.getElementById('tooltip').style.display='none';}
 
 function tryDeployAt(canvasX, canvasY) {
   if (!game || game.gameOver || !selectedCard) return;
+  const team = playerTeam;
+  if (game.mfaTimer > 0 && game.mfaTeam === team) { showMessage('双因子验证锁定中 · 无法部署'); return; }
   const slot = game.playerHand.indexOf(selectedCard);
   if (slot < 0 || game.power < selectedCard.cost) return;
   let lane = -1;
@@ -583,7 +592,6 @@ function tryDeployAt(canvasX, canvasY) {
   }
   if (lane < 0) return;
   const card = game.playerHand[slot];
-  const team = playerTeam;
   let dx;
   if (team === 'blue') dx = Math.max(DEPLOY_ZONE_BLUE - 160, Math.min(DEPLOY_ZONE_BLUE, canvasX));
   else dx = Math.max(DEPLOY_ZONE_RED, Math.min(DEPLOY_ZONE_RED + 160, canvasX));
@@ -637,6 +645,22 @@ function castSpell(card,team,lane,x,y){
       game.units.filter(u=>u.team!==team&&u.alive&&u.lane===lane).forEach(u=>{u.hp-=card.dmg;u.stunned=Math.max(u.stunned,card.stun);if(u.hp<=0)u.die();});
       game.towers.filter(t=>t.team!==team&&t.alive&&t.lane===lane).forEach(t=>{t.hp-=card.dmg;if(t.hp<=0)t.alive=false;});
       spawnParticles(x,y,'#a03030',25);break;
+    case'mfa':{
+      const enemyTeam=team==='blue'?'red':'blue';
+      game.mfaTimer=card.mfaTime;game.mfaTeam=enemyTeam;
+      showMessage('双因子验证启动 · 敌方部署锁定 '+card.mfaTime+'秒');spawnParticles(CANVAS_W/2,CANVAS_H/2,'#40c0a0',30);break;}
+    case'training':{
+      game.trainingTimer=card.trainTime;
+      game.towers.filter(t=>t.team===team&&t.alive).forEach(t=>t.atkSpdMul=2);
+      game.units.filter(u=>u.team===team&&u.alive&&u.isBuilding).forEach(u=>u.atkSpdMul=2);
+      showMessage('安全培训 · 塔攻速翻倍 '+card.trainTime+'秒');break;}
+    case'waterhole':{
+      const enemyTowers=game.towers.filter(t=>t.team!==team&&t.alive);
+      if(enemyTowers.length>0){
+        const tgt=enemyTowers.sort((a,b)=>Math.abs(a.x-x)-Math.abs(b.x-x))[0];
+        game.waterholeTarget=tgt;game.waterholeTimer=card.whTime;game.waterholeTeam=tgt.team;
+        tgt.atkSpdMul=0.5;showMessage('水坑攻击 · 敌方塔攻速减半 '+card.whTime+'秒');
+      }break;}
   }
 }
 
@@ -646,7 +670,8 @@ function updateAiThreatDisplay(g){
   const names=['暴露面','横向移动通道','核心资产区'];
   const lane=names[g.aiNextLane]||'未知';
   const nextIn=Math.max(0,g.aiTimer).toFixed(1);
-  if(g.aiPower<g.aiNextCard.cost)el.textContent=`${g.aiNextCard.name}·${lane}·蓄力中 ${nextIn}s`;
+  if(game.mfaTimer>0&&game.mfaTeam===(playerTeam==='red'?'blue':'red'))el.textContent=`双因子验证锁定中 ${game.mfaTimer.toFixed(1)}s`;
+  else if(g.aiPower<g.aiNextCard.cost)el.textContent=`${g.aiNextCard.name}·${lane}·蓄力中 ${nextIn}s`;
   else el.textContent=`下一波：${g.aiNextCard.name} → ${lane} (${nextIn}s)`;
 }
 
@@ -734,6 +759,7 @@ function executeAiNextMove(g) {
   if (!g.aiNextCard) return;
   const card = g.aiNextCard;
   const aiTeam = playerTeam === 'red' ? 'blue' : 'red';
+  if (game.mfaTimer > 0 && game.mfaTeam === aiTeam) return; // locked by MFA
   if (card.type === 'spell') castSpell(card, aiTeam, g.aiNextLane, g.aiNextX, LANES_Y[g.aiNextLane]);
   else game.units.push(new Unit(card, aiTeam, g.aiNextLane, g.aiNextX));
   g.aiPower -= card.cost;
@@ -756,6 +782,9 @@ function loop(now){
     }
   }
   if(game.revealTimer>0){game.revealTimer-=dt;if(game.revealTimer<=0)game.units.forEach(u=>u.revealed=false);}
+  if(game.mfaTimer>0){game.mfaTimer-=dt;}
+  if(game.trainingTimer>0){game.trainingTimer-=dt;if(game.trainingTimer<=0){game.towers.filter(t=>t.alive).forEach(t=>t.atkSpdMul=1);game.units.filter(u=>u.alive).forEach(u=>u.atkSpdMul=1);}}
+  if(game.waterholeTimer>0){game.waterholeTimer-=dt;if(game.waterholeTimer<=0){if(game.waterholeTarget&&game.waterholeTarget.alive)game.waterholeTarget.atkSpdMul=1;}}
   if(game.drawCooldown>0)game.drawCooldown-=dt;
   drawHand(game);
   // IDS reveal: any friendly IDS reveals enemy stealth units in range
