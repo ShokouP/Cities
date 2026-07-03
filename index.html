@@ -666,6 +666,7 @@ function castSpell(card,team,lane,x,y){
 
 function updateAiThreatDisplay(g){
   const el=document.getElementById('ai-threat');
+  if(tutorialDay>=0){if(el)el.textContent='教学模式 · AI按固定节奏出牌';return;}
   if(!g||!g.aiNextCard){if(el)el.textContent='侦察中…';return;}
   const names=['暴露面','横向移动通道','核心资产区'];
   const lane=names[g.aiNextLane]||'未知';
