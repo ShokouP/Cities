@@ -1314,11 +1314,22 @@ window.addEventListener('message',e=>{
     selectedCard=card;
     tryDeployAt(DEPLOY_ZONE_BLUE,LANES_Y[1]);
     report('deploy card',game.units.length>0||!selectedCard);
-    const before=game.aiCoreHpPerLane[0];
-    game.aiCoreHpPerLane[0]=0;game.aiCoreHpPerLane[1]=0;game.aiCoreHpPerLane[2]=0;
+    game.aiCoreHpPerLane=[0,0,0];
     loop(performance.now());
     report('victory ends game',game.gameOver&&game.winner==='blue');
-    game.aiCoreHpPerLane[0]=before;
+
+    startGame('red');
+    report('startGame red',!!game&&!game.gameOver&&playerTeam==='red');
+    const redCard=game.playerHand.find(c=>c.type!=='spell');
+    selectedCard=redCard;
+    tryDeployAt(DEPLOY_ZONE_RED,LANES_Y[0]);
+    report('red deploy',game.units.some(u=>u.team==='red'));
+    game.coreHpPerLane=[0,0,0];
+    loop(performance.now());
+    report('red victory',game.gameOver&&game.winner==='red');
+
+    startTutorial(0);
+    report('start tutorial',!!game&&!game.gameOver&&tutorialDay===0);
   }catch(err){
     report('smoke exception: '+err,false);
   }
