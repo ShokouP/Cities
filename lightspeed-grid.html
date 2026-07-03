@@ -182,6 +182,7 @@ const GAME_TIME_LIMIT=300;
 const LANE_H=140,LANES_Y=[110,310,510],LANE_NAMES=['暴露面','横向移动通道','核心资产区'];
 const LANE_X0=120,LANE_X1=1080,LANE_W=LANE_X1-LANE_X0;
 const TOWER_HP=2400,CORE_HP=6000;
+const TOWER_ATK=35,TOWER_ATK_SPD=0.8,TOWER_RANGE=140;
 const BLUE_TOWER_X=280,RED_TOWER_X=920,TOWER_W=32,TOWER_H=60;
 const CORE_W=36,PER_LANE_CORE_H=100;
 const DEPLOY_ZONE_BLUE=420,DEPLOY_ZONE_RED=780;
@@ -339,12 +340,12 @@ function createGame(){
     coreHpPerLane:[CORE_HP,CORE_HP,CORE_HP],
     aiCoreHpPerLane:[CORE_HP,CORE_HP,CORE_HP],
     towers:[
-      {team:'blue',lane:0,x:BLUE_TOWER_X,_y:LANES_Y[0],hp:TOWER_HP,maxHp:TOWER_HP,alive:true,isTower:true,shield:0},
-      {team:'blue',lane:1,x:BLUE_TOWER_X,_y:LANES_Y[1],hp:TOWER_HP,maxHp:TOWER_HP,alive:true,isTower:true,shield:0},
-      {team:'blue',lane:2,x:BLUE_TOWER_X,_y:LANES_Y[2],hp:TOWER_HP,maxHp:TOWER_HP,alive:true,isTower:true,shield:0},
-      {team:'red',lane:0,x:RED_TOWER_X,_y:LANES_Y[0],hp:TOWER_HP,maxHp:TOWER_HP,alive:true,isTower:true,shield:0},
-      {team:'red',lane:1,x:RED_TOWER_X,_y:LANES_Y[1],hp:TOWER_HP,maxHp:TOWER_HP,alive:true,isTower:true,shield:0},
-      {team:'red',lane:2,x:RED_TOWER_X,_y:LANES_Y[2],hp:TOWER_HP,maxHp:TOWER_HP,alive:true,isTower:true,shield:0},
+      {team:'blue',lane:0,x:BLUE_TOWER_X,_y:LANES_Y[0],hp:TOWER_HP,maxHp:TOWER_HP,alive:true,isTower:true,shield:0,atkCd:0},
+      {team:'blue',lane:1,x:BLUE_TOWER_X,_y:LANES_Y[1],hp:TOWER_HP,maxHp:TOWER_HP,alive:true,isTower:true,shield:0,atkCd:0},
+      {team:'blue',lane:2,x:BLUE_TOWER_X,_y:LANES_Y[2],hp:TOWER_HP,maxHp:TOWER_HP,alive:true,isTower:true,shield:0,atkCd:0},
+      {team:'red',lane:0,x:RED_TOWER_X,_y:LANES_Y[0],hp:TOWER_HP,maxHp:TOWER_HP,alive:true,isTower:true,shield:0,atkCd:0},
+      {team:'red',lane:1,x:RED_TOWER_X,_y:LANES_Y[1],hp:TOWER_HP,maxHp:TOWER_HP,alive:true,isTower:true,shield:0,atkCd:0},
+      {team:'red',lane:2,x:RED_TOWER_X,_y:LANES_Y[2],hp:TOWER_HP,maxHp:TOWER_HP,alive:true,isTower:true,shield:0,atkCd:0},
     ],units:[],time:0,aiTimer:0,aiNext:2.5,
     aiNextCard:null,aiNextLane:0,aiNextX:DEPLOY_ZONE_RED,
     playerDeck:[... (isAttack?RED_CARDS:BLUE_CARDS)],playerHand:[],handSize:5,
@@ -560,6 +561,8 @@ function updateAiThreatDisplay(g){
   else el.textContent=`下一波：${g.aiNextCard.name} → ${lane} (${nextIn}s)`;
 }
 
+let lasers=[];
+function spawnLaser(x1,y1,x2,y2,color){lasers.push({x1,y1,x2,y2,color,life:0.15,maxLife:0.15});}
 // ── FX ──
 function spawnParticles(x,y,color,count){for(let i=0;i<count;i++)particleEffects.push({x,y,color,vx:(Math.random()-0.5)*120,vy:(Math.random()-0.5)*120,life:0.5+Math.random()*0.7,maxLife:0.5+Math.random()*0.7,size:1+Math.random()*3});}
 function spawnFloatingText(x,y,text,team){floatingTexts.push({x,y,text:String(text),color:team==='blue'?'#5cb8ff':'#f05050',life:1.2,maxLife:1.2,vy:-40});}
@@ -628,6 +631,23 @@ function loop(now){
   game.units.forEach(u=>u.update(dt));game.units=game.units.filter(u=>u.alive);
   particleEffects.forEach(p=>{p.life-=dt;p.x+=p.vx*dt;p.y+=p.vy*dt;});particleEffects=particleEffects.filter(p=>p.life>0);
   floatingTexts.forEach(t=>{t.life-=dt;t.y+=t.vy*dt;});floatingTexts=floatingTexts.filter(t=>t.life>0);
+  lasers.forEach(l=>{l.life-=dt;});lasers=lasers.filter(l=>l.life>0);
+  // Tower attacks
+  game.towers.forEach(t=>{
+    if(!t.alive)return;
+    t.atkCd=Math.max(0,t.atkCd-dt);
+    if(t.atkCd<=0){
+      const enemies=game.units.filter(u=>u.alive&&u.team!==t.team&&u.lane===t.lane&&Math.abs(u.x-t.x)<TOWER_RANGE);
+      if(enemies.length>0){
+        const target=enemies.sort((a,b)=>Math.abs(a.x-t.x)-Math.abs(b.x-t.x))[0];
+        target.hp-=TOWER_ATK;
+        spawnFloatingText(target.x,target.y,Math.round(TOWER_ATK),t.team);
+        spawnLaser(t.x,t._y,target.x,target.y,t.team==='blue'?'#60a0ff':'#ff6060');
+        if(target.hp<=0)target.die();
+        t.atkCd=TOWER_ATK_SPD;
+      }
+    }
+  });
   game.towers.forEach(t=>{if(t.alive&&t.hp<=0){t.alive=false;spawnParticles(t.x,t._y,t.team==='blue'?'#2050d0':'#d03030',25);showMessage(`${LANE_NAMES[t.lane]}${t.team==='blue'?'蓝方':'红方'}节点塔被摧毁！`);}});
   // AI preview: always know next move
   if(!game.aiNextCard)planAiNextMove(game);
@@ -873,6 +893,7 @@ function render(g){
   // ── Particles & texts ──
   particleEffects.forEach(p=>{const a=p.life/p.maxLife,c=p.color;ctx.fillStyle=`rgba(${parseInt(c.slice(1,3),16)},${parseInt(c.slice(3,5),16)},${parseInt(c.slice(5,7),16)},${a})`;ctx.beginPath();ctx.arc(p.x,p.y,p.size*a,0,Math.PI*2);ctx.fill();});
   floatingTexts.forEach(t=>{const a=t.life/t.maxLife,c=t.color;ctx.fillStyle=`rgba(${parseInt(c.slice(1,3),16)},${parseInt(c.slice(3,5),16)},${parseInt(c.slice(5,7),16)},${a})`;ctx.font='bold 13px "Share Tech Mono",monospace';ctx.textAlign='center';ctx.fillText(t.text,t.x,t.y);});
+  lasers.forEach(l=>{const a=l.life/l.maxLife;ctx.strokeStyle=l.color;ctx.globalAlpha=a;ctx.lineWidth=2+a*2;ctx.beginPath();ctx.moveTo(l.x1,l.y1);ctx.lineTo(l.x2,l.y2);ctx.stroke();ctx.globalAlpha=1;});
 
   // ── Deploy zone highlight (when card selected) ──
   if (selectedCard && !g.gameOver) {
