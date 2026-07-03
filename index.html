@@ -583,14 +583,29 @@ function onCardClick(card){
   updateTip();
   refreshCardVisuals();
 }
+function getCardKeywordHint(c){
+  if(c.spell==='mfa')return '锁定敌方部署';
+  if(c.spell==='training')return '塔攻速翻倍';
+  if(c.spell==='waterhole')return '减速敌方塔';
+  if(c.spell==='killAll')return '全图清场';
+  if(c.spell==='directDmg')return '无视护盾';
+  if(c.bonusVs==='sql_inject')return '反SQL注入';
+  if(c.flyTarget)return '可对空/揭示隐身';
+  if(c.isFlying||c.type==='flying')return '飞行·越地面';
+  if(c.taunt)return '嘲讽改道';
+  if(c.stealth)return '隐匿';
+  return '';
+}
 function updateTip(){
   const el=document.getElementById('tip-text');
   if(!el)return;
-  if(!game||game.gameOver){el.textContent=ROLE_HINTS[playerTeam]||'';return;}
+  if(!game||game.gameOver){el.textContent=ROLE_HINTS[playerTeam]||'';el.style.color='#4a7a5a';return;}
   if(selectedCard){
     const c=selectedCard;
-    el.textContent=c.type==='spell'?`已选"${c.name}"· 点击战场我方部署区释放法术`:`已选"${c.name}"· 点击战场我方部署区部署单位`;
-    el.style.color='#5ab87a';
+    const place=c.type==='spell'?'释放法术':'部署单位';
+    const kw=getCardKeywordHint(c);
+    el.textContent=`已选"${c.name}"· ${place}${kw?' · '+kw:''}`;
+    el.style.color=game.power<=c.cost?'#f0c030':'#5ab87a';
   }else{
     el.textContent=ROLE_HINTS[playerTeam];
     el.style.color='#4a7a5a';
