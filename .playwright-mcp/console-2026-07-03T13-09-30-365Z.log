@@ -1,3 +1,0 @@
-[    5609ms] ReferenceError: drawHand is not defined
-    at startGame (http://localhost:3457/lightspeed-grid.html:351:21)
-    at HTMLButtonElement.<anonymous> (http://localhost:3457/lightspeed-grid.html:877:74)
