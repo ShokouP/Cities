@@ -28,6 +28,7 @@
   .hud-label { color:#4a6b5a; font-size:10px; text-transform:uppercase; letter-spacing:1px; }
   .hud-value { color:#3cf58b; font-size:17px; font-weight:bold; }
   .hud-value.danger { color:#f53c3c; animation:pulse 0.6s infinite; }
+  #time-display.danger { color:#f53c3c; animation:pulse 0.6s infinite; }
   .power-bar, .core-bar { width:70px; height:5px; background:#0f1812; border-radius:2px; overflow:hidden; border:1px solid #1a2e20; }
   .power-bar-inner { height:100%; background:linear-gradient(90deg,#3cf58b,#2ad46e); transition:width 0.15s; }
   .core-bar-inner { height:100%; background:linear-gradient(90deg,#3cf58b,#2ad46e); transition:width 0.15s; }
@@ -177,12 +178,14 @@
 <script>
 const CANVAS_W=1200,CANVAS_H=641;
 const MAX_POWER=10,START_POWER=7,POWER_REGEN=1.0,POWER_REGEN_FAST=1.5,FAST_REGEN_TIME=60;
+const GAME_TIME_LIMIT=300;
 const LANE_H=140,LANES_Y=[110,310,510],LANE_NAMES=['暴露面','横向移动通道','核心资产区'];
 const LANE_X0=120,LANE_X1=1080,LANE_W=LANE_X1-LANE_X0;
 const TOWER_HP=2400,CORE_HP=6000;
 const BLUE_TOWER_X=280,RED_TOWER_X=920,TOWER_W=32,TOWER_H=60;
 const CORE_W=36,PER_LANE_CORE_H=100;
 const DEPLOY_ZONE_BLUE=420,DEPLOY_ZONE_RED=780;
+const DRAW_INTERVAL=15;
 const ROLE_HINTS={
   blue:'守住三路核心服务器 · 点击手牌 → 点击我方部署区',
   red:'摧毁三路核心服务器 · 点击手牌 → 点击我方部署区'
@@ -346,10 +349,20 @@ function createGame(){
     aiNextCard:null,aiNextLane:0,aiNextX:DEPLOY_ZONE_RED,
     playerDeck:[... (isAttack?RED_CARDS:BLUE_CARDS)],playerHand:[],handSize:5,
     aiDeck:[... (isAttack?BLUE_CARDS:RED_CARDS.filter(c=>c.id!=='zeroday'))],
-    gameOver:false,winner:null,defeatMsg:'',revealTimer:0
+    gameOver:false,winner:null,defeatMsg:'',revealTimer:0,
+    drawCooldown:0
   };
 }
-function drawHand(g){while(g.playerHand.length<g.handSize&&g.playerDeck.length>0){const i=Math.floor(Math.random()*g.playerDeck.length);g.playerHand.push(g.playerDeck.splice(i,1)[0]);}}
+function drawHand(g){
+  if(g.drawCooldown>0)return;
+  let drawn=false;
+  while(g.playerHand.length<g.handSize&&g.playerDeck.length>0){
+    const i=Math.floor(Math.random()*g.playerDeck.length);
+    g.playerHand.push(g.playerDeck.splice(i,1)[0]);
+    drawn=true;
+  }
+  if(drawn)g.drawCooldown=DRAW_INTERVAL;
+}
 function startGame(team){
   playerTeam=team||'blue';
   document.getElementById('overlay').style.display='none';
@@ -593,6 +606,8 @@ function loop(now){
     }
   }
   if(game.revealTimer>0){game.revealTimer-=dt;if(game.revealTimer<=0)game.units.forEach(u=>u.revealed=false);}
+  if(game.drawCooldown>0)game.drawCooldown-=dt;
+  drawHand(game);
   // IDS reveal: any friendly IDS reveals enemy stealth units in range
   game.units.filter(u=>u.alive&&u.card.flyTarget).forEach(ids=>{
     game.units.filter(e=>e.team!==ids.team&&e.stealth&&e.alive&&e.lane===ids.lane&&Math.abs(e.x-ids.x)<ids.range).forEach(e=>e.revealed=true);
@@ -611,6 +626,14 @@ function loop(now){
   const playerWon=playerTeam==='blue'?totalAiCore<=0:totalCore<=0;
   if(playerLost){endGame(playerTeam==='blue'?'red':'blue',playerTeam==='blue'?'核心服务器被攻破——域控权限丢失。\n"你的轮班结束了。"':'红队攻击链被切断——任务失败。\n"对方守住了光速城。"');return;}
   if(playerWon){endGame(playerTeam==='blue'?'blue':'red',playerTeam==='blue'?'对方核心服务器已下线——攻击链断裂。\n"光速城今夜平安。"':'对方核心服务器已攻破——域控权限到手。\n"光速城今夜失守。"');return;}
+  // Time limit
+  if(game.time>=GAME_TIME_LIMIT){
+    const playerCoreTotal=playerTeam==='blue'?totalCore:totalAiCore;
+    const aiCoreTotal=playerTeam==='blue'?totalAiCore:totalCore;
+    if(playerCoreTotal>aiCoreTotal){endGame(playerTeam,playerTeam==='blue'?'时间到！核心血量领先，光速城守住。':'时间到！核心血量领先，任务成功。');return;}
+    else if(aiCoreTotal>playerCoreTotal){endGame(playerTeam==='blue'?'red':'blue',playerTeam==='blue'?'时间到！核心血量落后，域控权限丢失。':'时间到！核心血量落后，攻击失败。');return;}
+    else{endGame('draw','时间到！双方核心血量相同，平局。');return;}
+  }
   // ── HUD ──
   document.getElementById('power-display').textContent=Math.floor(game.power)+'/'+MAX_POWER;
   document.getElementById('ai-power-display').textContent=Math.floor(game.aiPower)+'/'+MAX_POWER;
@@ -625,7 +648,11 @@ function loop(now){
     document.getElementById('ai-core-bar-'+i).style.width=Math.max(0,(aiCores[i]/CORE_HP*100))+'%';
   }
   const m=Math.floor(game.time/60),s=Math.floor(game.time%60);
-  document.getElementById('time-display').textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+  const timeLeft=Math.max(0,GAME_TIME_LIMIT-game.time);
+  const ml=Math.floor(timeLeft/60),sl=Math.floor(timeLeft%60);
+  document.getElementById('time-display').textContent=String(ml).padStart(2,'0')+':'+String(sl).padStart(2,'0');
+  if(timeLeft<=30)document.getElementById('time-display').classList.add('danger');
+  else document.getElementById('time-display').classList.remove('danger');
   const playerCoreTotal=Math.round(playerCores.reduce((a,b)=>a+b,0));
   const ce=document.getElementById('core-display');if(playerCoreTotal<CORE_HP*0.75)ce.classList.add('danger');else ce.classList.remove('danger');
   updateAiThreatDisplay(game);
@@ -636,7 +663,9 @@ function endGame(winner,msg){
   game.gameOver=true;game.winner=winner;game.defeatMsg=msg;
   const ov=document.getElementById('overlay');ov.style.display='flex';
   const playerWon=winner===playerTeam;
-  ov.innerHTML=`<h1 style="color:${playerWon?'#3cf58b':'#f53c3c'}">${playerWon?'任务完成':'任务失败'}</h1><p style="white-space:pre-line">${msg}</p><div style="display:flex;gap:16px;"><button id="restart-defend-btn">防守方（蓝队）</button><button id="restart-attack-btn">进攻方（红队）</button></div>`;
+  const titleColor=winner==='draw'?'#f0c030':(playerWon?'#3cf58b':'#f53c3c');
+  const titleText=winner==='draw'?'平局':(playerWon?'任务完成':'任务失败');
+  ov.innerHTML=`<h1 style="color:${titleColor}">${titleText}</h1><p style="white-space:pre-line">${msg}</p><div style="display:flex;gap:16px;"><button id="restart-defend-btn">防守方（蓝队）</button><button id="restart-attack-btn">进攻方（红队）</button></div>`;
   document.getElementById('restart-defend-btn').addEventListener('click',()=>startGame('blue'));
   document.getElementById('restart-attack-btn').addEventListener('click',()=>startGame('red'));
   updateTip();
