@@ -666,6 +666,15 @@ function showTooltip(e,card){
 }
 function hideTooltip(){document.getElementById('tooltip').style.display='none';}
 
+function getCanvasXY(e){
+  const rect=canvas.getBoundingClientRect();
+  const clientX=e.touches?.[0]?.clientX??e.changedTouches?.[0]?.clientX??e.clientX;
+  const clientY=e.touches?.[0]?.clientY??e.changedTouches?.[0]?.clientY??e.clientY;
+  return{
+    x:(clientX-rect.left)*(CANVAS_W/rect.width),
+    y:(clientY-rect.top)*(CANVAS_H/rect.height)
+  };
+}
 function tryDeployAt(canvasX, canvasY) {
   if (!game || game.gameOver || !selectedCard) return;
   const team = playerTeam;
@@ -688,25 +697,31 @@ function tryDeployAt(canvasX, canvasY) {
   selectedCard = null; drawHand(game,true); rebuildCardHand(); updateTip();
 }
 
-// ── Canvas Click ──
+// ── Canvas Click / Touch ──
 canvas.addEventListener('click', e => {
-  const rect = canvas.getBoundingClientRect();
-  const cx = (e.clientX - rect.left) * (CANVAS_W / rect.width);
-  const cy = (e.clientY - rect.top) * (CANVAS_H / rect.height);
-  tryDeployAt(cx, cy);
+  const p = getCanvasXY(e);
+  tryDeployAt(p.x, p.y);
 });
+canvas.addEventListener('touchstart', e => {
+  if (!selectedCard) return;
+  const p = getCanvasXY(e);
+  mouseX = p.x; mouseY = p.y;
+}, {passive:false});
+canvas.addEventListener('touchend', e => {
+  e.preventDefault();
+  const p = getCanvasXY(e);
+  mouseX = p.x; mouseY = p.y;
+  tryDeployAt(p.x, p.y);
+}, {passive:false});
 canvas.addEventListener('dragover', e => { e.preventDefault(); e.dataTransfer.dropEffect = 'copy'; });
 canvas.addEventListener('drop', e => {
   e.preventDefault();
-  const rect = canvas.getBoundingClientRect();
-  const cx = (e.clientX - rect.left) * (CANVAS_W / rect.width);
-  const cy = (e.clientY - rect.top) * (CANVAS_H / rect.height);
-  tryDeployAt(cx, cy);
+  const p = getCanvasXY(e);
+  tryDeployAt(p.x, p.y);
 });
 canvas.addEventListener('mousemove', e => {
-  const rect = canvas.getBoundingClientRect();
-  mouseX = (e.clientX - rect.left) * (CANVAS_W / rect.width);
-  mouseY = (e.clientY - rect.top) * (CANVAS_H / rect.height);
+  const p = getCanvasXY(e);
+  mouseX = p.x; mouseY = p.y;
 });
 
 function castSpell(card,team,lane,x,y){
