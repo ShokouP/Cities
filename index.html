@@ -29,97 +29,96 @@
     #game-area { display: flex; flex-direction: column; min-height: 0; }
     #hud { padding: 3px 5px; gap: 3px; min-height: 34px; }
     #hud .hud-label { display: none; }
-    .hud-value { font-size: 12px !important; }
-    .hud-row { gap: 3px; }
-    .hud-item { gap: 0; }
-    .power-bar, .core-bar { width: 36px; height: 4px; }
-    .core-bars { gap: 2px; }
-    .mini-core-bar { width: 10px; height: 3px; }
-    #ai-threat { max-width: 60px; font-size: 7px; margin-top: 0; }
-    #tip-bar { min-height: 16px; padding: 2px 6px; }
-    #tip-text { font-size: 7px; }
+    .hud-value { font-size: 14px !important; }
+    .hud-row { gap: 4px; }
+    .hud-item { gap: 1px; }
+    .power-bar, .core-bar { width: 44px; height: 5px; }
+    .core-bars { gap: 3px; }
+    .mini-core-bar { width: 14px; height: 4px; }
+    #ai-threat { max-width: 80px; font-size: 9px; margin-top: 1px; }
+    #tip-bar { min-height: 20px; padding: 3px 8px; }
+    #tip-text { font-size: 9px; }
     #canvas-wrap { flex: 1 1 auto; min-height: 0; overflow: hidden; display: flex; align-items: center; justify-content: center; background: #050705; }
     canvas { width: 100%; height: auto; max-width: 100%; max-height: 100%; aspect-ratio: 1200 / 641; object-fit: contain; min-width: auto; }
-    #card-hand { min-height: 92px; max-height: 120px; padding: 4px 6px; justify-content: flex-start; }
-    .card { width: 86px !important; height: 78px !important; margin: 0 3px; }
-    .card-inner { grid-template-columns: 26px 1fr !important; grid-template-rows: 14px 1fr 14px !important; padding: 3px 4px 3px 3px !important; }
-    .card-pixel { width: 24px !important; height: 70px !important; }
-    .card-pixel canvas { width: 20px !important; height: 66px !important; }
-    .card-name { font-size: 10px !important; max-width: 52px !important; }
-    .card-cost { font-size: 11px !important; min-width: 12px !important; }
-    .card-desc { font-size: 6px !important; line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-    .card-stats { font-size: 6px !important; gap: 3px !important; margin-top: 2px !important; }
-    .card-tag { font-size: 6px !important; padding: 1px 2px !important; }
-    #overlay { gap: 10px; padding: 18px; }
-    #overlay h1 { font-size: 22px; letter-spacing: 2px; }
-    #overlay p { font-size: 11px; margin-bottom: 4px; }
-    #overlay button { padding: 10px 16px; font-size: 13px; letter-spacing: 1px; width: min(260px, 80vw); }
-    #overlay div { gap: 8px; }
-    #intro { padding: 24px; padding-top: calc(24px + env(safe-area-inset-top)); }
-    #intro-line { font-size: 12px; line-height: 1.5; }
-    #intro-skip { font-size: 9px; bottom: calc(12px + env(safe-area-inset-bottom)); right: calc(16px + env(safe-area-inset-right)); }
+    #card-hand { min-height: 104px; max-height: 132px; padding: 5px 8px; justify-content: flex-start; }
+    .card { width: 100px !important; height: 90px !important; margin: 0 3px; }
+    .card-inner { grid-template-columns: 30px 1fr !important; grid-template-rows: 16px 1fr 16px !important; padding: 4px 5px 4px 4px !important; }
+    .card-pixel { width: 28px !important; height: 80px !important; }
+    .card-pixel canvas { width: 24px !important; height: 74px !important; }
+    .card-name { font-size: 11px !important; max-width: 60px !important; }
+    .card-cost { font-size: 13px !important; min-width: 14px !important; }
+    .card-desc { font-size: 7px !important; line-height: 1.25; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .card-stats { font-size: 7px !important; gap: 4px !important; margin-top: 2px !important; }
+    .card-tag { font-size: 7px !important; padding: 1px 3px !important; }
+    #overlay { gap: 12px; padding: 22px; }
+    #overlay h1 { font-size: 26px; letter-spacing: 2px; }
+    #overlay p { font-size: 13px; margin-bottom: 5px; }
+    #overlay button { padding: 12px 18px; font-size: 15px; letter-spacing: 1px; width: min(280px, 82vw); }
+    #overlay div { gap: 10px; }
+    #intro { padding: 28px; padding-top: calc(28px + env(safe-area-inset-top)); }
+    #intro-line { font-size: 14px; line-height: 1.55; }
+    #intro-skip { font-size: 10px; bottom: calc(14px + env(safe-area-inset-bottom)); right: calc(18px + env(safe-area-inset-right)); }
   }
   @media (max-width: 380px) and (orientation: portrait) {
-    .hud-value { font-size: 10px !important; }
-    .power-bar, .core-bar { width: 30px; height: 3px; }
-    .mini-core-bar { width: 8px; height: 2px; }
+    .hud-value { font-size: 12px !important; }
+    .power-bar, .core-bar { width: 34px; height: 4px; }
+    .mini-core-bar { width: 10px; height: 3px; }
     #ai-threat { display: none; }
-    #card-hand { min-height: 78px; max-height: 96px; }
-    .card { width: 74px !important; height: 68px !important; }
-    .card-inner { grid-template-columns: 22px 1fr !important; grid-template-rows: 12px 1fr 12px !important; }
-    .card-pixel { width: 20px !important; height: 60px !important; }
-    .card-pixel canvas { width: 16px !important; height: 56px !important; }
-    .card-name { font-size: 9px !important; max-width: 44px !important; }
-    .card-cost { font-size: 10px !important; }
-    .card-desc { font-size: 5px !important; }
-    .card-stats { font-size: 5px !important; }
-    .card-tag { font-size: 5px !important; }
+    #card-hand { min-height: 88px; max-height: 108px; }
+    .card { width: 84px !important; height: 76px !important; }
+    .card-inner { grid-template-columns: 26px 1fr !important; grid-template-rows: 14px 1fr 14px !important; }
+    .card-pixel { width: 24px !important; height: 68px !important; }
+    .card-pixel canvas { width: 20px !important; height: 62px !important; }
+    .card-name { font-size: 10px !important; max-width: 50px !important; }
+    .card-cost { font-size: 11px !important; }
+    .card-desc { font-size: 6px !important; }
+    .card-stats { font-size: 6px !important; }
+    .card-tag { font-size: 6px !important; }
   }
   /* ── Mobile landscape (wide) ── */
   @media (max-width: 900px) and (orientation: landscape) {
     body { align-items: stretch; padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); }
     #app { height: 100dvh; max-height: none; border: none; border-radius: 0; }
     #game-area { flex: 1; display: flex; flex-direction: row; min-height: 0; }
-    #hud { padding: 2px 8px; gap: 4px; min-height: 30px; }
-    #hud .hud-label { font-size: 7px; }
-    .hud-value { font-size: 11px !important; }
-    .hud-row { gap: 3px; }
-    .power-bar, .core-bar { width: 40px; height: 3px; }
-    .mini-core-bar { width: 10px; height: 2px; }
-    #ai-threat { max-width: 90px; font-size: 7px; margin-top: 0; }
-    #tip-bar { min-height: 12px; padding: 1px 6px; }
-    #tip-text { font-size: 7px; }
+    #hud { padding: 3px 10px; gap: 5px; min-height: 34px; }
+    #hud .hud-label { font-size: 8px; }
+    .hud-value { font-size: 13px !important; }
+    .hud-row { gap: 4px; }
+    .power-bar, .core-bar { width: 48px; height: 4px; }
+    .mini-core-bar { width: 12px; height: 3px; }
+    #ai-threat { max-width: 110px; font-size: 8px; margin-top: 0; }
+    #tip-bar { min-height: 14px; padding: 2px 8px; }
+    #tip-text { font-size: 8px; }
     #canvas-wrap { flex: 1 1 auto; align-self: stretch; display: flex; align-items: center; justify-content: center; min-width: 0; min-height: 0; overflow: hidden; background: #050705; }
     canvas { width: 100%; height: auto; max-height: 100%; aspect-ratio: 1200 / 641; object-fit: contain; min-width: auto; }
-    #card-hand { flex: 0 0 108px; align-self: stretch; width: 108px; min-width: 108px; padding: 2px; }
-    .card { width: 96px !important; height: 50px !important; margin: 2px 0; }
-    .card-inner { grid-template-columns: 22px 1fr !important; grid-template-rows: 10px 1fr 10px !important; padding: 2px 3px 2px 2px !important; }
-    .card-pixel { width: 20px !important; height: 44px !important; }
-    .card-pixel canvas { width: 16px !important; height: 40px !important; }
-    .card-name { font-size: 8px !important; max-width: 64px !important; }
-    .card-cost { font-size: 9px !important; }
-    .card-desc { display: none; }
-    .card-stats { font-size: 5px !important; gap: 3px !important; margin-top: 1px !important; }
-    .card-tag { font-size: 5px !important; padding: 0 1px !important; }
-    #overlay { gap: 8px; padding: 12px; }
-    #overlay h1 { font-size: 20px; letter-spacing: 2px; }
-    #overlay p { font-size: 9px; margin-bottom: 2px; }
-    #overlay button { padding: 6px 10px; font-size: 10px; letter-spacing: 1px; width: min(220px, 60vw); }
-    #intro { padding: 18px; padding-top: calc(18px + env(safe-area-inset-top)); }
-    #intro-line { font-size: 10px; line-height: 1.35; }
-    #intro-skip { font-size: 8px; bottom: calc(10px + env(safe-area-inset-bottom)); right: calc(12px + env(safe-area-inset-right)); }
+    #card-hand { flex: 0 0 118px; align-self: stretch; width: 118px; min-width: 118px; padding: 3px; }
+    .card { width: 106px !important; height: 56px !important; margin: 2px 0; }
+    .card-inner { grid-template-columns: 24px 1fr !important; grid-template-rows: 12px 1fr 12px !important; padding: 2px 4px 2px 2px !important; }
+    .card-pixel { width: 22px !important; height: 48px !important; }
+    .card-pixel canvas { width: 18px !important; height: 44px !important; }
+    .card-name { font-size: 9px !important; max-width: 72px !important; }
+    .card-cost { font-size: 10px !important; }
+    .card-stats { font-size: 6px !important; gap: 4px !important; margin-top: 1px !important; }
+    .card-tag { font-size: 6px !important; padding: 1px 2px !important; }
+    #overlay { gap: 10px; padding: 14px; }
+    #overlay h1 { font-size: 22px; letter-spacing: 2px; }
+    #overlay p { font-size: 10px; margin-bottom: 3px; }
+    #overlay button { padding: 8px 12px; font-size: 12px; letter-spacing: 1px; width: min(240px, 62vw); }
+    #intro { padding: 22px; padding-top: calc(22px + env(safe-area-inset-top)); }
+    #intro-line { font-size: 11px; line-height: 1.45; }
+    #intro-skip { font-size: 9px; bottom: calc(12px + env(safe-area-inset-bottom)); right: calc(14px + env(safe-area-inset-right)); }
   }
   #hud {
-    min-height:40px; display:flex; align-items:center; justify-content:space-between;
-    padding:0 10px; border-bottom:1px solid #1a3a2a;
-    background:rgba(0,0,0,0.35); font-size:clamp(10px,2.8vw,13px); color:#7eb896;
-    gap:6px;
+    min-height:44px; display:flex; align-items:center; justify-content:space-between;
+    padding:0 12px; border-bottom:1px solid #1a3a2a;
+    background:rgba(0,0,0,0.35); font-size:clamp(11px,2.8vw,14px); color:#7eb896;
+    gap:8px;
   }
-  .hud-item { display:flex; flex-direction:column; align-items:flex-start; gap:1px; }
+  .hud-item { display:flex; flex-direction:column; align-items:flex-start; gap:2px; }
   .hud-item.right { align-items:flex-end; }
-  .hud-row { display:flex; align-items:center; gap:clamp(2px,1vw,6px); }
-  .hud-label { color:#4a6b5a; font-size:clamp(7px,1.8vw,10px); text-transform:uppercase; letter-spacing:0.5px; }
-  .hud-value { color:#3cf58b; font-size:clamp(13px,3.6vw,17px); font-weight:bold; }
+  .hud-row { display:flex; align-items:center; gap:clamp(3px,1vw,7px); }
+  .hud-label { color:#4a6b5a; font-size:clamp(8px,1.8vw,11px); text-transform:uppercase; letter-spacing:0.5px; }
+  .hud-value { color:#3cf58b; font-size:clamp(14px,3.6vw,19px); font-weight:bold; }
   .hud-value.danger { color:#f53c3c; animation:pulse 0.6s infinite; }
   #time-display.danger { color:#f53c3c; animation:pulse 0.6s infinite; }
   .power-bar, .core-bar { width:clamp(40px,11vw,70px); height:4px; background:#0f1812; border-radius:2px; overflow:hidden; border:1px solid #1a2e20; }
@@ -134,16 +133,16 @@
   canvas { display:block; width:100%; height:100%; }
   /* ── Card Hand ── */
   #card-hand {
-    height: auto; min-height: 90px; max-height: 122px;
+    height: auto; min-height: 100px; max-height: 134px;
     display: flex; align-items: center; justify-content: center; gap: 0;
-    padding: 6px 8px; border-top: 1px solid #1a3a2a; background: rgba(0,0,0,0.55);
+    padding: 7px 10px; border-top: 1px solid #1a3a2a; background: rgba(0,0,0,0.55);
     overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch;
     scrollbar-width: thin; scrollbar-color: #1a3a2a #0a0c0f;
   }
   #card-hand::-webkit-scrollbar { height: 4px; }
   #card-hand::-webkit-scrollbar-thumb { background: #1a3a2a; border-radius: 2px; }
   .card {
-    width: clamp(110px, 18vw, 150px); height: clamp(80px, 16vw, 106px);
+    width: clamp(118px, 19vw, 160px); height: clamp(88px, 17vw, 114px);
     background: #0b120f;
     border: 2px solid #1a2e20; border-radius: 2px;
     cursor: pointer; position: relative; overflow: hidden; flex-shrink: 0;
@@ -167,33 +166,41 @@
   box-shadow: 0 0 0 2px var(--card-accent, #3cf58b), 0 10px 26px rgba(0,0,0,0.6);
 }
 .card.unaffordable { opacity: 0.32; pointer-events: none; filter: grayscale(0.8); }
+.card.used-up { opacity: 0.28; pointer-events: none; filter: grayscale(1) brightness(0.7); }
+.card.used-up::after {
+  content: '已耗尽';
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(0,0,0,0.45);
+  color: #f53c3c; font-size: clamp(10px, 2.4vw, 13px); font-weight: bold; letter-spacing: 2px;
+}
   .card-inner {
     display: grid;
-    grid-template-columns: clamp(34px, 8vw, 44px) 1fr;
-    grid-template-rows: clamp(14px, 4vw, 18px) 1fr clamp(14px, 4vw, 18px);
-    height: 100%; padding: 4px 6px 4px 4px; position: relative; z-index: 1;
+    grid-template-columns: clamp(38px, 8vw, 48px) 1fr;
+    grid-template-rows: clamp(16px, 4vw, 20px) 1fr clamp(16px, 4vw, 20px);
+    height: 100%; padding: 5px 7px 5px 5px; position: relative; z-index: 1;
   }
   .card-pixel {
-    grid-row: 1 / 4; width: clamp(30px, 7vw, 38px); height: clamp(70px, 15vw, 90px);
+    grid-row: 1 / 4; width: clamp(34px, 7vw, 42px); height: clamp(78px, 15vw, 98px);
     background: #0a0f0c; border: 1px solid #1f3326;
     display: flex; align-items: center; justify-content: center;
     position: relative;
   }
-  .card-pixel canvas { width: clamp(26px, 6vw, 32px); height: clamp(62px, 13vw, 84px); image-rendering: pixelated; }
+  .card-pixel canvas { width: clamp(30px, 6vw, 36px); height: clamp(68px, 13vw, 90px); image-rendering: pixelated; }
   .card-header { grid-column: 2; display: flex; justify-content: space-between; align-items: center; }
-  .card-name { font-size: clamp(9px, 2.6vw, 12px); font-weight: bold; color: #e8f0e8; letter-spacing: 0.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: clamp(52px, 14vw, 78px); }
+  .card-name { font-size: clamp(10px, 2.6vw, 13px); font-weight: bold; color: #e8f0e8; letter-spacing: 0.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: clamp(58px, 14vw, 84px); }
   .card-cost {
-    font-size: clamp(11px, 3.2vw, 14px); font-weight: bold; color: var(--card-accent, #3cf58b); line-height: 1;
-    min-width: 16px; text-align: right;
+    font-size: clamp(12px, 3.2vw, 15px); font-weight: bold; color: var(--card-accent, #3cf58b); line-height: 1;
+    min-width: 18px; text-align: right;
   }
-  .card-body { grid-column: 2; display: flex; flex-direction: column; gap: 1px; padding-top: 2px; }
-  .card-desc { font-size: clamp(6px, 1.8vw, 8px); color: #7a9a88; line-height: 1.3; }
-  .card-stats { display: flex; gap: clamp(4px, 1.5vw, 8px); margin-top: auto; font-size: clamp(6px, 1.8vw, 8px); color: #5a7a6a; }
+  .card-body { grid-column: 2; display: flex; flex-direction: column; gap: 2px; padding-top: 2px; }
+  .card-desc { font-size: clamp(7px, 1.8vw, 9px); color: #7a9a88; line-height: 1.35; }
+  .card-stats { display: flex; gap: clamp(5px, 1.5vw, 9px); margin-top: auto; font-size: clamp(7px, 1.8vw, 9px); color: #5a7a6a; }
   .card-stat { display: flex; align-items: center; gap: 2px; }
   .card-stat-val { color: #a0c0aa; font-weight: bold; }
   .card-footer { grid-column: 2; display: flex; justify-content: space-between; align-items: center; }
   .card-tag {
-    font-size: clamp(5px, 1.6vw, 7px); padding: 1px 3px; letter-spacing: 0.5px; text-transform: uppercase;
+    font-size: clamp(6px, 1.6vw, 8px); padding: 1px 4px; letter-spacing: 0.5px; text-transform: uppercase;
     background: rgba(0,0,0,0.4); color: var(--card-accent, #3cf58b); border: 1px solid rgba(255,255,255,0.12);
   }
 .card-tag.flying { color: #d4b830; border-color: rgba(212,184,48,0.35); }
@@ -203,44 +210,44 @@
   #tooltip {
     position:absolute; pointer-events:none; z-index:10;
     background:rgba(5,10,8,0.95); border:1px solid #2a4a3a;
-    border-radius:5px; padding:10px 14px; font-size:11px; color:#b8d4c3;
-    max-width:220px; display:none;
+    border-radius:5px; padding:11px 15px; font-size:12px; color:#b8d4c3;
+    max-width:240px; display:none;
   }
   #message {
     position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
     pointer-events:none; z-index:20;
-    font-size:22px; color:#3cf58b; text-shadow:0 0 20px rgba(60,245,139,0.5);
+    font-size:24px; color:#3cf58b; text-shadow:0 0 20px rgba(60,245,139,0.5);
     display:none; text-align:center; line-height:1.5;
   }
   #overlay {
     position:absolute; inset:0; z-index:15; background:rgba(0,0,0,0.7);
-    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px;
-    padding:20px; text-align:center;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:18px;
+    padding:24px; text-align:center;
   }
-  #overlay h1 { font-size:clamp(22px, 6vw, 32px); color:#3cf58b; letter-spacing:4px; text-shadow:0 0 30px rgba(60,245,139,0.4); }
-  #overlay p { color:#7eb896; font-size:clamp(11px, 3vw, 14px); max-width:min(500px, 90vw); text-align:center; line-height:1.6; }
+  #overlay h1 { font-size:clamp(26px, 6vw, 36px); color:#3cf58b; letter-spacing:4px; text-shadow:0 0 30px rgba(60,245,139,0.4); }
+  #overlay p { color:#7eb896; font-size:clamp(12px, 3vw, 15px); max-width:min(520px, 90vw); text-align:center; line-height:1.6; }
   #overlay div { flex-wrap:wrap; justify-content:center; }
   #overlay button {
     background:transparent; border:2px solid #3cf58b; color:#3cf58b;
-    padding:clamp(8px, 3vw, 12px) clamp(24px, 10vw, 40px); font-size:clamp(13px, 4vw, 16px); font-family:inherit; cursor:pointer;
+    padding:clamp(10px, 3vw, 14px) clamp(28px, 10vw, 44px); font-size:clamp(14px, 4vw, 17px); font-family:inherit; cursor:pointer;
     letter-spacing:2px; border-radius:4px; transition:all 0.2s;
     touch-action: manipulation; -webkit-tap-highlight-color: transparent;
   }
   #tip-bar {
-    min-height:18px; display:flex; align-items:center; justify-content:center;
-    border-bottom:1px solid #1a3a2a; background:rgba(0,0,0,0.25); padding:2px 8px;
+    min-height:20px; display:flex; align-items:center; justify-content:center;
+    border-bottom:1px solid #1a3a2a; background:rgba(0,0,0,0.25); padding:3px 10px;
   }
-  #tip-text { font-size:clamp(8px, 2.2vw, 10px); color:#4a7a5a; text-align:center; }
+  #tip-text { font-size:clamp(9px, 2.2vw, 11px); color:#4a7a5a; text-align:center; }
   #intro {
     position:absolute; inset:0; z-index:20; background:#050705;
     display:flex; flex-direction:column; align-items:flex-start; justify-content:flex-start;
-    padding:40px; font-family:'Share Tech Mono',monospace; color:#3cf58b;
+    padding:44px; font-family:'Share Tech Mono',monospace; color:#3cf58b;
     overflow:hidden; cursor:pointer; touch-action: manipulation;
   }
-  #intro-line { font-size:clamp(13px,3vw,16px); line-height:1.6; white-space:pre-wrap; text-shadow:0 0 8px rgba(60,245,139,0.35); }
+  #intro-line { font-size:clamp(14px,3vw,17px); line-height:1.65; white-space:pre-wrap; text-shadow:0 0 8px rgba(60,245,139,0.35); }
   #intro-cursor { display:inline-block; width:8px; height:1em; background:#3cf58b; animation:blink 0.8s infinite; vertical-align:middle; }
   @keyframes blink { 50% { opacity:0; } }
-  #intro-skip { position:absolute; bottom:20px; right:24px; color:#4a7a5a; font-size:11px; letter-spacing:1px; }
+  #intro-skip { position:absolute; bottom:22px; right:26px; color:#4a7a5a; font-size:12px; letter-spacing:1px; }
   #overlay { display:none; }
 </style>
 </head>
@@ -490,7 +497,7 @@ function createGame(){
     playerDeck:[... (isAttack?RED_CARDS:BLUE_CARDS)],playerHand:[],handSize:5,
     aiDeck:[... (isAttack?BLUE_CARDS:RED_CARDS)],
     gameOver:false,winner:null,defeatMsg:'',revealTimer:0,
-    drawCooldown:0,mfaTimer:0,trainingTimer:0,waterholeTimer:0
+    drawCooldown:0,mfaTimer:0,trainingTimer:0,waterholeTimer:0,emergencyUsed:false
   };
 }
 function drawHand(g,forceOne){
@@ -499,6 +506,20 @@ function drawHand(g,forceOne){
   const i=Math.floor(Math.random()*g.playerDeck.length);
   g.playerHand.push(g.playerDeck.splice(i,1)[0]);
   g.drawCooldown=DRAW_INTERVAL;
+  ensurePlayableHand(g);
+}
+function ensurePlayableHand(g){
+  if(!g||g.playerHand.length===0||g.playerDeck.length===0)return;
+  const affordable=g.playerHand.some(c=>c.cost<=g.power);
+  if(affordable)return;
+  const cheaperInDeck=g.playerDeck.filter(c=>c.cost<Math.max(...g.playerHand.map(h=>h.cost)));
+  if(cheaperInDeck.length===0)return;
+  const mostExpensiveIdx=g.playerHand.map((c,i)=>({c,i})).sort((a,b)=>b.c.cost-a.c.cost)[0].i;
+  const cheaper=cheaperInDeck.sort((a,b)=>a.cost-b.cost)[0];
+  const deckIdx=g.playerDeck.findIndex(c=>c===cheaper);
+  if(deckIdx<0)return;
+  g.playerDeck.push(g.playerHand.splice(mostExpensiveIdx,1)[0]);
+  g.playerHand.push(g.playerDeck.splice(deckIdx,1)[0]);
 }
 function startGame(team){
   playerTeam=team||'blue';
@@ -509,6 +530,7 @@ function startGame(team){
     const i=Math.floor(Math.random()*game.playerDeck.length);
     game.playerHand.push(game.playerDeck.splice(i,1)[0]);
   }
+  ensurePlayableHand(game);
   game.drawCooldown=DRAW_INTERVAL;
   selectedCard=null;
   rebuildCardHand();updateTip();if(animId)cancelAnimationFrame(animId);loop(performance.now());
@@ -525,6 +547,7 @@ function startTutorial(dayIndex){
     const i=Math.floor(Math.random()*game.playerDeck.length);
     game.playerHand.push(game.playerDeck.splice(i,1)[0]);
   }
+  ensurePlayableHand(game);
   game.drawCooldown=DRAW_INTERVAL;
   game.aiTimer=step.aiDelay;
   selectedCard=null;
@@ -560,7 +583,8 @@ function rebuildCardHand(){
     if(card.duration)statsHtml+=`<span class="card-stat">⏱<span class="card-stat-val">${card.duration}s</span></span>`;
     const d=document.createElement('div');d.className='card';d.dataset.idx=i;
     d.style.setProperty('--card-accent',accent);
-    if(game.power<card.cost)d.classList.add('unaffordable');
+    if(game.power<card.cost||card.spell==='killAll'&&game.emergencyUsed)d.classList.add('unaffordable');
+    if(card.spell==='killAll'&&game.emergencyUsed)d.classList.add('used-up');
     if(selectedCard===card)d.classList.add('selected');
     d.innerHTML=
       `<div class="card-inner">`+
@@ -726,6 +750,7 @@ canvas.addEventListener('mousemove', e => {
 });
 
 function castSpell(card,team,lane,x,y){
+  if(card.spell==='killAll'&&game.emergencyUsed){showMessage('应急响应已耗尽');return;}
   switch(card.spell){
     case'heal':{
       let best=null,bd=Infinity;
@@ -733,7 +758,7 @@ function castSpell(card,team,lane,x,y){
       game.units.filter(u=>u.team===team&&u.isBuilding&&u.alive).forEach(u=>{const d=Math.hypot(u.x-x,u.y-y);if(d<bd){bd=d;best=u;}});
       if(best&&bd<200){const h=card.healPct*(best.maxHp||best.hp*2.5);best.hp=Math.min((best.maxHp||best.hp*2.5),best.hp+h);spawnFloatingText(best.x,best._y||best.y,'+'+Math.round(h),'blue');spawnParticles(best.x,best._y||best.y,'#60d080',15);}
       break;}
-    case'killAll':game.units.filter(u=>u.team!==team&&u.alive).forEach(u=>u.die());spawnParticles(CANVAS_W/2,CANVAS_H/2,'#ffffff',40);showMessage('应急响应启动 · 全图清场');break;
+    case'killAll':game.emergencyUsed=true;game.units.filter(u=>u.team!==team&&u.alive).forEach(u=>u.die());spawnParticles(CANVAS_W/2,CANVAS_H/2,'#ffffff',40);showMessage('应急响应启动 · 全图清场');break;
     case'shield':{
       let tgt=null,td=Infinity;
       game.towers.filter(t=>t.team===team&&t.alive).forEach(t=>{const d=Math.hypot(t.x-x,t._y-y);if(d<td){td=d;tgt=t;}});
@@ -827,7 +852,7 @@ function renderShards(ctx){
     const a=s.life/s.maxLife;
     ctx.globalAlpha=a;
     ctx.fillStyle=s.color;
-    ctx.font=`bold ${s.size}px "Share Tech Mono",monospace`;
+    ctx.font=`bold ${Math.round(s.size*1.15)}px "Share Tech Mono",monospace`;
     ctx.textAlign='center';
     ctx.translate(s.x,s.y);
     ctx.rotate(s.rot);
@@ -847,7 +872,7 @@ function aiTick(g, dt) {
 }
 
 function planAiNextMove(g) {
-  const affordable = g.aiDeck.filter(c => g.aiPower >= c.cost);
+  const affordable = g.aiDeck.filter(c => g.aiPower >= c.cost && !(c.spell==='killAll' && g.emergencyUsed));
   if (!affordable.length) { g.aiNextCard = null; return; }
   const card = affordable[Math.floor(Math.random() * affordable.length)];
   const aiTeam = playerTeam === 'red' ? 'blue' : 'red';
@@ -1058,12 +1083,12 @@ function render(g){
 
   // Side labels (dynamic)
   ctx.save();
-  ctx.fillStyle='rgba(60,140,220,0.7)';ctx.font='bold 12px "Share Tech Mono",monospace';ctx.textAlign='center';
+  ctx.fillStyle='rgba(60,140,220,0.7)';ctx.font='bold 14px "Share Tech Mono",monospace';ctx.textAlign='center';
   ctx.translate(14,CANVAS_H/2);ctx.rotate(-Math.PI/2);
   ctx.fillText(playerTeam==='red'?'红队 攻击方':'SOC 安全运营中心',0,0);
   ctx.restore();
   ctx.save();
-  ctx.fillStyle='rgba(220,60,60,0.7)';ctx.font='bold 12px "Share Tech Mono",monospace';ctx.textAlign='center';
+  ctx.fillStyle='rgba(220,60,60,0.7)';ctx.font='bold 14px "Share Tech Mono",monospace';ctx.textAlign='center';
   ctx.translate(CANVAS_W-14,CANVAS_H/2);ctx.rotate(Math.PI/2);
   ctx.fillText(playerTeam==='red'?'SOC 安全运营中心':'红队 攻击方',0,0);
   ctx.restore();
@@ -1087,11 +1112,11 @@ function render(g){
     ctx.fillStyle='rgba(8,16,10,0.9)';ctx.strokeStyle='#1a4a2a';ctx.lineWidth=1;
     const badgeW=90,badgeH=22;
     roundRect(ctx,badgeX-badgeW,badgeY,badgeW,badgeH,4);ctx.fill();ctx.stroke();
-    ctx.fillStyle='#3cf58b';ctx.font='bold 11px "Share Tech Mono",monospace';ctx.textAlign='center';
-    ctx.fillText(LANE_NAMES[i],badgeX-badgeW/2,badgeY+15);
+    ctx.fillStyle='#3cf58b';ctx.font='bold 13px "Share Tech Mono",monospace';ctx.textAlign='center';
+    ctx.fillText(LANE_NAMES[i],badgeX-badgeW/2,badgeY+16);
     // Width indicator
     const widths=['宽路','窄路','中路'];
-    ctx.fillStyle='#4a6b5a';ctx.font='9px "Share Tech Mono",monospace';
+    ctx.fillStyle='#4a6b5a';ctx.font='10px "Share Tech Mono",monospace';
     ctx.fillText(widths[i]+' · '+(i===0?'外网网关':i===1?'内网跳板机':'数据库前置'),badgeX-badgeW/2,badgeY+LANE_H-6);
 
     // Midline dots (separation)
@@ -1111,7 +1136,7 @@ function render(g){
     ctx.beginPath(); ctx.moveTo(myZoneX-160, ly); ctx.lineTo(myZoneX-160, ly+LANE_H); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(myZoneX, ly); ctx.lineTo(myZoneX, ly+LANE_H); ctx.stroke();
     ctx.setLineDash([]);
-    ctx.fillStyle = "rgba(60,140,200,0.55)"; ctx.font = "9px \"Share Tech Mono\",monospace"; ctx.textAlign = "center";
+    ctx.fillStyle = "rgba(60,140,200,0.55)"; ctx.font = "10px \"Share Tech Mono\",monospace"; ctx.textAlign = "center";
     ctx.fillText("我方部署区", myZoneX-80, ly+LANE_H-6);
     ctx.strokeStyle = "rgba(200,60,60,0.35)"; ctx.lineWidth = 1; ctx.setLineDash([6,10]);
     ctx.beginPath(); ctx.moveTo(enemyZoneX, ly); ctx.lineTo(enemyZoneX, ly+LANE_H); ctx.stroke();
@@ -1127,7 +1152,7 @@ function render(g){
   const pTeam2 = playerTeam || 'blue';
   const myHalfText = pTeam2 === 'blue' ? "← 我方半场" : "红方半场 →";
   const enemyHalfText = pTeam2 === 'blue' ? "红方半场 →" : "← 我方半场";
-  ctx.fillStyle="rgba(150,200,255,0.55)";ctx.font="10px \"Share Tech Mono\",monospace";ctx.textAlign="center";
+  ctx.fillStyle="rgba(150,200,255,0.55)";ctx.font="11px \"Share Tech Mono\",monospace";ctx.textAlign="center";
   ctx.fillText(myHalfText,LANE_X0+50,18);
   ctx.fillStyle="rgba(255,150,150,0.55)";
   ctx.fillText(enemyHalfText,LANE_X1-50,18);
@@ -1155,8 +1180,8 @@ function render(g){
     // Name badge
     const labels=['[外网网关]','[内网跳板机]','[DB前置]'];
     ctx.fillStyle=t.team==='blue'?'rgba(80,160,240,0.9)':'rgba(240,100,100,0.9)';
-    ctx.font='bold 9px "Share Tech Mono",monospace';ctx.textAlign='center';
-    ctx.fillText(labels[t.lane],t.x,t._y-th/2-22);
+    ctx.font='bold 10px "Share Tech Mono",monospace';ctx.textAlign='center';
+    ctx.fillText(labels[t.lane],t.x,t._y-th/2-24);
     // Shield ring
     if(t.shield>0){
       ctx.strokeStyle=`rgba(100,200,255,${0.35+0.25*Math.sin(g.time*5)})`;ctx.lineWidth=2.5;
@@ -1206,11 +1231,11 @@ function render(g){
     if(u.card.name){
       const isEnemy=u.team!==playerTeam;
       ctx.fillStyle='rgba(0,0,0,0.55)';
-      const labelW=Math.min(80,u.card.name.length*9+4);
-      ctx.fillRect(u.x-labelW/2,dy-sz-22,labelW,14);
-      ctx.strokeStyle=isEnemy?'#ff6060':'#60c0ff';ctx.lineWidth=0.8;ctx.strokeRect(u.x-labelW/2,dy-sz-22,labelW,14);
-      ctx.fillStyle=isEnemy?'#ffb8b8':'#b8e0ff';ctx.font='9px "Share Tech Mono",monospace';ctx.textAlign='center';
-      ctx.fillText(u.card.name,u.x,dy-sz-12);
+      const labelW=Math.min(90,u.card.name.length*10+4);
+      ctx.fillRect(u.x-labelW/2,dy-sz-24,labelW,16);
+      ctx.strokeStyle=isEnemy?'#ff6060':'#60c0ff';ctx.lineWidth=0.8;ctx.strokeRect(u.x-labelW/2,dy-sz-24,labelW,16);
+      ctx.fillStyle=isEnemy?'#ffb8b8':'#b8e0ff';ctx.font='10px "Share Tech Mono",monospace';ctx.textAlign='center';
+      ctx.fillText(u.card.name,u.x,dy-sz-13);
     }
 
     // HP bar below
@@ -1230,7 +1255,7 @@ function render(g){
   // ── Particles, shards & texts ──
   particleEffects.forEach(p=>{const a=p.life/p.maxLife,c=p.color;ctx.fillStyle=`rgba(${parseInt(c.slice(1,3),16)},${parseInt(c.slice(3,5),16)},${parseInt(c.slice(5,7),16)},${a})`;ctx.beginPath();ctx.arc(p.x,p.y,p.size*a,0,Math.PI*2);ctx.fill();});
   renderShards(ctx);
-  floatingTexts.forEach(t=>{const a=t.life/t.maxLife,c=t.color;ctx.fillStyle=`rgba(${parseInt(c.slice(1,3),16)},${parseInt(c.slice(3,5),16)},${parseInt(c.slice(5,7),16)},${a})`;ctx.font='bold 13px "Share Tech Mono",monospace';ctx.textAlign='center';ctx.fillText(t.text,t.x,t.y);});
+  floatingTexts.forEach(t=>{const a=t.life/t.maxLife,c=t.color;ctx.fillStyle=`rgba(${parseInt(c.slice(1,3),16)},${parseInt(c.slice(3,5),16)},${parseInt(c.slice(5,7),16)},${a})`;ctx.font='bold 15px "Share Tech Mono",monospace';ctx.textAlign='center';ctx.fillText(t.text,t.x,t.y);});
   lasers.forEach(l=>{const a=l.life/l.maxLife;ctx.strokeStyle=l.color;ctx.globalAlpha=a;ctx.lineWidth=2+a*2;ctx.beginPath();ctx.moveTo(l.x1,l.y1);ctx.lineTo(l.x2,l.y2);ctx.stroke();ctx.globalAlpha=1;});
 
   // ── Deploy zone highlight (when card selected) ──
@@ -1312,11 +1337,11 @@ function drawCorePillar(ctx,x,y,hp,maxHp,team){
   ctx.fillStyle=team==='blue'?'rgba(60,220,120,0.8)':'rgba(240,80,60,0.8)';
   ctx.fillRect(cx+barPad,barY,barW,barH);
   // HP text
-  ctx.fillStyle='rgba(255,255,255,0.9)';ctx.font='bold 9px "Share Tech Mono",monospace';ctx.textAlign='center';
+  ctx.fillStyle='rgba(255,255,255,0.9)';ctx.font='bold 10px "Share Tech Mono",monospace';ctx.textAlign='center';
   ctx.fillText(Math.round(hp)+'',x,cy+h/2+3);
   // Label above (team names, not relative to player perspective)
   ctx.fillStyle=team==='blue'?'rgba(150,200,255,0.8)':'rgba(255,150,150,0.8)';
-  ctx.fillText(team==='blue'?'蓝核':'红核',x,cy-6);
+  ctx.fillText(team==='blue'?'蓝核':'红核',x,cy-7);
 }
 
 function roundRect(ctx,x,y,w,h,r){
@@ -1424,7 +1449,7 @@ window.addEventListener('message',e=>{
   ctx.strokeStyle='rgba(20,45,30,0.25)';ctx.lineWidth=0.5;
   for(let x=LANE_X0;x<=LANE_X1;x+=60){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,CANVAS_H);ctx.stroke();}
   for(let y=0;y<CANVAS_H;y+=60){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(CANVAS_W,y);ctx.stroke();}
-  for(let i=0;i<3;i++){const ly=LANES_Y[i]-LANE_H/2;ctx.strokeStyle='#1a3a2a';ctx.lineWidth=1.5;ctx.strokeRect(LANE_X0,ly,LANE_W,LANE_H);ctx.fillStyle='#3cf58b';ctx.font='bold 11px "Share Tech Mono",monospace';ctx.textAlign='right';ctx.fillText(LANE_NAMES[i],LANE_X0-12,LANES_Y[i]+4);}
+  for(let i=0;i<3;i++){const ly=LANES_Y[i]-LANE_H/2;ctx.strokeStyle='#1a3a2a';ctx.lineWidth=1.5;ctx.strokeRect(LANE_X0,ly,LANE_W,LANE_H);ctx.fillStyle='#3cf58b';ctx.font='bold 13px "Share Tech Mono",monospace';ctx.textAlign='right';ctx.fillText(LANE_NAMES[i],LANE_X0-12,LANES_Y[i]+4);}
 })();
 </script>
 </body>
