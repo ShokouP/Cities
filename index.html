@@ -220,6 +220,7 @@
     background:transparent; border:2px solid #3cf58b; color:#3cf58b;
     padding:clamp(8px, 3vw, 12px) clamp(24px, 10vw, 40px); font-size:clamp(13px, 4vw, 16px); font-family:inherit; cursor:pointer;
     letter-spacing:2px; border-radius:4px; transition:all 0.2s;
+    touch-action: manipulation; -webkit-tap-highlight-color: transparent;
   }
   #tip-bar {
     min-height:18px; display:flex; align-items:center; justify-content:center;
@@ -230,7 +231,7 @@
     position:absolute; inset:0; z-index:20; background:#050705;
     display:flex; flex-direction:column; align-items:flex-start; justify-content:flex-start;
     padding:40px; font-family:'Share Tech Mono',monospace; color:#3cf58b;
-    overflow:hidden; cursor:pointer;
+    overflow:hidden; cursor:pointer; touch-action: manipulation;
   }
   #intro-line { font-size:clamp(13px,3vw,16px); line-height:1.6; white-space:pre-wrap; text-shadow:0 0 8px rgba(60,245,139,0.35); }
   #intro-cursor { display:inline-block; width:8px; height:1em; background:#3cf58b; animation:blink 0.8s infinite; vertical-align:middle; }
@@ -281,14 +282,14 @@
     <div id="card-hand"></div>
   </div>
   <div id="intro"><span id="intro-line"></span><span id="intro-cursor"></span><div id="intro-skip">点击跳过 &gt;&gt;</div></div>
-  <div id="overlay">
+  <div id="overlay" style="pointer-events:auto; z-index:25;">
     <h1>光 速 城</h1>
     <p>Lightspeed Grid · 网络安全攻防<br>拖卡牌到战场部署 · 单位自动前进交战<br>左路暴露面 → 中路横向移动 → 右路核心资产区</p>
     <div style="display:flex;gap:16px;">
-      <button id="start-defend-btn">防 守 方（蓝 队）</button>
-      <button id="start-attack-btn">进 攻 方（红 队）</button>
+      <button id="start-defend-btn" class="start-btn" data-team="blue">防 守 方（蓝 队）</button>
+      <button id="start-attack-btn" class="start-btn" data-team="red">进 攻 方（红 队）</button>
     </div>
-    <button id="start-tutorial-btn" style="margin-top:8px;">教 学 模 式（三 日 PvE）</button>
+    <button id="start-tutorial-btn" class="start-btn" style="margin-top:8px;" data-tutorial="0">教 学 模 式（三 日 PvE）</button>
   </div>
 </div>
 
@@ -1300,10 +1301,23 @@ function roundRect(ctx,x,y,w,h,r){
   ctx.closePath();
 }
 
-// Init
-document.getElementById('start-defend-btn').addEventListener('click',()=>{tutorialDay=-1;startGame('blue');});
-document.getElementById('start-attack-btn').addEventListener('click',()=>{tutorialDay=-1;startGame('red');});
-document.getElementById('start-tutorial-btn').addEventListener('click',()=>startTutorial(0));
+// Init - bind start buttons with both click and touchend for mobile reliability
+function bindStartButton(id, action){
+  const btn=document.getElementById(id);
+  if(!btn)return;
+  const handler=(e)=>{
+    if(e.type==='touchend' && Date.now()-handler._lastClick < 500){ return; }
+    handler._lastClick=Date.now();
+    e.preventDefault(); e.stopPropagation();
+    action();
+  };
+  handler._lastClick=0;
+  btn.addEventListener('click', handler);
+  btn.addEventListener('touchend', handler, {passive:false});
+}
+bindStartButton('start-defend-btn',()=>{tutorialDay=-1;startGame('blue');});
+bindStartButton('start-attack-btn',()=>{tutorialDay=-1;startGame('red');});
+bindStartButton('start-tutorial-btn',()=>startTutorial(0));
 
 // Intro cinematic
 const INTRO_LINES=[
@@ -1337,8 +1351,9 @@ function skipIntro(){
   document.getElementById('intro-line').innerHTML=INTRO_LINES.join('\n');
   setTimeout(()=>{
     document.getElementById('intro').style.display='none';
+    document.getElementById('intro').style.pointerEvents='none';
     document.getElementById('overlay').style.display='flex';
-  },600);
+  },50);
 }
 document.getElementById('intro').addEventListener('click',skipIntro);
 document.addEventListener('keydown',skipIntro);
