@@ -2,7 +2,10 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>光速城 · Lightspeed Grid</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
@@ -21,8 +24,9 @@
   }
   /* ── Mobile portrait (narrow) ── */
   @media (max-width: 700px) and (orientation: portrait) {
+    body { padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); }
     #app { height: 100dvh; max-height: none; border: none; border-radius: 0; }
-    #game-area { display: contents; }
+    #game-area { display: flex; flex-direction: column; min-height: 0; }
     #hud { padding: 3px 5px; gap: 3px; min-height: 34px; }
     #hud .hud-label { display: none; }
     .hud-value { font-size: 12px !important; }
@@ -34,8 +38,8 @@
     #ai-threat { max-width: 60px; font-size: 7px; margin-top: 0; }
     #tip-bar { min-height: 16px; padding: 2px 6px; }
     #tip-text { font-size: 7px; }
-    #canvas-wrap { flex:1; min-height: 0; overflow: hidden; }
-    canvas { width: 100%; height: 100%; min-width: auto; }
+    #canvas-wrap { flex: 1 1 auto; min-height: 0; overflow: hidden; display: flex; align-items: center; justify-content: center; background: #050705; }
+    canvas { width: 100%; height: auto; max-width: 100%; max-height: 100%; aspect-ratio: 1200 / 641; object-fit: contain; min-width: auto; }
     #card-hand { min-height: 92px; max-height: 120px; padding: 4px 6px; justify-content: flex-start; }
     .card { width: 86px !important; height: 78px !important; margin: 0 3px; }
     .card-inner { grid-template-columns: 26px 1fr !important; grid-template-rows: 14px 1fr 14px !important; padding: 3px 4px 3px 3px !important; }
@@ -51,9 +55,9 @@
     #overlay p { font-size: 11px; margin-bottom: 4px; }
     #overlay button { padding: 10px 16px; font-size: 13px; letter-spacing: 1px; width: min(260px, 80vw); }
     #overlay div { gap: 8px; }
-    #intro { padding: 24px; }
+    #intro { padding: 24px; padding-top: calc(24px + env(safe-area-inset-top)); }
     #intro-line { font-size: 12px; line-height: 1.5; }
-    #intro-skip { font-size: 9px; bottom: 12px; right: 16px; }
+    #intro-skip { font-size: 9px; bottom: calc(12px + env(safe-area-inset-bottom)); right: calc(16px + env(safe-area-inset-right)); }
   }
   @media (max-width: 380px) and (orientation: portrait) {
     .hud-value { font-size: 10px !important; }
@@ -73,7 +77,7 @@
   }
   /* ── Mobile landscape (wide) ── */
   @media (max-width: 900px) and (orientation: landscape) {
-    body { align-items: stretch; }
+    body { align-items: stretch; padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); }
     #app { height: 100dvh; max-height: none; border: none; border-radius: 0; }
     #game-area { flex: 1; display: flex; flex-direction: row; min-height: 0; }
     #hud { padding: 2px 8px; gap: 4px; min-height: 30px; }
@@ -85,7 +89,7 @@
     #ai-threat { max-width: 90px; font-size: 7px; margin-top: 0; }
     #tip-bar { min-height: 12px; padding: 1px 6px; }
     #tip-text { font-size: 7px; }
-    #canvas-wrap { flex: 1 1 auto; align-self: stretch; display: flex; align-items: center; justify-content: center; min-width: 0; min-height: 0; overflow: hidden; }
+    #canvas-wrap { flex: 1 1 auto; align-self: stretch; display: flex; align-items: center; justify-content: center; min-width: 0; min-height: 0; overflow: hidden; background: #050705; }
     canvas { width: 100%; height: auto; max-height: 100%; aspect-ratio: 1200 / 641; object-fit: contain; min-width: auto; }
     #card-hand { flex: 0 0 108px; align-self: stretch; width: 108px; min-width: 108px; padding: 2px; }
     .card { width: 96px !important; height: 50px !important; margin: 2px 0; }
@@ -101,9 +105,9 @@
     #overlay h1 { font-size: 20px; letter-spacing: 2px; }
     #overlay p { font-size: 9px; margin-bottom: 2px; }
     #overlay button { padding: 6px 10px; font-size: 10px; letter-spacing: 1px; width: min(220px, 60vw); }
-    #intro { padding: 18px; }
+    #intro { padding: 18px; padding-top: calc(18px + env(safe-area-inset-top)); }
     #intro-line { font-size: 10px; line-height: 1.35; }
-    #intro-skip { font-size: 8px; bottom: 10px; right: 12px; }
+    #intro-skip { font-size: 8px; bottom: calc(10px + env(safe-area-inset-bottom)); right: calc(12px + env(safe-area-inset-right)); }
   }
   #hud {
     min-height:40px; display:flex; align-items:center; justify-content:space-between;
