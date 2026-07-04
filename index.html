@@ -333,6 +333,7 @@ const BLUE_CARDS=[
   {id:'threat_hunter',name:'溯源小队',cost:7,type:'ground',hp:750,atk:110,atkSpd:1.1,range:75,speed:55,duration:0,desc:'高费重甲·直捣红队核心塔',tag:'地面',color:'#20d0a0',prioCore:true},
   {id:'mfa',name:'双因子验证',cost:2,type:'spell',hp:0,atk:0,atkSpd:0,range:0,speed:0,duration:0,desc:'全图8秒内敌方无法部署',tag:'法术',color:'#40c0a0',spell:'mfa',mfaTime:8},
   {id:'training',name:'安全培训',cost:3,type:'spell',hp:0,atk:0,atkSpd:0,range:0,speed:0,duration:0,desc:'3秒内友方塔攻速翻倍',tag:'法术',color:'#50a0f0',spell:'training',trainTime:3},
+  {id:'blockade',name:'实时封堵',cost:2,type:'spell',hp:0,atk:0,atkSpd:0,range:0,speed:0,duration:0,desc:'最近一路敌方单位冻结2秒并受80伤害',tag:'法术',color:'#30a0e0',spell:'blockade',blockDmg:80,blockStun:2},
 ];
 const RED_CARDS=[
   {id:'scan',name:'网络扫描',cost:2,type:'spell',hp:0,atk:0,atkSpd:0,range:0,speed:0,duration:0,desc:'揭示对方部署4秒',tag:'法术',color:'#f08040',spell:'reveal',revealTime:4},
@@ -543,12 +544,8 @@ function nextTutorialDayOrMenu(){
 
 // ── Card Hand DOM ──
 const CARD_COLORS={
-  firewall:'#3c8cf5',waf:'#5ca8f0',ids:'#50e890',edr:'#4088e0',honeypot:'#e0b040',
-  patch:'#60d080',emergency:'#f06040',encrypt:'#70c0f0',threat_hunter:'#20d0a0',
-  mfa:'#40c0a0',training:'#50a0f0',
-  scan:'#f08040',phish:'#e0c040',sql_inject:'#e04040',bruteforce:'#f06030',
-  zeroday:'#c030c0',ddos:'#a03030',ransomware:'#d02020',backdoor:'#9040d0',
-  waterhole:'#b06020',nday:'#d04080',minion:'#a040d0'
+  firewall:'#3c8cf5',waf:'#5ca8f0',ids:'#50e890',edr:'#4088e0',honeypot:'#e0b040',patch:'#60d080',emergency:'#f06040',encrypt:'#70c0f0',threat_hunter:'#20d0a0',mfa:'#40c0a0',training:'#50a0f0',blockade:'#30a0e0',
+  scan:'#f08040',phish:'#e0c040',sql_inject:'#e04040',bruteforce:'#f06030',zeroday:'#c030c0',ddos:'#a03030',ransomware:'#d02020',backdoor:'#9040d0',waterhole:'#b06020',nday:'#d04080',minion:'#a040d0'
 };
 function rebuildCardHand(){
   const ctr=document.getElementById('card-hand');ctr.innerHTML='';
@@ -766,6 +763,17 @@ function castSpell(card,team,lane,x,y){
         game.waterholeTarget=tgt;game.waterholeTimer=card.whTime;game.waterholeTeam=tgt.team;
         tgt.atkSpdMul=0.5;showMessage('水坑攻击 · 敌方塔攻速减半 '+card.whTime+'秒');
       }break;}
+    case'blockade':{
+      const nearestLane=LANES_Y.map((yy,i)=>({i,d:Math.abs(yy-y)})).sort((a,b)=>a.d-b.d)[0].i;
+      const enemyTeam=team==='blue'?'red':'blue';
+      let hits=0;
+      game.units.filter(u=>u.team===enemyTeam&&u.alive&&u.lane===nearestLane).forEach(u=>{
+        u.hp-=card.blockDmg;u.stunned=Math.max(u.stunned,card.blockStun);hits++;
+        if(u.hp<=0)u.die();
+      });
+      showMessage('实时封堵 · '+LANE_NAMES[nearestLane]+'冻结 '+card.blockStun+'秒');
+      spawnParticles(x,LANES_Y[nearestLane],CARD_COLORS.blockade||'#30a0e0',15+hits*5);
+      break;}
   }
 }
 
